@@ -2004,7 +2004,17 @@ function Post2()
 		{
 			// Only send it to everyone if the topic is approved, otherwise just to the topic starter if they want it.
 			if ($topic_info['approved'])
+			{
 				sendNotifications($topic, 'reply');
+				global $boarddir;
+				if (function_exists('tapatalk_push'))
+					tapatalk_push_reply($msgOptions['id']);
+				else if(file_exists($boarddir . '/mobiquo/push_hook.php'))
+				{
+					include($boarddir . '/mobiquo/push_hook.php');
+					tapatalk_push_reply($msgOptions['id']);
+				}
+			}
 			else
 				sendNotifications($topic, 'reply', array(), $topic_info['id_member_started']);
 		}

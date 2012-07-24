@@ -10,9 +10,11 @@
         <require-dir name="mobiquo" destination="$boarddir" />
         <modification>install.xml</modification>
         <readme type="file" parsebbc="true">readme.txt</readme>
+        <code>db/install.php</code>
     </install>
     <uninstall>
         <remove-dir name="mobiquo" destinatin="$boarddir" />
         <modification reverse="true">install.xml</modification>
+        <code>db/uninstall.php</code>
     </uninstall>
 </package-info>

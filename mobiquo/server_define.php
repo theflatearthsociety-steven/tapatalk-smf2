@@ -12,7 +12,8 @@ $server_param = array(
     
     'login' => array(
         'function'  => 'login_func',
-        'signature' => array(array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcBase64)),
+        'signature' => array(array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcBase64, $xmlrpcBoolean, $xmlrpcString),
+                             array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcBase64)),
         'docstring' => 'authorize need two parameters,the first is user name(Base64), second is password.',
     ),
 
@@ -443,5 +444,15 @@ $server_param = array(
         'signature' => array(array($xmlrpcArray),
                              array($xmlrpcArray, $xmlrpcInt, $xmlrpcInt)),
         'docstring' => '',
+    ),
+    
+    //**********************************************
+    // Puch related functions
+    //**********************************************
+    
+    'update_push_status' => array(
+        'function' => 'update_push_status_func',
+        'signature' => array(array($xmlrpcStruct, $xmlrpcStruct),
+                             array($xmlrpcStruct, $xmlrpcStruct, $xmlrpcBase64, $xmlrpcBase64)),
     ),
 );

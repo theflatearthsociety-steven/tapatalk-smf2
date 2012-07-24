@@ -34,12 +34,16 @@ switch ($request_name) {
         break;
     case 'login':
     case 'authorize_user':
-        if ($params_num == 2) {
+        if ($params_num == 2 || $params_num == 4) {
             $_POST['user'] = $request_params[0];
             $_POST['password'] = $request_params[1];
             $_POST['cookielength'] = -1;
             $_GET['action'] = 'login2';
-        } else {
+            if($params_num == 4)
+            {
+                $_POST['push'] = $request_params[3];
+            }
+        }else {
             get_error('Parameter Error');
         }
         break;
@@ -680,6 +684,23 @@ switch ($request_name) {
         }
         $post_per_page = $end_num - $start_num + 1;
         $_GET['start'] = $start_num;
+        break;
+    case 'update_push_status':
+        if ($params_num == 1)
+        {
+            $_POST['settings'] = $request_params[0];
+            $_GET['action'] = 'update_push_status';
+        }
+        else if($params_num == 3) 
+        {
+            $_POST['settings'] = $request_params[0];
+            $_POST['user'] = $request_params[1];
+            $_POST['password'] = $request_params[2];
+            $_POST['cookielength'] = -1;
+            $_GET['action'] = 'login2';
+        }else {
+            get_error('Parameter Error');
+        }
         break;
 }
 

@@ -447,6 +447,17 @@ function DoLogin()
 	if (!empty($user_settings['additional_groups']) && $user_settings['additional_groups'][0] !== '')
 	    $user_info['groups'] = array_merge($user_info['groups'], $user_settings['additional_groups']);
 
+	//Add by tapatalk
+	require_once('input.php');
+	global $request_params;
+	$input = Tapatalk_Input::filterXmlInput(array(
+		'username'  => Tapatalk_Input::STRING,
+		'password'  => Tapatalk_Input::STRING,
+		'anonymous' => Tapatalk_Input::INT,
+		'push'      => Tapatalk_Input::STRING,
+	), $request_params);
+	if ($input['push']) update_push();
+	
 	// Are you banned?
 	is_not_banned(true);
 
@@ -667,4 +678,29 @@ function validatePasswordFlood($id_member, $password_flood_value = false, $was_c
 
 }
 
+function update_push()
+{
+	global $smcFunc, $user_info, $db_prefix;
+	
+	if ($user_info['id'] && mobi_table_exist('tapatalk_users'))
+	{
+		$request = $smcFunc['db_insert']('ignore',
+					'{db_prefix}tapatalk_users',
+					array('userid' => 'int'),
+					array($user_info['id']),
+					array('userid')
+				);
+		if ($smcFunc['db_affected_rows']($request) == 0)
+		{
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}tapatalk_users
+				SET updated = CURRENT_TIMESTAMP 
+				WHERE userid = {int:user_id}',
+				array(
+					'user_id' => $user_info['id'],
+				)
+			);
+		}
+	}
+}
 ?>

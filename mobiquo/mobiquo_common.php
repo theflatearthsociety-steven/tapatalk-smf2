@@ -8,6 +8,7 @@ function mobiquo_exit($str = '')
     
     switch ($request_name) {
         case    'authorize_user': if (preg_match('/^action=login2;sa=check;member=/', $str)) return;
+        case'update_push_status': if (preg_match('/^action=login2;sa=check;member=/', $str)) return;
         case             'login': if (preg_match('/^action=login2;sa=check;member=/', $str)) return;
         case        'login_user': if (preg_match('/^action=login2;sa=check;member=/', $str)) return;
         case       'logout_user': if (isset($_COOKIE['PHPSESSID'])) sessionDestroy($_COOKIE['PHPSESSID']); return;
@@ -697,4 +698,13 @@ function process_list_tag($str)
     }
     
     return $result;
+}
+
+function mobi_table_exist($table_name)
+{
+    global $smcFunc, $db_prefix;
+    db_extend();
+    $tables = $smcFunc['db_list_tables'](false, $db_prefix . $table_name);
+    
+    return !empty($tables);
 }

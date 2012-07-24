@@ -649,6 +649,7 @@ function action_get_subscribed_topic()
 
     $context['topic_num'] = $totalNotifications;
 }
+function action_update_push_status() {}
 
 function action_get_participated_topic()
 {
@@ -1527,6 +1528,21 @@ function before_action_search()
         }
         
         $_REQUEST['brd'] = $_POST['brd'];
+    }
+}
+
+function before_action_update_push_status()
+{
+    global $user_info;
+
+    if ($user_info['id'])
+    {
+        $_POST['action'] = 'update_push_status';
+        $_REQUEST['action'] = $_POST['action'];
+    }
+    else
+    {
+        before_action_login();
     }
 }
 
