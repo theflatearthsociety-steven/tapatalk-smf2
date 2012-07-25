@@ -354,8 +354,6 @@ function get_post_detail($reset = false)
     censorText($message['subject']);
 
     // Run BBC interpreter on the message.
-    $message['body'] = preg_replace('/\[(\/?)code\]/si', '[$1quote]', $message['body']);
-    $message['body'] = process_list_tag($message['body']);
     $message['body'] = mobiquo_parse_bbc($message['body'], 0, $message['id_msg']);
 
     // Compose the memory eat- I mean message array.

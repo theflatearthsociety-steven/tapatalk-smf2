@@ -313,6 +313,7 @@ function parse_bbcode($str)
     return preg_replace($search, $replace, $str);
 }
 
+
 function basic_clean($str, $cut = 0)
 {
     $str = preg_replace('/<a.*?>Quote from:.*?<\/a>/', ' ', $str);
@@ -472,6 +473,9 @@ function mobiquo_parse_bbc($message, $smileys = true, $cache_id = '', $parse_tag
 {
     global $user_info, $modSettings;
     
+    $message = preg_replace('/\[(\/?)code\]/si', '[$1quote]', $message);
+    $message = process_list_tag($message);
+    $message = preg_replace('/\[(youtube|yt)\](.*?)\[\/\1\]/sie', "video_bbcode_format('$1', '$2')", $message);
     $user_info['time_format'] = $user_info['user_time_format'];
     $modSettings['todayMod'] = $modSettings['todayMod_bak'];
     $message = str_replace('[spoiler]', "\nSpoiler for Hiden:\n[quote]", $message);
@@ -480,6 +484,28 @@ function mobiquo_parse_bbc($message, $smileys = true, $cache_id = '', $parse_tag
     $user_info['time_format'] = '%Y%m%dT%H:%M:%S+00:00';
     $modSettings['todayMod'] = 0;
     
+    return $message;
+}
+
+function video_bbcode_format($type, $url)
+{
+    $url = trim($url);
+
+    switch (strtolower($type)) {
+        case 'yt':
+        case 'youtube':
+            if (preg_match('#^(http://)?((www|m)\.)?(youtube\.com/(watch\?.*?v=|v/)|youtu\.be/)([-\w]+)#', $url, $matches)) {
+                $message = '[url='.$url.']YouTube Video[/url]';
+            } else if (preg_match('/^[-\w]+$/', $url)) {
+                $url = 'http://www.youtube.com/watch?v='.$url;
+                $message = '[url='.$url.']YouTube Video[/url]';
+            } else {
+                $message = '';
+            }
+            break;
+        
+        default: $message = '';
+    }
     return $message;
 }
 
