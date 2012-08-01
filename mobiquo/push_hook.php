@@ -2,7 +2,10 @@
 
 function tapatalk_push_reply($post_id)
 {
-    global $user_info, $context, $smcFunc, $boardurl;
+    global $user_info, $context, $smcFunc, $boardurl, $modSettings;
+
+    if(!$modSettings['tp_pushEnabled'])
+        return;
     if ($context['current_topic'] && $post_id && ini_get('allow_url_fopen'))// mobi_table_exists('tapatalk_users')
     {
         $request = $smcFunc['db_query']('', '
@@ -24,7 +27,7 @@ function tapatalk_push_reply($post_id)
                 'id'        => $context['current_topic'],
                 'subid'     => $post_id,
                 'title'     => tt_push_clean($_POST['subject']),
-                'author'    => tt_push_clean($user_info['id']),
+                'author'    => tt_push_clean($user_info['name']),
                 'dateline'  => time(),
             );
             $ttp_post_data = array(
@@ -39,8 +42,10 @@ function tapatalk_push_reply($post_id)
 
 function tapatalk_push_pm()
 {
-    global $user_info, $smcFunc, $boardurl;
-    
+    global $user_info, $smcFunc, $boardurl, $modSettings;
+
+    if(!$modSettings['tp_pushEnabled'])
+        return;
     if ($_REQUEST['recipient_to'] && $_REQUEST['subject'] && ini_get('allow_url_fopen'))// mobi_table_exists('tapatalk_users')
     {
         $timestr = time();
@@ -74,7 +79,7 @@ function tapatalk_push_pm()
                     'type'      => 'pm',
                     'id'        => $id_pm['id_pm'],
                     'title'     => tt_push_clean($_REQUEST['subject']),
-                    'author'    => tt_push_clean($user_info['username']),
+                    'author'    => tt_push_clean($user_info['name']),
                     'dateline'  => time(),
                 );
                 $ttp_post_data = array(
