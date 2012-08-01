@@ -5,7 +5,8 @@
     <file name="$sourcedir/Load.php">
         <operation>
             <search position="after"><![CDATA[	$context['menu_separator'] = !empty($settings['use_image_buttons']) ? ' ' : ' | ';]]></search>
-            <add><![CDATA[	$context['html_headers'] .= '<script type="text/javascript" language="JavaScript" src="' . $boardurl . '/mobiquo/tapatalkdetect.js"></script>';
+            <add><![CDATA[	$jsfile_name = ( $modSettings['tp_tapatalkNotifierForChromeEnabled'] && $context['browser']['is_chrome'] ) ? "tapatalkdetect.js" :"tapatalkdetect-nochrome.js";
+	$context['html_headers'] .= '<script type="text/javascript" language="JavaScript" src="' . $boardurl . '/mobiquo/'.$jsfile_name.'"></script>';
 ]]></add>
         </operation>
     </file>
@@ -49,4 +50,63 @@
 	}]]></add>
         </operation>
     </file>
+        </file>
+        <file name="$sourcedir/Admin.php">
+        <operation>
+            <search position="replace"><![CDATA[	// Any files to include for administration?
+	if (!empty($modSettings['integrate_admin_include']))]]></search>
+            <add><![CDATA[	$modSettings['integrate_admin_include'] = $modSettings['integrate_admin_include'].",\$sourcedir/Subs-Tapatalk.php";
+	$modSettings['integrate_admin_areas'] = $modSettings['integrate_admin_areas'].",Tapatalk_add_admin_areas";
+	// Any files to include for administration?
+	if (!empty($modSettings['integrate_admin_include']))]]></add>
+        </operation>
+    </file>
+        <file name="$themedir/languages/Admin.english.php">
+        <operation>
+            <search position="after"><![CDATA[?>]]></search>
+            <add><![CDATA[//Tapatalk
+$txt['tapatalktitle'] = 'Tapatalk Settings';
+$txt['tp_general_settings'] = 'General';
+$txt['tp_other_settings'] = 'Others';
+$txt['tp_board_settings'] = 'Boards';]]></add>
+        </operation>
+        </file>
+        <file name="$themedir/languages/ManageSettings.english.php">
+        <operation>
+            <search position="after"><![CDATA[?>]]></search>
+            <add><![CDATA[//Tapatalk
+$txt['tapatalktitle'] = 'Tapatalk Settings';
+$txt['tp_pushEnabled'] = 'Enable push for Tapatalk users';
+$txt['tapatalkEnabled'] = 'Enable tapatalk';
+$txt['tp_guestOkayEnabled'] = 'Enable forum view for guest by tapatalk';
+$txt['tp_tapatalkNotifierForChromeEnabled'] = 'Enable Tapatalk Notifier in Chrome';
+$txt['tp_general_settings'] = 'General';
+$txt['tp_board_settings'] = 'Boards';
+$txt['tp_other_settings'] = 'Others';
+$txt['tp_parent_board'] = 'Boards1';
+$txt['tp_child_board'] = 'Boards2';
+$txt['tp_board_settingsDesc'] = 'Set the board you want to hide to tapatalk users';
+$txt['tp_general_settingsDesc'] = 'This is the general settings for tapatalk';
+$txt['tp_other_settingsDesc'] = 'Taptalk information';
+$txt['tp_select_boards'] = 'Select Boards to HIDE on Tapatalk';
+$txt['tp_register_page_url'] = 'Register page url';
+$txt['taptalk_descp'] = '<strong>Tapatalk for SMF Plugin</strong></br>
+For SMF 2.0 RC4/RC5/Final, <a href = "http://www.tapatalk.com">http://www.tapatalk.com</a></br></br>
+
+<b>What is Tapatalk?</b></br>
+Tapatalk is a forum app for iPhone/iPad, Android, BlackBerry, Windows Phone and WebOS. The app provides super fast forum access to any vBulletin, IPBoard, phpBB, SMF, xenForo, MyBB and Kunena forums that have activated Tapatalk. Forum owner can download the free plug-in to activate Tapatalk in your forum.</br>
+
+<b>What does this mod do?</b></br>
+This mod enables your forum to be accessed by the Tapatalk app. The Tapatalk app can be downloaded from Apple iTune Store or from Google Android Market.</br>
+
+<b>What next do I have to do?</b></br>
+After installing this mod, head straight to <a href = "http://tapatalk.com/activate_tapatalk.php">http://tapatalk.com/activate_tapatalk.php</a> and register there. After registering you can enlist your forum into the Tapatalk network.</br>
+</br>
+Please manually change permission of all files under mobiquo/ folder (including the folder itself) to chmod 755 otherwise it won\'t work!!</br>
+</br>
+For more information please visit tapatalk.com</br>
+
+Thank you! :)';]]></add>
+        </operation>
+        </file>
 </modification>

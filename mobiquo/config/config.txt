@@ -1,7 +1,4 @@
 version = sm-2a_3.1.0
-is_open = 1
-guest_okay = 1
-reg_url = index.php?action=register
 api_level = 3
 
 disable_search = 0
@@ -29,7 +26,6 @@ pm_load = 1
 inbox_stat = 1
 searchid = 1
 
-push = 1
 
 /* For mod conflict situation.
 If your forum installed some mod which changed code in file like 'Load.php' and called function defined in the mod, tapatalk may not work.

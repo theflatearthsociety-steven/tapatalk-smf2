@@ -4,16 +4,18 @@ defined('IN_MOBIQUO') or exit;
 
 function get_config_func()
 {
-    global $mobiquo_config, $user_info;
+    global $mobiquo_config, $user_info, $modSettings, $maintenance;
 
     $config_list = array(
-        'is_open'    => new xmlrpcval($mobiquo_config['is_open'] ? true : false, 'boolean'),
-        'guest_okay' => new xmlrpcval($mobiquo_config['guest_okay'] ? true : false, 'boolean'),
-    );
+        'is_open'    => new xmlrpcval( ($maintenance == 0 && $modSettings['tapatalkEnabled']) ? true : false, 'boolean'),
+        'guest_okay' => new xmlrpcval($modSettings['allow_guestAccess'] && $modSettings['tp_guestOkayEnabled']? true : false, 'boolean'),
+        'push'       => new xmlrpcval($modSettings['tp_pushEnabled']? true: false,'boolean'),
+        'reg_url'       => new xmlrpcval($modSettings['tp_register_page_url'],'string'),
 
+    );
     foreach($mobiquo_config as $key => $value)
     {
-        if (!in_array($key, array('is_open', 'guest_okay', 'mod_function', 'conflict_mod')))
+        if (!in_array($key, array('is_open', 'guest_okay', 'mod_function', 'conflict_mod', 'push')))
         {
             $config_list[$key] = new xmlrpcval($value, 'string');
         }
@@ -777,7 +779,7 @@ function get_new_topic_func()
 
 function get_latest_topic_func()
 {
-    global $context, $modSettings;
+    global $context, $modSettings, $topic_per_page, $start_num;
 
     $topic_list = array();
     foreach ($context['posts'] as $topic)
@@ -812,6 +814,8 @@ function get_latest_topic_func()
     }
     $total_topic_num = min(100, $modSettings['totalTopics']);
 
+    if(count($topic_list) < $topic_per_page && $start_num == 0)
+        $total_topic_num = count($topic_list);
     $response = new xmlrpcval(array(
         'result'    => new xmlrpcval(true, 'boolean'),
         'total_topic_num' => new xmlrpcval($total_topic_num, 'int'),
@@ -1129,44 +1133,49 @@ function search_topic_func()
     global $context;
 
     $topic_list = array();
-    while ($topic = $context['get_topics']())
+    if (isset($context['get_topics']))
     {
-        $topic_info = get_topic_info($topic['board']['id'], $topic['id']);
-
-        $xmlrpc_topic = new xmlrpcval(array(
-            'forum_id'          => new xmlrpcval($topic['board']['id']),
-            'forum_name'        => new xmlrpcval(basic_clean($topic['board']['name']), 'base64'),
-            'topic_id'          => new xmlrpcval($topic['id']),
-            'topic_title'       => new xmlrpcval(basic_clean($topic['matches'][0]['subject']), 'base64'),
-       'post_author_name'       => new xmlrpcval($topic['matches'][0]['member']['username'], 'base64'),
-    'post_author_display_name'  => new xmlrpcval(basic_clean($topic['matches'][0]['member']['name']), 'base64'),
-            'short_content'     => new xmlrpcval(basic_clean($topic['matches'][0]['body']), 'base64'),
-            'icon_url'          => new xmlrpcval($topic['matches'][0]['member']['avatar']['href']),
-            'post_time'         => new xmlrpcval($topic['matches'][0]['time'], 'dateTime.iso8601'),
-            'reply_number'      => new xmlrpcval($topic_info['num_replies'], 'int'),
-            'view_number'       => new xmlrpcval($topic_info['num_views'], 'int'),
-            'new_post'          => new xmlrpcval($topic_info['new'], 'boolean'),
-            'can_subscribe'     => new xmlrpcval($topic_info['can_mark_notify'], 'boolean'),
-            'is_subscribed'     => new xmlrpcval($topic_info['is_marked_notify'], 'boolean'),
-            'is_sticky'          => new xmlrpcval($topic_info['is_sticky'], 'boolean'),
-            'is_closed'         => new xmlrpcval($topic_info['is_locked'], 'boolean'),
-
-            'can_delete'        => new xmlrpcval($topic_info['can_remove'], 'boolean'),
-            'can_close'         => new xmlrpcval($topic_info['can_lock'], 'boolean'),
-            'can_stick'         => new xmlrpcval($topic_info['can_sticky'], 'boolean'),
-            'can_move'          => new xmlrpcval($topic_info['can_move'], 'boolean'),
-            'can_rename'        => new xmlrpcval($topic_info['can_move'], 'boolean'),
+        while ($topic = $context['get_topics']())
+        {
+            $topic_info = get_topic_info($topic['board']['id'], $topic['id']);
+    
+            $xmlrpc_topic = new xmlrpcval(array(
+                'forum_id'          => new xmlrpcval($topic['board']['id']),
+                'forum_name'        => new xmlrpcval(basic_clean($topic['board']['name']), 'base64'),
+                'topic_id'          => new xmlrpcval($topic['id']),
+                'topic_title'       => new xmlrpcval(basic_clean($topic['matches'][0]['subject']), 'base64'),
+           'post_author_name'       => new xmlrpcval($topic['matches'][0]['member']['username'], 'base64'),
+        'post_author_display_name'  => new xmlrpcval(basic_clean($topic['matches'][0]['member']['name']), 'base64'),
+                'short_content'     => new xmlrpcval(basic_clean($topic['matches'][0]['body']), 'base64'),
+                'icon_url'          => new xmlrpcval($topic['matches'][0]['member']['avatar']['href']),
+                'post_time'         => new xmlrpcval($topic['matches'][0]['time'], 'dateTime.iso8601'),
+                'reply_number'      => new xmlrpcval($topic_info['num_replies'], 'int'),
+                'view_number'       => new xmlrpcval($topic_info['num_views'], 'int'),
+                'new_post'          => new xmlrpcval($topic_info['new'], 'boolean'),
+                'can_subscribe'     => new xmlrpcval($topic_info['can_mark_notify'], 'boolean'),
+                'is_subscribed'     => new xmlrpcval($topic_info['is_marked_notify'], 'boolean'),
+                'is_sticky'          => new xmlrpcval($topic_info['is_sticky'], 'boolean'),
+                'is_closed'         => new xmlrpcval($topic_info['is_locked'], 'boolean'),
+    
+                'can_delete'        => new xmlrpcval($topic_info['can_remove'], 'boolean'),
+                'can_close'         => new xmlrpcval($topic_info['can_lock'], 'boolean'),
+                'can_stick'         => new xmlrpcval($topic_info['can_sticky'], 'boolean'),
+                'can_move'          => new xmlrpcval($topic_info['can_move'], 'boolean'),
+                'can_rename'        => new xmlrpcval($topic_info['can_move'], 'boolean'),
+            ), 'struct');
+    
+            $topic_list[] = $xmlrpc_topic;
+        }
+    
+        $result = new xmlrpcval(array(
+            'total_topic_num' => new xmlrpcval($context['num_results'], 'int'),
+            'search_id'       => new xmlrpcval($context['params'], 'string'),
+            'topics'          => new xmlrpcval($topic_list, 'array')
         ), 'struct');
-
-        $topic_list[] = $xmlrpc_topic;
     }
-
-    $result = new xmlrpcval(array(
-        'total_topic_num' => new xmlrpcval($context['num_results'], 'int'),
-        'search_id'       => new xmlrpcval($context['params'], 'string'),
-        'topics'          => new xmlrpcval($topic_list, 'array')
-    ), 'struct');
-
+    else
+        $result = new xmlrpcval(array(
+            'total_topic_num' => new xmlrpcval($context['num_results'], 'int'),  ), 'struct');
     return new xmlrpcresp($result);
 }
 
@@ -1174,45 +1183,53 @@ function search_post_func()
 {
     global $context;
     $post_list = array();
-
-    while ($topic = $context['get_topics']())
+    if (isset($context['get_topics']))
     {
-        $topic_info = get_topic_info($topic['board']['id'], $topic['id']);
-
-        $xmlrpc_post = new xmlrpcval(array(
-            'forum_id'          => new xmlrpcval($topic['board']['id']),
-            'forum_name'        => new xmlrpcval(basic_clean($topic['board']['name']), 'base64'),
-            'topic_id'          => new xmlrpcval($topic['id']),
-            'topic_title'       => new xmlrpcval(basic_clean($topic['first_post']['subject']), 'base64'),
-            'post_id'           => new xmlrpcval($topic['matches'][0]['id'], 'string'),
-            'post_title'        => new xmlrpcval(basic_clean($topic['matches'][0]['subject']), 'base64'),
-       'post_author_name'       => new xmlrpcval($topic['matches'][0]['member']['username'], 'base64'),
-    'post_author_display_name'  => new xmlrpcval(basic_clean($topic['matches'][0]['member']['name']), 'base64'),
-            'short_content'     => new xmlrpcval(basic_clean($topic['matches'][0]['body']), 'base64'),
-            'icon_url'          => new xmlrpcval($topic['matches'][0]['member']['avatar']['href']),
-            'post_time'         => new xmlrpcval($topic['matches'][0]['time'], 'dateTime.iso8601'),
-            'reply_number'      => new xmlrpcval($topic_info['num_replies'], 'int'),
-            'view_number'       => new xmlrpcval($topic_info['num_views'], 'int'),
-            'new_post'          => new xmlrpcval($topic_info['new'], 'boolean'),
-            'can_subscribe'     => new xmlrpcval($topic_info['can_mark_notify'], 'boolean'),
-            'is_subscribed'     => new xmlrpcval($topic_info['is_marked_notify'], 'boolean'),
-            'is_closed'         => new xmlrpcval($topic_info['is_locked'], 'boolean'),
-            'is_sticky'          => new xmlrpcval($topic_info['is_sticky'], 'boolean'),
-
-            'can_delete'        => new xmlrpcval($topic_info['can_remove'], 'boolean'),
-            'can_close'         => new xmlrpcval($topic_info['can_lock'], 'boolean'),
-            'can_stick'         => new xmlrpcval($topic_info['can_sticky'], 'boolean'),
-            'can_move'          => new xmlrpcval($topic_info['can_move'], 'boolean'),
+        while ($topic = $context['get_topics']())
+        {
+            $topic_info = get_topic_info($topic['board']['id'], $topic['id']);
+    
+            $xmlrpc_post = new xmlrpcval(array(
+                'forum_id'          => new xmlrpcval($topic['board']['id']),
+                'forum_name'        => new xmlrpcval(basic_clean($topic['board']['name']), 'base64'),
+                'topic_id'          => new xmlrpcval($topic['id']),
+                'topic_title'       => new xmlrpcval(basic_clean($topic['first_post']['subject']), 'base64'),
+                'post_id'           => new xmlrpcval($topic['matches'][0]['id'], 'string'),
+                'post_title'        => new xmlrpcval(basic_clean($topic['matches'][0]['subject']), 'base64'),
+           'post_author_name'       => new xmlrpcval($topic['matches'][0]['member']['username'], 'base64'),
+        'post_author_display_name'  => new xmlrpcval(basic_clean($topic['matches'][0]['member']['name']), 'base64'),
+                'short_content'     => new xmlrpcval(basic_clean($topic['matches'][0]['body']), 'base64'),
+                'icon_url'          => new xmlrpcval($topic['matches'][0]['member']['avatar']['href']),
+                'post_time'         => new xmlrpcval($topic['matches'][0]['time'], 'dateTime.iso8601'),
+                'reply_number'      => new xmlrpcval($topic_info['num_replies'], 'int'),
+                'view_number'       => new xmlrpcval($topic_info['num_views'], 'int'),
+                'new_post'          => new xmlrpcval($topic_info['new'], 'boolean'),
+                'can_subscribe'     => new xmlrpcval($topic_info['can_mark_notify'], 'boolean'),
+                'is_subscribed'     => new xmlrpcval($topic_info['is_marked_notify'], 'boolean'),
+                'is_closed'         => new xmlrpcval($topic_info['is_locked'], 'boolean'),
+                'is_sticky'          => new xmlrpcval($topic_info['is_sticky'], 'boolean'),
+    
+                'can_delete'        => new xmlrpcval($topic_info['can_remove'], 'boolean'),
+                'can_close'         => new xmlrpcval($topic_info['can_lock'], 'boolean'),
+                'can_stick'         => new xmlrpcval($topic_info['can_sticky'], 'boolean'),
+                'can_move'          => new xmlrpcval($topic_info['can_move'], 'boolean'),
+            ), 'struct');
+    
+            $post_list[] = $xmlrpc_post;
+        }
+        $result = new xmlrpcval(array(
+            'total_post_num' => new xmlrpcval($context['num_results'], 'int'),
+            'search_id'       => new xmlrpcval($context['params'], 'string'),
+            'posts'          => new xmlrpcval($post_list, 'array')
         ), 'struct');
-
-        $post_list[] = $xmlrpc_post;
     }
-    $result = new xmlrpcval(array(
-        'total_post_num' => new xmlrpcval($context['num_results'], 'int'),
-        'search_id'       => new xmlrpcval($context['params'], 'string'),
-        'posts'          => new xmlrpcval($post_list, 'array')
-    ), 'struct');
-
+    else
+    {
+         $result = new xmlrpcval(array(
+            'total_post_num' => new xmlrpcval(0, 'int'),
+           
+        ), 'struct');
+    }
     return new xmlrpcresp($result);
 }
 

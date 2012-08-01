@@ -417,6 +417,7 @@ function loadUserSettings()
 	elseif (!empty($modSettings['userLanguage']) && !empty($_SESSION['language']) && isset($languages[strtr($_SESSION['language'], './\\:', '____')]))
 		$user_info['language'] = strtr($_SESSION['language'], './\\:', '____');
 
+
 	// Just build this here, it makes it easier to change/use - administrators can see all boards.
 	if ($user_info['is_admin'])
 		$user_info['query_see_board'] = '1=1';
@@ -424,6 +425,8 @@ function loadUserSettings()
 	else
 		$user_info['query_see_board'] = '(FIND_IN_SET(' . implode(', b.member_groups) != 0 OR FIND_IN_SET(', $user_info['groups']) . ', b.member_groups) != 0' . (isset($user_info['mod_cache']) ? ' OR ' . $user_info['mod_cache']['mq'] : '') . ')';
 
+	if (isset($modSettings['boards_hide_for_tapatalk']) && !empty($modSettings['boards_hide_for_tapatalk']))
+        $user_info['query_see_board'] = '(' . $user_info['query_see_board'] . ' AND b.id_board NOT IN (' . $modSettings['boards_hide_for_tapatalk'] . '))';
 	// Build the list of boards they WANT to see.
 	// This will take the place of query_see_boards in certain spots, so it better include the boards they can see also
 
@@ -524,7 +527,7 @@ function loadBoard()
 				LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 				LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = {raw:board_link})
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = mods.id_member)
-			WHERE b.id_board = {raw:board_link}',
+			WHERE b.id_board = {raw:board_link} AND {query_see_board}',
 			array(
 				'current_topic' => $topic,
 				'board_link' => empty($topic) ? $smcFunc['db_quote']('{int:current_board}', array('current_board' => $board)) : 't.id_board',

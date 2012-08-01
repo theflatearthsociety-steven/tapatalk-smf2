@@ -549,7 +549,7 @@ function UnreadTopics()
 		$smcFunc['db_free_result']($request);
 
 		if (empty($boards))
-			fatal_lang_error('error_no_boards_selected');
+			return;
 
 		$query_this_board = 'id_board IN ({array_int:boards})';
 		$query_parameters['boards'] = $boards;
