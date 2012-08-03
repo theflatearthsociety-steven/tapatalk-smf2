@@ -271,6 +271,7 @@ function before_action_get_topic()
         $_REQUEST['start'] = $start_num;
         $modSettings['defaultMaxTopics'] = $topic_per_page;
     }
+    before_action_get_thread();
 }
 
 function action_get_topic(){}
@@ -1542,6 +1543,105 @@ function before_action_update_push_status()
     {
         before_action_login();
     }
+}
+
+function before_action_get_thread()
+{
+    global $smcFunc, $user_info, $modSettings, $context, $user_settings, $topic;
+    
+    //Okay let's Check an prepare ;)
+	$context['user_post_avaible'] = 0; //Standard Show no hidden content ;)
+	//Only a Member Thing ;)
+	if (!$user_info['is_guest']) {
+		$check_for_hide = true;
+
+  //Groupcheck ;D
+		if($check_for_hide && !empty($modSettings['hide_autounhidegroups'])) {
+			$modSettings['hide_autounhidegroups'] = !is_array($modSettings['hide_autounhidegroups']) ? explode(',', $modSettings['hide_autounhidegroups']) : $modSettings['hide_autounhidegroups'];
+			foreach($user_info['groups'] as $group_id)
+				if(in_array($group_id, $modSettings['hide_autounhidegroups'])) {
+					$check_for_hide = false;
+					$context['user_post_avaible'] = 1;
+					break; //One is enouph ;D
+				}
+		}
+
+		$karmaOk = false;
+		$postOk = false;
+
+		//Okay know let's look for the post minimum ;D
+		if($check_for_hide && (!empty($modSettings['hide_minpostunhide']) || !empty($modSettings['hide_minpostautounhide']))) {
+			//Load the posts data ;D
+			global $user_settings;
+
+			//Need a minimum post to unhide?
+			if(!empty($modSettings['hide_minpostunhide']) && $modSettings['hide_minpostunhide'] > 0 && $user_settings['posts'] < $modSettings['hide_minpostunhide']) {
+				$postOk = true;
+				$check_for_hide = false;
+			}
+
+			//Auto Unhide????
+			if(!empty($modSettings['hide_minpostautounhide']) && $modSettings['hide_minpostautounhide'] > 0 && $user_settings['posts'] > $modSettings['hide_minpostautounhide']) {
+					$check_for_hide = false;
+					$context['user_post_avaible'] = 1;
+			}
+
+		}
+		else
+			$postOk = true;
+
+		//Okay Check Karma Things :)
+		if(!empty($modSettings['karmaMode']) && $check_for_hide && !empty($modSettings['hide_karmaenable'])) {
+			//Karma Check :D for this i need to load the user infos :x
+			loadMemberData($user_info['id']);
+			loadMemberContext($user_info['id']);
+			global $memberContext;
+
+			if(!empty($modSettings['hide_onlykarmagood']))
+				$karmaValue = $memberContext[$user_info['id']]['karma']['good'];
+			else
+				$karmaValue = $memberContext[$user_info['id']]['karma']['good'] - $memberContext[$user_info['id']]['karma']['bad'];
+
+			//Need a minimum karma to unhide?
+			if(!empty($modSettings['hide_minkarmaunhide']) && $karmaValue < $modSettings['hide_minkarmaunhide']) {
+				$check_for_hide = false;
+				$karmaOk = true;
+			}
+
+			//Auto Unhide for Karma?
+			if(!empty($modSettings['hide_minkarmaautounhide']) && $karmaValue > $modSettings['hide_minkarmaautounhide']) {
+					$check_for_hide = false;
+					$context['user_post_avaible'] = 1;
+			}
+
+		}
+		else
+			$karmaOk = true;
+
+		// Find if there a post from you in this thread :) (For the hide tag, at least one Post need to be approved!)
+		if (empty($context['user_post_avaible']) && $check_for_hide) {
+			$request = $smcFunc['db_query']('', '
+				SELECT id_msg, id_member, approved
+				FROM {db_prefix}messages
+					WHERE id_topic = {int:topic}
+					AND id_member = {int:id_member}
+					AND approved = {int:approved}
+				LIMIT {int:limit}',
+				array(
+					'id_member' => $user_info['id'],
+					'topic' => $topic,
+					'limit' => 1,
+					'approved' => 1,
+				)
+			);
+
+			if ($smcFunc['db_num_rows']($request)) 
+				$context['user_post_avaible'] = 1;
+			else 
+				$context['user_post_avaible'] = 0;
+			$smcFunc['db_free_result']($request);
+		}
+	}
 }
 
 function after_action_get_topic()

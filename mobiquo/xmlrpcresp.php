@@ -9,7 +9,7 @@ function get_config_func()
     $config_list = array(
         'is_open'    => new xmlrpcval( ($maintenance == 0 && $modSettings['tapatalkEnabled']) ? true : false, 'boolean'),
         'guest_okay' => new xmlrpcval($modSettings['allow_guestAccess'] && $modSettings['tp_guestOkayEnabled']? true : false, 'boolean'),
-        'push'       => new xmlrpcval($modSettings['tp_pushEnabled']? true: false,'boolean'),
+        'push'       => new xmlrpcval($modSettings['tp_pushEnabled']? true: false,'string'),
         'reg_url'       => new xmlrpcval($modSettings['tp_register_page_url'],'string'),
 
     );
@@ -148,7 +148,7 @@ function get_topic_func()
             'last_reply_time'   => new xmlrpcval($topic['last_post']['time'],'dateTime.iso8601'),
             'reply_number'      => new xmlrpcval($topic['replies'], 'int'),
             'view_number'       => new xmlrpcval($topic['views'], 'int'),
-            'short_content'     => new xmlrpcval(basic_clean($topic['first_post']['preview']), 'base64'),
+            'short_content'     => new xmlrpcval(mobiquo_parse_bbc(post_html_clean(basic_clean($topic['first_post']['preview']))), 'base64'),
             'icon_url'          => new xmlrpcval($avatar, 'string'),
             'new_post'          => new xmlrpcval($topic['new'], 'boolean'),
             'can_subscribe'     => new xmlrpcval($context['can_mark_notify'], 'boolean'),
