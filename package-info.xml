@@ -8,12 +8,19 @@
     <type>modification</type>
     <install>
         <require-dir name="mobiquo" destination="$boarddir" />
+        <require-dir name="Sources" destination="$boarddir" />
+		<require-dir name="Themes" destination="$boarddir" />
         <modification>install.xml</modification>
         <readme type="file" parsebbc="true">readme.txt</readme>
+        <redirect url="?action=admin;area=tapatalksettings;" timeout="3000">redirect.txt</redirect>
         <code>db/install.php</code>
     </install>
     <uninstall>
         <remove-dir name="mobiquo" destinatin="$boarddir" />
+        <remove-file name="$sourcedir/ManageTapatalk.php" />
+		<remove-file name="$sourcedir/Subs-Tapatalk.php" />
+		<remove-file name="$themedir/images/admin/tapatalk_settings.png" />
+		<remove-file name="$themedir/Tapatalk.template.php" />
         <modification reverse="true">install.xml</modification>
         <code>db/uninstall.php</code>
     </uninstall>

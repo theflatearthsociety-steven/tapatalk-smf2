@@ -271,6 +271,7 @@ function before_action_get_topic()
         $_REQUEST['start'] = $start_num;
         $modSettings['defaultMaxTopics'] = $topic_per_page;
     }
+    before_action_get_thread();
 }
 
 function action_get_topic(){}
@@ -278,7 +279,7 @@ function action_get_topic(){}
 // Callback for the message display.
 function get_post_detail($reset = false)
 {
-    global $settings, $txt, $modSettings, $scripturl, $options, $user_info, $smcFunc;
+    global $settings, $txt, $modSettings, $scripturl, $options, $user_info, $smcFunc, $sourcedir;
     global $memberContext, $context, $messages_request, $topic, $attachments, $topicinfo;
 
     static $counter = null;
@@ -396,9 +397,226 @@ function get_post_detail($reset = false)
     else
         $counter--;
 
+    $installed_mode = mobi_loadInstalledPackages();
+    $is_attachments_in_message_mode_installed = false;
+    if(!empty($installed_mode))
+        foreach($installed_mode as $mode_index => $mode)
+            if($mode['name'] == 'Attachments In Message')
+            {
+                $is_attachments_in_message_mode_installed = true;
+                break;
+            }
+    if($is_attachments_in_message_mode_installed)
+    {
+        //---------------------------------------------------------------------------    
+        // ATTACHMENT IN MESSAGE MOD BEGINS
+        // Scan for inlined attachments
+      
+      // OPTIONS:
+      $attachalwaysfullsize = false;    
+      
+      // start by zeroing out the array keeping track of which attachments have been inlined
+      $attachmentreferences = array();
+      $context['inlinedimages'] = array();
+    
+      // now we are going to loop through $message['body'] and search for attachments
+      // they are pseudocode of the form [attach=#] or [attachthumb=#] or [attachurl=#] or [attachimg=#]
+      $startsearchpos=0;
+      $lastinlineattachnum=0;
+      while (true)
+          {
+          // get next [attach*] tag
+          $startpos = strpos($output['body'],'[attach',$startsearchpos);
+          if ($startpos===false)
+              {
+              // no more
+              break;
+              }
+          $endpos = strpos($output['body'],']',$startpos);
+          if ($endpos==false)
+              {
+              // no close bracket
+              break;
+              }
+    
+          // we got a tag, now figure out where it is and its extent
+          $taglen=($endpos-$startpos)-1;
+    
+          // ok now to be nice, lets see if we are inside a code block and should therefore NOT expand this
+          // i put this in a conditional on case you want to disable it for speed
+          // maybe there is a faster and better way to do this? this actually can miss some recursive divs but
+          // worst case scenario is simply that it will try to inline, wont cause any parsing troubles, etc.        
+                $leftmsg=substr($output['body'],0,$startpos);            
+                // get last pos (we do it manually since php4 does not support strrpos)
+                //$codetaglast = strrpos($leftmsg,'<div class="code">');
+                $codetaglast = false;
+                $lastpos = 0;
+                while (($lastpos=strpos($leftmsg,'<div class="code">',$lastpos))!==false)
+                    {
+                    $codetaglast = $lastpos;
+                    $lastpos = $lastpos + 18;
+                    }
+                // if there is a class code before us, then see if there is a likely matching end
+                if ($codetaglast !== false)
+                    {
+                    $codetaglastend = strpos($leftmsg,'</div>',$codetaglast);
+                    if ($codetaglastend === false)
+                        {
+                        // skip it
+                        $startsearchpos = $endpos+1;
+                        continue;
+                        }
+                    }
+    
+          // grab the tag
+          $tagstring=substr($output['body'],$startpos+1,$taglen);
+          $equalpos = strpos($tagstring,'=');
+          if ($equalpos>0)
+              {
+              // separate tag string into keyword and attachment index
+              $tagkeyword=substr($tagstring,0,$equalpos);
+              $inlineattachnum=substr($tagstring,$equalpos+1);
+              }
+          else
+              {
+              $inlineattachnum="";
+              $tagkeyword=$tagstring;
+              }
+    
+          // trim keywords and lowercase
+          $tagkeyword = strtolower(trim($tagkeyword));
+          $inlineattachnum = strtolower(trim($inlineattachnum));
+    
+          // fixup if they started their attachment # with #
+          if (strlen($inlineattachnum)>0)
+              {
+              if (substr($inlineattachnum,0,1)=="#")
+                  {
+                  // user erroneously added a # at start
+                  $inlineattachnum = substr($inlineattachnum,1);
+                  $inlineattachnum = strtolower(trim($inlineattachnum));
+                  }
+              }
+          
+          // reset inlined text we are going to compute
+          $inlinedtext="";
+    
+          // blank incredments in sequence
+          if (!isset($inlineattachnum) || $inlineattachnum=="")
+              {
+              // its just a keyword, assume attachment index increments
+              $inlineattachnum=$lastinlineattachnum+1;
+              $lastinlineattachnum=$inlineattachnum;
+              }
+    
+    
+          // adjust for 0 indexing
+          if ($inlineattachnum > 0)
+              --$inlineattachnum;
+    
+          // ok now find the text of the attachment being referred to
+          if (isset($output['attachment'][$inlineattachnum]))
+              $attachment = $output['attachment'][$inlineattachnum];
+          else
+              $attachment="";
+    
+          // ok got a reference to a valid existing attachment
+          if ($attachment!="")
+              {
+                  // found a real attachment - now figure out how to include it
+                if ($attachment['is_image'] && $tagkeyword!='attachurl' && $tagkeyword!='attachmini')
+                    $inlinedtext = '[img]'.$attachment['href'].'[/img]';
+                else if ($tagkeyword=='attachmini')
+                    {
+                    // attach as url - no other options - this works for images or any file type
+                    // useful if you want to attach an image but still have it displayed as an image
+                    // the mini means dont display details like size and download count.
+                    $inlinedtext = '[url="'.$attachment['href'].'"]'.$attachment['name'].'[/url]';
+                    }
+                else
+                    {
+                    // attach as url - no other options - this works for images or any file type
+                    // useful if you want to attach an image but still have it displayed as an image
+                    $inlinedtext = '[url="'.$attachment['href'].'"]' . $attachment['name'] . '</a> ('. $attachment['size']. ($attachment['is_image'] ? '. ' . $attachment['real_width'] . 'x' . $attachment['real_height'] . ' - ' . $txt['attach_viewed'] : ' - ' . $txt['attach_downloaded']) . ' ' . $attachment['downloads'] . ' ' . $txt['attach_times'] . '.)'.'[/url]' ;
+                    }
+        
+                // set flag saying we inlined it, so we dont add it at end
+                $attachmentreferences[$inlineattachnum]=1;
+            }
+        else
+            {
+            // couldnt find attachment specified - so say so
+            // they may have specified it wrong or they dont have permissions for attachments (unregged visitor)
+            //$inlinedtext = 'tried to inline include (' . $tagkeyword . ') attachment #' . ($inlineattachnum + 1) . ' but it could not be found (or you don\'t have permission to view images).</br>';
+            if (!empty($modSettings['attachmentEnable']) && allowedTo('view_attachments'))
+                $inlinedtext = $txt['mod_aim_attachment_missing'];
+            else
+                $inlinedtext = $txt['mod_aim_forbiden_for_guest'];
+            }
+    
+        // replace message body item with new text we just created
+        $output['body']=substr_replace($output['body'],$inlinedtext,$startpos,$taglen+2);
+    
+        // advanced startsearchpos to avoid all posibility of recursive expansions on some bad code
+        $startsearchpos = $startpos+strlen($inlinedtext);
+        }
+        //---------------------------------------------------------------------------
+    }
     return $output;
 }
+// Load the installed packages.
+function mobi_loadInstalledPackages()
+{
+	global $boarddir, $smcFunc;
 
+	// First, check that the database is valid, installed.list is still king.
+	$install_file = implode('', file($boarddir . '/Packages/installed.list'));
+	if (trim($install_file) == '')
+	{
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}log_packages
+			SET install_state = {int:not_installed}',
+			array(
+				'not_installed' => 0,
+			)
+		);
+
+		// Don't have anything left, so send an empty array.
+		return array();
+	}
+
+	// Load the packages from the database - note this is ordered by install time to ensure latest package uninstalled first.
+	$request = $smcFunc['db_query']('', '
+		SELECT id_install, package_id, filename, name, version
+		FROM {db_prefix}log_packages
+		WHERE install_state != {int:not_installed}
+		ORDER BY time_installed DESC',
+		array(
+			'not_installed' => 0,
+		)
+	);
+	$installed = array();
+	$found = array();
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		// Already found this? If so don't add it twice!
+		if (in_array($row['package_id'], $found))
+			continue;
+
+		$found[] = $row['package_id'];
+
+		$installed[] = array(
+			'id' => $row['id_install'],
+			'name' => $row['name'],
+			'filename' => $row['filename'],
+			'package_id' => $row['package_id'],
+			'version' => $row['version'],
+		);
+	}
+	$smcFunc['db_free_result']($request);
+
+	return $installed;
+}
 function action_get_latest_topic()
 {
     action_get_new_topic();
@@ -1541,6 +1759,105 @@ function before_action_update_push_status()
     else
     {
         before_action_login();
+    }
+}
+
+function before_action_get_thread()
+{
+    global $smcFunc, $user_info, $modSettings, $context, $user_settings, $topic;
+    
+    //Okay let's Check an prepare ;)
+    $context['user_post_avaible'] = 0; //Standard Show no hidden content ;)
+    //Only a Member Thing ;)
+    if (!$user_info['is_guest']) {
+        $check_for_hide = true;
+
+  //Groupcheck ;D
+        if($check_for_hide && !empty($modSettings['hide_autounhidegroups'])) {
+            $modSettings['hide_autounhidegroups'] = !is_array($modSettings['hide_autounhidegroups']) ? explode(',', $modSettings['hide_autounhidegroups']) : $modSettings['hide_autounhidegroups'];
+            foreach($user_info['groups'] as $group_id)
+                if(in_array($group_id, $modSettings['hide_autounhidegroups'])) {
+                    $check_for_hide = false;
+                    $context['user_post_avaible'] = 1;
+                    break; //One is enouph ;D
+                }
+        }
+
+        $karmaOk = false;
+        $postOk = false;
+
+        //Okay know let's look for the post minimum ;D
+        if($check_for_hide && (!empty($modSettings['hide_minpostunhide']) || !empty($modSettings['hide_minpostautounhide']))) {
+            //Load the posts data ;D
+            global $user_settings;
+
+            //Need a minimum post to unhide?
+            if(!empty($modSettings['hide_minpostunhide']) && $modSettings['hide_minpostunhide'] > 0 && $user_settings['posts'] < $modSettings['hide_minpostunhide']) {
+                $postOk = true;
+                $check_for_hide = false;
+            }
+
+            //Auto Unhide????
+            if(!empty($modSettings['hide_minpostautounhide']) && $modSettings['hide_minpostautounhide'] > 0 && $user_settings['posts'] > $modSettings['hide_minpostautounhide']) {
+                    $check_for_hide = false;
+                    $context['user_post_avaible'] = 1;
+            }
+
+        }
+        else
+            $postOk = true;
+
+        //Okay Check Karma Things :)
+        if(!empty($modSettings['karmaMode']) && $check_for_hide && !empty($modSettings['hide_karmaenable'])) {
+            //Karma Check :D for this i need to load the user infos :x
+            loadMemberData($user_info['id']);
+            loadMemberContext($user_info['id']);
+            global $memberContext;
+
+            if(!empty($modSettings['hide_onlykarmagood']))
+                $karmaValue = $memberContext[$user_info['id']]['karma']['good'];
+            else
+                $karmaValue = $memberContext[$user_info['id']]['karma']['good'] - $memberContext[$user_info['id']]['karma']['bad'];
+
+            //Need a minimum karma to unhide?
+            if(!empty($modSettings['hide_minkarmaunhide']) && $karmaValue < $modSettings['hide_minkarmaunhide']) {
+                $check_for_hide = false;
+                $karmaOk = true;
+            }
+
+            //Auto Unhide for Karma?
+            if(!empty($modSettings['hide_minkarmaautounhide']) && $karmaValue > $modSettings['hide_minkarmaautounhide']) {
+                    $check_for_hide = false;
+                    $context['user_post_avaible'] = 1;
+            }
+
+        }
+        else
+            $karmaOk = true;
+
+        // Find if there a post from you in this thread :) (For the hide tag, at least one Post need to be approved!)
+        if (empty($context['user_post_avaible']) && $check_for_hide) {
+            $request = $smcFunc['db_query']('', '
+                SELECT id_msg, id_member, approved
+                FROM {db_prefix}messages
+                    WHERE id_topic = {int:topic}
+                    AND id_member = {int:id_member}
+                    AND approved = {int:approved}
+                LIMIT {int:limit}',
+                array(
+                    'id_member' => $user_info['id'],
+                    'topic' => $topic,
+                    'limit' => 1,
+                    'approved' => 1,
+                )
+            );
+
+            if ($smcFunc['db_num_rows']($request)) 
+                $context['user_post_avaible'] = 1;
+            else 
+                $context['user_post_avaible'] = 0;
+            $smcFunc['db_free_result']($request);
+        }
     }
 }
 

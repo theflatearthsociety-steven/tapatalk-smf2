@@ -472,13 +472,14 @@ function get_topic_info($fid, $tid)
 
 function mobiquo_parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = array())
 {
-    global $user_info, $modSettings;
+    global $user_info, $modSettings, $context;
     
     $message = preg_replace('/\[(\/?)code\]/si', '[$1quote]', $message);
     $message = process_list_tag($message);
     $message = preg_replace('/\[(youtube|yt)\](.*?)\[\/\1\]/sie', "video_bbcode_format('$1', '$2')", $message);
     $user_info['time_format'] = $user_info['user_time_format'];
     $modSettings['todayMod'] = $modSettings['todayMod_bak'];
+    $message = $context['user_post_avaible']? $message : preg_replace('/\[hide\](.*?)\[\/hide\]/','',$message);
     $message = str_replace('[spoiler]', "\nSpoiler for Hiden:\n[quote]", $message);
     $message = str_replace('[/spoiler]', '[/quote]', $message);
     $message = parse_bbc($message, $smileys, $cache_id, $parse_tags);
@@ -732,6 +733,5 @@ function mobi_table_exist($table_name)
     global $smcFunc, $db_prefix;
     db_extend();
     $tables = $smcFunc['db_list_tables'](false, $db_prefix . $table_name);
-    
     return !empty($tables);
 }
