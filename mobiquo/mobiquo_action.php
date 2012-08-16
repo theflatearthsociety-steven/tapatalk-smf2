@@ -141,6 +141,7 @@ function build_board($boards, $is_cat = false)
     $response = array();
     foreach ($boards as $id => $board)
     {
+        if(empty($board['id'])) continue;
         $new_post = false;
         if ($board['new'] || $board['children_new']) {
             $new_post = true;

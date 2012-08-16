@@ -280,7 +280,7 @@ function updateMemberData($members, $data)
 		'notify_announcements', 'notify_send_body', 'notify_regularity', 'notify_types',
 		'id_theme', 'is_activated', 'id_msg_last_visit', 'id_post_group', 'total_time_logged_in', 'warning',
 	);
-	if (isset($modSettings['thank_you_post_last_thx_time']))
+	if (isset($modSettings['integrate_pre_include']) && strpos($modSettings['integrate_pre_include'],"$sourcedir/Subs-ThankYou.php"))
 	{
 		$knownInts[]= 'thank_you_post_became';
 		$knownInts[]= 'thank_you_post_made';
@@ -307,7 +307,7 @@ function updateMemberData($members, $data)
 			$type = 'raw';
 	}
 		// Ensure Thank-o_matic posts don't overflow or underflow.
-		if (isset($modSettings['thank_you_post_last_thx_time']) && in_array($var, array('thank_you_post_became', 'thank_you_post_made')))
+		if (isset($modSettings['integrate_pre_include']) && strpos($modSettings['integrate_pre_include'],"$sourcedir/Subs-ThankYou.php") && in_array($var, array('thank_you_post_became', 'thank_you_post_made')))
 		{
 			if (preg_match('~^'  . $var . ' (\+ |- |\+ -)([\d]+)~', $val, $match))
 			{
