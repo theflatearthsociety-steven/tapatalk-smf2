@@ -6,7 +6,7 @@ function tapatalk_push_reply($post_id)
 
     if(!$modSettings['tp_pushEnabled'])
         return;
-    if ($context['current_topic'] && $post_id && (function_exists('curl_init') || ini_get('allow_url_fopen')))// mobi_table_exists('tapatalk_users')
+    if ($context['current_topic'] && $post_id && (function_exists('curl_init') || ini_get('allow_url_fopen')))
     {
         $request = $smcFunc['db_query']('', '
             SELECT ts.id_member
@@ -34,7 +34,6 @@ function tapatalk_push_reply($post_id)
                 'url'  => $boardurl,
                 'data' => base64_encode(serialize(array($ttp_data))),
             );
-
             $return_status = tt_do_post_request($ttp_post_data);
         }
     }
@@ -46,7 +45,7 @@ function tapatalk_push_pm()
 
     if(!$modSettings['tp_pushEnabled'])
         return;
-    if ($_REQUEST['recipient_to'] && $_REQUEST['subject'] && (function_exists('curl_init') || ini_get('allow_url_fopen')))// mobi_table_exists('tapatalk_users')
+    if ($_REQUEST['recipient_to'] && $_REQUEST['subject'] && (function_exists('curl_init') || ini_get('allow_url_fopen')))
     {
         $timestr = time();
         $id_pm_req = $smcFunc['db_query']('', '
@@ -92,36 +91,43 @@ function tapatalk_push_pm()
     }
 }
 
-function do_post_request($data)
-{
-    $push_url = 'http://push.tapatalk.com/push.php';
-    
-    $response = 'CURL is disabled and PHP option "allow_url_fopen" is OFF. You can enable CURL or turn on "allow_url_fopen" in php.ini to fix this problem.';
-    if (function_exists('curl_init'))
+    function tt_do_post_request($data)
     {
-        $ch = curl_init($push_url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        $response = curl_exec($ch);
-        curl_close($ch);
+        $push_url = 'http://push.tapatalk.com/push.php';
+
+        $response = 'CURL is disabled and PHP option "allow_url_fopen" is OFF. You can enable CURL or turn on "allow_url_fopen" in php.ini to fix this problem.';
+        if (function_exists('curl_init'))
+        {
+            $ch = curl_init($push_url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HEADER, false);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($ch,CURLOPT_TIMEOUT,10);
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+        }
+        elseif (ini_get('allow_url_fopen'))
+        {
+            $params = array('http' => array(
+                'method' => 'POST',
+                'content' => http_build_query($data, '', '&'),
+            ));
+
+            $ctx = stream_context_create($params);
+            $timeout = 10;
+            $old = ini_set('default_socket_timeout', $timeout);
+            $fp = @fopen($push_url, 'rb', false, $ctx);
+            ini_set('default_socket_timeout', $old);
+            stream_set_timeout($fp, $timeout);
+            stream_set_blocking($fp, 0); 
+            
+            if (!$fp) return false;
+            $response = @stream_get_contents($fp);
+        }
+        return $response;
     }
-    elseif (ini_get('allow_url_fopen'))
-    {
-        $params = array('http' => array(
-            'method' => 'POST',
-            'content' => http_build_query($data, '', '&'),
-        ));
-        
-        $ctx = stream_context_create($params);
-        $fp = @fopen($push_url, 'rb', false, $ctx);
-        if (!$fp) return false;
-        $response = @stream_get_contents($fp);
-    }
-    
-    return $response;
-}
 
 function tt_push_clean($str)
 {
