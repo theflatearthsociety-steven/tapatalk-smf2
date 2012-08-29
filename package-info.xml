@@ -3,13 +3,13 @@
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
     <name>Tapatalk SMF 2.0 RC4/RC5/Final Plugin</name>
     <id>Tapatalk:TapatalkDevelopmentTeam</id>
-    <version>3.1.0</version>
+    <version>3.2.0</version>
     <homepage>http://tapatalk.com</homepage>
     <type>modification</type>
     <install>
         <require-dir name="mobiquo" destination="$boarddir" />
         <require-dir name="Sources" destination="$boarddir" />
-		<require-dir name="Themes" destination="$boarddir" />
+        <require-dir name="Themes" destination="$boarddir" />
         <modification>install.xml</modification>
         <readme type="file" parsebbc="true">readme.txt</readme>
         <redirect url="?action=admin;area=tapatalksettings;" timeout="3000">redirect.txt</redirect>
@@ -18,9 +18,9 @@
     <uninstall>
         <remove-dir name="mobiquo" destinatin="$boarddir" />
         <remove-file name="$sourcedir/ManageTapatalk.php" />
-		<remove-file name="$sourcedir/Subs-Tapatalk.php" />
-		<remove-file name="$themedir/images/admin/tapatalk_settings.png" />
-		<remove-file name="$themedir/Tapatalk.template.php" />
+        <remove-file name="$sourcedir/Subs-Tapatalk.php" />
+        <remove-file name="$themedir/images/admin/tapatalk_settings.png" />
+        <remove-file name="$themedir/Tapatalk.template.php" />
         <modification reverse="true">install.xml</modification>
         <code>db/uninstall.php</code>
     </uninstall>
