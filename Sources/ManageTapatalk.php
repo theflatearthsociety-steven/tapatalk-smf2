@@ -87,17 +87,17 @@ function ManageTapatalkBoards($return_config = false)
 	if (isset($_GET['save']))
 	{
 		//Nothing to do?
+		if(!empty($_POST['brd']))
 		{
-		    fix_brd_value();
+			fix_brd_value();
 			//No Double Entries ;)
 			$_POST['brd'] = array_unique($_POST['brd']);
 			$brds = implode(",",$_POST['brd']);
-            $hide_boards = array(
-                'boards_hide_for_tapatalk' => empty($brds)? '': $brds,
-            );
-            updateSettings($hide_boards);
-
 		}
+		$hide_boards = array(
+			'boards_hide_for_tapatalk' => empty($brds)? '': $brds,
+		);
+		updateSettings($hide_boards);
 
 		//Redirect ;)
 		redirectexit('action=admin;area=tapatalksettings;sa=boards');

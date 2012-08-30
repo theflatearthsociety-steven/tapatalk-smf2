@@ -5,7 +5,7 @@
     <file name="$sourcedir/Load.php">
         <operation>
             <search position="after"><![CDATA[	$context['menu_separator'] = !empty($settings['use_image_buttons']) ? ' ' : ' | ';]]></search>
-            <add><![CDATA[	$jsfile_name = ( $modSettings['tp_tapatalkNotifierForChromeEnabled'] && $context['browser']['is_chrome'] ) ? "tapatalkdetect.js" :"tapatalkdetect-nochrome.js";
+            <add><![CDATA[	$jsfile_name = (isset($modSettings['tp_tapatalkNotifierForChromeEnabled']) && $modSettings['tp_tapatalkNotifierForChromeEnabled'] && isset($context['browser']['is_chrome']) && $context['browser']['is_chrome'] ) ? "tapatalkdetect.js" :"tapatalkdetect-nochrome.js";
 	$context['html_headers'] .= '<script type="text/javascript" language="JavaScript" src="' . $boardurl . '/mobiquo/'.$jsfile_name.'"></script>';
 ]]></add>
         </operation>
@@ -51,16 +51,7 @@
         </operation>
     </file>
         </file>
-        <file name="$sourcedir/Admin.php">
-        <operation>
-            <search position="replace"><![CDATA[	// Any files to include for administration?
-	if (!empty($modSettings['integrate_admin_include']))]]></search>
-            <add><![CDATA[	$modSettings['integrate_admin_include'] = $modSettings['integrate_admin_include'].",\$sourcedir/Subs-Tapatalk.php";
-	$modSettings['integrate_admin_areas'] = $modSettings['integrate_admin_areas'].",Tapatalk_add_admin_areas";
-	// Any files to include for administration?
-	if (!empty($modSettings['integrate_admin_include']))]]></add>
-        </operation>
-    </file>
+
         <file name="$themedir/languages/Admin.english.php">
         <operation>
             <search position="after"><![CDATA[?>]]></search>

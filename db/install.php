@@ -18,6 +18,15 @@ elseif (!defined('SMF'))
 //Anothers $smcFunc;
 db_extend('packages');
 
+//Hooks Integration
+$hooks = array(
+	'integrate_pre_include' => '$sourcedir/Subs-Tapatalk.php',
+	'integrate_admin_areas' => 'Tapatalk_add_admin_areas',
+);
+
+//Loading....
+foreach($hooks AS $hook => $call)
+	add_integration_function($hook,$call);
 
 //Creating columns....
 $columns = array(
