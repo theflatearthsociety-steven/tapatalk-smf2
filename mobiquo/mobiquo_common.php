@@ -2,6 +2,9 @@
 
 defined('IN_MOBIQUO') or exit;
 
+
+register_shutdown_function('xmlrpc_shutdown');
+
 function mobiquo_exit($str = '')
 {
     global $request_name, $context, $topic, $board;

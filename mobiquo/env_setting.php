@@ -2,7 +2,6 @@
 
 defined('IN_MOBIQUO') or exit;
 
-register_shutdown_function('xmlrpc_shutdown');
 require('config/config.php');
 $mobiquo_config = get_mobiquo_config();
 

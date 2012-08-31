@@ -125,7 +125,7 @@ function Display()
 		$_SESSION['last_read_topic'] = $topic;
 	}
 
-	$support_post_thanks = isset($modSettings['integrate_pre_include']) && strpos($modSettings['integrate_pre_include'],"$sourcedir/Subs-ThankYou.php");
+	$support_post_thanks = isset($modSettings['integrate_pre_include']) && strpos($modSettings['integrate_pre_include'],'$sourcedir/Subs-ThankYou.php');
 	// Get all the important topic info.
 	$request = $smcFunc['db_query']('', '
 		SELECT
