@@ -520,7 +520,7 @@ function loadBoard()
 				c.id_cat, b.name AS bname, b.description, b.num_topics, b.member_groups,
 				b.id_parent, c.name AS cname, IFNULL(mem.id_member, 0) AS id_moderator,
 				mem.real_name' . (!empty($topic) ? ', b.id_board' : '') . ', b.child_level,
-				b.id_theme, b.override_theme, b.count_posts, b.id_profile,'.(isset($modSettings['integrate_pre_include']) && strpos($modSettings['integrate_pre_include'],"$sourcedir/Subs-ThankYou.php") ? 'b.thank_you_post_enable,' : '').' b.redirect,
+				b.id_theme, b.override_theme, b.count_posts, b.id_profile,'.(isset($modSettings['integrate_pre_include']) && strpos($modSettings['integrate_pre_include'],'$sourcedir/Subs-ThankYou.php') ? 'b.thank_you_post_enable,' : '').' b.redirect,
 				b.unapproved_topics, b.unapproved_posts' . (!empty($topic) ? ', t.approved, t.id_member_started' : '') . '
 			FROM {db_prefix}boards AS b' . (!empty($topic) ? '
 				INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:current_topic})' : '') . '
@@ -568,7 +568,7 @@ function loadBoard()
 				'cur_topic_starter' => empty($topic) ? 0 : $row['id_member_started'],
 			);
 
-      if (isset($modSettings['integrate_pre_include']) && strpos($modSettings['integrate_pre_include'],"$sourcedir/Subs-ThankYou.php"))
+      if (isset($modSettings['integrate_pre_include']) && strpos($modSettings['integrate_pre_include'],'$sourcedir/Subs-ThankYou.php'))
       {
         $board_info['thank_you_post_enable'] = empty($row['thank_you_post_enable']);
       }  

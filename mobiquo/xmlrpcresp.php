@@ -272,21 +272,30 @@ function get_thread_func()
             $rpc_me_name = "me";
             $me_value = $xmlrpc_post['post_id'] -> $rpc_me_name;
             $msg_id = $me_value['string'];
-            $member_list = $context['thank_you_post'][$msg_id]['fulllist'];
             $me_author_id = $xmlrpc_post['post_author_id'] -> $rpc_me_name;
     
             $already_posted = $user_info['id'] == $me_author_id['string'] ? true: false;
-            foreach($member_list as $one_thank_member => $one)
+            if(isset($context['thank_you_post'][$msg_id]))
             {
-                $thx_info_list[] = new xmlrpcval(array(
-                            'userid' => new xmlrpcval($one['id_member'], 'string'),
-                            'username' => new xmlrpcval($one['member_name'], 'base64')
-                        ), 'struct');
-                if ($user_info['id'] == $one['id_member'])
-                    $already_posted = true;
+                $member_list = $context['thank_you_post'][$msg_id]['fulllist'];
+                foreach($member_list as $one_thank_member => $one)
+                {
+                    $thx_info_list[] = new xmlrpcval(array(
+                                'userid' => new xmlrpcval($one['id_member'], 'string'),
+                                'username' => new xmlrpcval($one['member_name'], 'base64')
+                            ), 'struct');
+                    if ($user_info['id'] == $one['id_member'])
+                        $already_posted = true;
+                }
+
+                $is_the_post_locked = ($context['thank_you_post_info'][$msg_id]['thank_you_post'] == 2);
+                $can_thank_if_not_locked = $board_info['thank_you_post_enable'] && !$context['thank_you_post'][$msg_id]['user_postet'] && allowedTo('thank_you_post_post') && !$already_posted;
             }
-            $is_the_post_locked = ($context['thank_you_post_info'][$msg_id]['thank_you_post'] == 2);
-            $can_thank_if_not_locked = $board_info['thank_you_post_enable'] && !$context['thank_you_post'][$msg_id]['user_postet'] && allowedTo('thank_you_post_post') && !$already_posted;
+            else
+            {
+                $is_the_post_locked = isset($context['thank_you_post_info'][$msg_id]) && ($context['thank_you_post_info'][$msg_id]['thank_you_post'] == 2);
+                $can_thank_if_not_locked = $board_info['thank_you_post_enable'] && allowedTo('thank_you_post_post') && !$already_posted;
+            }
             $xmlrpc_post['can_thank'] = new xmlrpcval($can_thank_if_not_locked && !$is_the_post_locked && !$context['is_thank_you_post_locked'], 'boolean');
             if (!empty($thx_info_list) && $board_info['thank_you_post_enable'] && allowedTo('thank_you_post_show'))
                     $xmlrpc_post['thanks_info'] = new xmlrpcval($thx_info_list, 'array');
