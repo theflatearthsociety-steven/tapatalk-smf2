@@ -1,5 +1,5 @@
 [center][color=red][size=18pt]Tapatalk for SMF Plugin[/size][/color][/center]
-[center][size=8pt]For SMF 2.0 RC4/RC5/Final, http://www.tapatalk.com[/size][/center]
+[center][size=8pt]For SMF 2.0 RC5/Final, http://www.tapatalk.com[/size][/center]
 
 [b]What is Tapatalk?[/b]
 Tapatalk is a forum app for iPhone/iPad, Android, BlackBerry, Windows Phone and WebOS. The app provides super fast forum access to any vBulletin, IPBoard, phpBB, SMF, xenForo, MyBB and Kunena forums that have activated Tapatalk. Forum owner can download the free plug-in to activate Tapatalk in your forum.
