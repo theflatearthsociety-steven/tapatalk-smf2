@@ -45,7 +45,7 @@ function tapatalk_push_pm()
 
     if(!$modSettings['tp_pushEnabled'])
         return;
-    if ($_REQUEST['recipient_to'] && $_REQUEST['subject'] && (function_exists('curl_init') || ini_get('allow_url_fopen')))
+    if (isset($_REQUEST['recipient_to']) && isset($_REQUEST['subject']) && (function_exists('curl_init') || ini_get('allow_url_fopen')))
     {
         $timestr = time();
         $id_pm_req = $smcFunc['db_query']('', '
@@ -58,7 +58,9 @@ function tapatalk_push_pm()
                 'send_userid' => $user_info['id'],
             ));
         $id_pm = $smcFunc['db_fetch_assoc']($id_pm_req);
-        $smcFunc['db_free_result']($request);
+        if($id_pm_req)
+            $smcFunc['db_free_result']($id_pm_req);
+
         if ($id_pm)
         {
             $request = $smcFunc['db_query']('', '
