@@ -43,9 +43,10 @@ function tapatalk_push_pm()
 {
     global $user_info, $smcFunc, $boardurl, $modSettings;
 
-    if(!$modSettings['tp_pushEnabled'])
+    if(!$modSettings['tp_pushEnabled'] || (!function_exists('curl_init') && !ini_get('allow_url_fopen')))
         return;
-    if (isset($_REQUEST['recipient_to']) && isset($_REQUEST['subject']) && (function_exists('curl_init') || ini_get('allow_url_fopen')))
+    
+    if (isset($_REQUEST['recipient_to']) && is_array($_REQUEST['recipient_to']) && !empty($_REQUEST['recipient_to']) && isset($_REQUEST['subject']))
     {
         $timestr = time();
         $id_pm_req = $smcFunc['db_query']('', '
@@ -68,7 +69,7 @@ function tapatalk_push_pm()
                 FROM {db_prefix}tapatalk_users tu
                 WHERE tu.userid IN ({array_int:recipient_to}) AND tu.pm = 1',
                 array(
-                    'recipient_to' => $_POST['recipient_to'],//$recipientList['to'],
+                    'recipient_to' => $_REQUEST['recipient_to'],//$recipientList['to'],
                 )
             );
             while($row = $smcFunc['db_fetch_assoc']($request))
@@ -121,11 +122,12 @@ function tapatalk_push_pm()
             $timeout = 10;
             $old = ini_set('default_socket_timeout', $timeout);
             $fp = @fopen($push_url, 'rb', false, $ctx);
+            if (!$fp) return false;
+            
             ini_set('default_socket_timeout', $old);
             stream_set_timeout($fp, $timeout);
-            stream_set_blocking($fp, 0); 
+            stream_set_blocking($fp, 0);
             
-            if (!$fp) return false;
             $response = @stream_get_contents($fp);
         }
         return $response;
