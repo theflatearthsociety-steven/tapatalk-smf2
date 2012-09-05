@@ -46,7 +46,7 @@ function tapatalk_push_pm()
     if(!$modSettings['tp_pushEnabled'] || (!function_exists('curl_init') && !ini_get('allow_url_fopen')))
         return;
     
-    if (isset($_REQUEST['recipient_to']) && is_array($_REQUEST['recipient_to']) && !empty($_REQUEST['recipient_to']) && isset($_REQUEST['subject']))
+    if (isset($_POST['recipient_to']) && is_array($_POST['recipient_to']) && !empty($_POST['recipient_to']))
     {
         $timestr = time();
         $id_pm_req = $smcFunc['db_query']('', '
@@ -69,7 +69,7 @@ function tapatalk_push_pm()
                 FROM {db_prefix}tapatalk_users tu
                 WHERE tu.userid IN ({array_int:recipient_to}) AND tu.pm = 1',
                 array(
-                    'recipient_to' => $_REQUEST['recipient_to'],//$recipientList['to'],
+                    'recipient_to' => $_POST['recipient_to'],//$recipientList['to'],
                 )
             );
             while($row = $smcFunc['db_fetch_assoc']($request))
@@ -80,7 +80,7 @@ function tapatalk_push_pm()
                     'userid'    => $row['userid'],
                     'type'      => 'pm',
                     'id'        => $id_pm['id_pm'],
-                    'title'     => tt_push_clean($_REQUEST['subject']),
+                    'title'     => tt_push_clean($_POST['subject']),
                     'author'    => tt_push_clean($user_info['name']),
                     'dateline'  => time(),
                 );
@@ -94,44 +94,44 @@ function tapatalk_push_pm()
     }
 }
 
-    function tt_do_post_request($data)
+function tt_do_post_request($data)
+{
+    $push_url = 'http://push.tapatalk.com/push.php';
+
+    $response = 'CURL is disabled and PHP option "allow_url_fopen" is OFF. You can enable CURL or turn on "allow_url_fopen" in php.ini to fix this problem.';
+    if (function_exists('curl_init'))
     {
-        $push_url = 'http://push.tapatalk.com/push.php';
+        $ch = curl_init($push_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch,CURLOPT_TIMEOUT,10);
 
-        $response = 'CURL is disabled and PHP option "allow_url_fopen" is OFF. You can enable CURL or turn on "allow_url_fopen" in php.ini to fix this problem.';
-        if (function_exists('curl_init'))
-        {
-            $ch = curl_init($push_url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HEADER, false);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-            curl_setopt($ch,CURLOPT_TIMEOUT,10);
-
-            $response = curl_exec($ch);
-            curl_close($ch);
-        }
-        elseif (ini_get('allow_url_fopen'))
-        {
-            $params = array('http' => array(
-                'method' => 'POST',
-                'content' => http_build_query($data, '', '&'),
-            ));
-
-            $ctx = stream_context_create($params);
-            $timeout = 10;
-            $old = ini_set('default_socket_timeout', $timeout);
-            $fp = @fopen($push_url, 'rb', false, $ctx);
-            if (!$fp) return false;
-            
-            ini_set('default_socket_timeout', $old);
-            stream_set_timeout($fp, $timeout);
-            stream_set_blocking($fp, 0);
-            
-            $response = @stream_get_contents($fp);
-        }
-        return $response;
+        $response = curl_exec($ch);
+        curl_close($ch);
     }
+    elseif (ini_get('allow_url_fopen'))
+    {
+        $params = array('http' => array(
+            'method' => 'POST',
+            'content' => http_build_query($data, '', '&'),
+        ));
+
+        $ctx = stream_context_create($params);
+        $timeout = 10;
+        $old = ini_set('default_socket_timeout', $timeout);
+        $fp = @fopen($push_url, 'rb', false, $ctx);
+        if (!$fp) return false;
+        
+        ini_set('default_socket_timeout', $old);
+        stream_set_timeout($fp, $timeout);
+        stream_set_blocking($fp, 0);
+        
+        $response = @stream_get_contents($fp);
+    }
+    return $response;
+}
 
 function tt_push_clean($str)
 {
