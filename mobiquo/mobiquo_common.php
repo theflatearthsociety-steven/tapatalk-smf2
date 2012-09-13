@@ -386,6 +386,7 @@ function get_topic_info($fid, $tid)
     $topic = $smcFunc['db_fetch_assoc']($request);
     $smcFunc['db_free_result']($request);
     
+    if(empty($topic)) return array();
     // Check for notifications on this topic
     $request = $smcFunc['db_query']('', '
         SELECT sent, id_topic
