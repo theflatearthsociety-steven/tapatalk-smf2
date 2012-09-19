@@ -23,11 +23,11 @@ $charset_8F = array_merge($charset_89, $charset_AF);
 // char 128/160~255 in html entity
 // char 173(&shy;) may not supported in most browser.
 $charset_html = array(
-    
+
     // =============================================
     // BELOW IS ISO-8859-* CHARSET HTML ENCODE MAP
     // =============================================
-    
+
     // ISO-8859-1 (Western Europe)
     'ISO-8859-1' => array(
         '&nbsp;',   '&iexcl;',  '&cent;',   '&pound;',  '&curren;', '&yen;',    '&brvbar;', '&sect;',   '&uml;',    '&copy;',   '&ordf;',   '&laquo;',  '&not;',    '&shy;',    '&reg;',    '&macr;',
@@ -37,7 +37,7 @@ $charset_html = array(
         '&agrave;', '&aacute;', '&acirc;',  '&atilde;', '&auml;',   '&aring;',  '&aelig;',  '&ccedil;', '&egrave;', '&eacute;', '&ecirc;',  '&euml;',   '&igrave;', '&iacute;', '&icirc;',  '&iuml;',
         '&eth;',    '&ntilde;', '&ograve;', '&oacute;', '&ocirc;',  '&otilde;', '&ouml;',   '&divide;', '&oslash;', '&ugrave;', '&uacute;', '&ucirc;',  '&uuml;',   '&yacute;', '&thorn;',  '&yuml;',
     ),
-    
+
     // ISO-8859-9 (Turkish)
     // it only has 6 different chars vs iso-8859-1. They are &#286;, &#287; &#304;, &#305;, &#350;, &#351;
     'ISO-8859-9' => array(
@@ -48,7 +48,7 @@ $charset_html = array(
         '&agrave;', '&aacute;', '&acirc;',  '&atilde;', '&auml;',   '&aring;',  '&aelig;',  '&ccedil;', '&egrave;', '&eacute;', '&ecirc;',  '&euml;',   '&igrave;', '&iacute;', '&icirc;',  '&iuml;',
         '&#287;',   '&ntilde;', '&ograve;', '&oacute;', '&ocirc;',  '&otilde;', '&ouml;',   '&divide;', '&oslash;', '&ugrave;', '&uacute;', '&ucirc;',  '&uuml;',   '&#305;',   '&#351;',   '&yuml;',
     ),
-    
+
     // ISO-8859-2 (Central Europe)
     'ISO-8859-2' => array(
         '&nbsp;',   '&#260;',   '&#728;',   '&#321;',   '&curren;', '&#317;',   '&#346;',   '&sect;',   '&uml;',    '&Scaron;', '&#350;',   '&#356;',   '&#377;',   '&shy;',    '&#381;',   '&#379;',
@@ -58,7 +58,7 @@ $charset_html = array(
         '&#341;',   '&aacute;', '&acirc;',  '&#259;',   '&auml;',   '&#314;',   '&#263;',   '&ccedil;', '&#269;',   '&eacute;', '&#281;',   '&euml;',   '&#283;',   '&iacute;', '&icirc;',  '&#271;',
         '&#273;',   '&#324;',   '&#328;',   '&oacute;', '&ocirc;',  '&#337;',   '&ouml;',   '&divide;', '&#345;',   '&#367;',   '&uacute;', '&#369;',   '&uuml;',   '&yacute;', '&#355;',   '&#729;',
     ),
-    
+
     // ISO-8859-3 (Southern Europe)
     // it has 7 undefined chars at 165, 174, 190, 195, 208, 227, 240
     'ISO-8859-3' => array(
@@ -69,7 +69,7 @@ $charset_html = array(
         '&agrave;', '&aacute;', '&acirc;',  chr(227),   '&auml;',   '&#267;',   '&#265;',   '&ccedil;', '&egrave;', '&eacute;', '&ecirc;',  '&euml;',   '&igrave;', '&iacute;', '&icirc;',  '&iuml;',
         chr(240),   '&ntilde;', '&ograve;', '&oacute;', '&ocirc;',  '&#289;',   '&ouml;',   '&divide;', '&#285;',   '&ugrave;', '&uacute;', '&ucirc;',  '&uuml;',   '&#365;',   '&#349;',   '&#729;',
     ),
-    
+
     // ISO-8859-4 (Baltic)
     'ISO-8859-4' => array(
         '&nbsp;',   '&#260;',   '&#312;',   '&#342;',   '&curren;', '&#296;',   '&#315;',   '&sect;',   '&uml;',    '&Scaron;', '&#274;',   '&#290;',   '&#358;',   '&shy;',    '&#381;',   '&macr;',
@@ -79,7 +79,7 @@ $charset_html = array(
         '&#257;',   '&aacute;', '&acirc;',  '&atilde;', '&auml;',   '&aring;',  '&aelig;',  '&#303;',   '&#269;',   '&eacute;', '&#281;',   '&euml;',   '&#279;',   '&iacute;', '&icirc;',  '&#299;',
         '&#273;',   '&#326;',   '&#333;',   '&#311;',   '&ocirc;',  '&otilde;', '&ouml;',   '&divide;', '&oslash;', '&#371;',   '&uacute;', '&ucirc;',  '&uuml;',   '&#361;',   '&#363;',   '&#729;',
     ),
-    
+
     // ISO-8859-5 (Cyrillic)
     'ISO-8859-5' => array(
         '&nbsp;',   '&#1025;',  '&#1026;',  '&#1027;',  '&#1028;',  '&#1029;',  '&#1030;',  '&#1031;',  '&#1032;',  '&#1033;',  '&#1034;',  '&#1035;',  '&#1036;',  '&shy;',    '&#1038;',  '&#1039;',
@@ -89,7 +89,7 @@ $charset_html = array(
         '&#1088;',  '&#1089;',  '&#1090;',  '&#1091;',  '&#1092;',  '&#1093;',  '&#1094;',  '&#1095;',  '&#1096;',  '&#1097;',  '&#1098;',  '&#1099;',  '&#1100;',  '&#1101;',  '&#1102;',  '&#1103;',
         '&#8470;',  '&#1105;',  '&#1106;',  '&#1107;',  '&#1108;',  '&#1109;',  '&#1110;',  '&#1111;',  '&#1112;',  '&#1113;',  '&#1114;',  '&#1115;',  '&#1116;',  '&sect;',   '&#1118;',  '&#1119;',
     ),
-    
+
     // ISO-8859-6 (Arabic)
     'ISO-8859-6' => array(
         '&nbsp;',   chr(161),   chr(162),   chr(163),   '&curren;', chr(165),   chr(166),   chr(167),   chr(168),   chr(169),   chr(170),   chr(171),   '&#1548;',  '&shy;',    chr(174),   chr(175),
@@ -99,7 +99,7 @@ $charset_html = array(
         '&#1600;',  '&#1601;',  '&#1602;',  '&#1603;',  '&#1604;',  '&#1605;',  '&#1606;',  '&#1607;',  '&#1608;',  '&#1609;',  '&#1610;',  '&#1611;',  '&#1612;',  '&#1613;',  '&#1614;',  '&#1615;',
         '&#1616;',  '&#1617;',  '&#1618;',  chr(243),   chr(244),   chr(245),   chr(246),   chr(247),   chr(248),   chr(249),   chr(250),   chr(251),   chr(252),   chr(253),   chr(254),   chr(255),
     ),
-    
+
     // ISO-8859-7 (Greek)
     'ISO-8859-7' => array(
         '&nbsp;',   '&lsquo;',  '&rsquo;',  '&pound;',  '&euro;',   '&#8367;',  '&brvbar;', '&sect;',   '&uml;',    '&copy;',   '&#890;',   '&laquo;',  '&not;',    '&shy;',    chr(174),   '&#8213;',
@@ -109,7 +109,7 @@ $charset_html = array(
         '&#944;',   '&alpha;',  '&beta;',   '&gamma;',  '&delta;',  '&epsilon;','&zeta;',   '&eta;',    '&theta;',  '&iota;',   '&kappa;',  '&lambda;', '&mu;',     '&nu;',     '&xi;',     '&omicron;',
         '&pi;',     '&rho;',    '&sigmaf;', '&sigma;',  '&tau;',    '&upsilon;','&phi;',    '&chi;',    '&psi;',    '&omega;',  '&#970;',   '&#971;',   '&#972;',   '&#973;',   '&#974;',   chr(255),
     ),
-    
+
     // ISO-8859-8 (Hebrew)
     'ISO-8859-8' => array(
         '&nbsp;',   chr(161),   '&cent;',   '&pound;',  '&curren;', '&yen;',    '&brvbar;', '&sect;',   '&uml;',    '&copy;',   '&times;',  '&laquo;',  '&not;',    '&shy;',    '&reg;',    '&macr;',
@@ -119,7 +119,7 @@ $charset_html = array(
         '&#1488;',  '&#1489;',  '&#1490;',  '&#1491;',  '&#1492;',  '&#1493;',  '&#1494;',  '&#1495;',  '&#1496;',  '&#1497;',  '&#1498;',  '&#1499;',  '&#1500;',  '&#1501;',  '&#1502;',  '&#1503;',
         '&#1504;',  '&#1505;',  '&#1506;',  '&#1507;',  '&#1508;',  '&#1509;',  '&#1510;',  '&#1511;',  '&#1512;',  '&#1513;',  '&#1514;',  chr(251),   chr(252),   '&lrm;',    '&rlm;',    chr(255),
     ),
-    
+
     // ISO-8859-10 (Latin 6)
     'ISO-8859-10' => array(
         '&nbsp;',   '&#260;',   '&#274;',   '&#290;',   '&#298;',   '&#296;',   '&#310;',   '&sect;',   '&#315;',   '&#272;',   '&Scaron;', '&#358;',   '&#381;',   '&shy;',    '&#362;',   '&#330;',
@@ -129,7 +129,7 @@ $charset_html = array(
         '&#257;',   '&aacute;', '&acirc;',  '&atilde;', '&auml;',   '&aring;',  '&aelig;',  '&#303;',   '&#269;',   '&eacute;', '&#281;',   '&euml;',   '&#279;',   '&iacute;', '&icirc;',  '&iuml;',
         '&eth;',    '&#326;',   '&#333;',   '&oacute;', '&ocirc;',  '&otilde;', '&ouml;',   '&#361;',   '&oslash;', '&#371;',   '&uacute;', '&ucirc;',  '&uuml;',   '&yacute;', '&thorn;',  '&#312;',
     ),
-    
+
     // ISO-8859-11 (Thai)
     'ISO-8859-11' => array(
         '&nbsp;',   '&#3585;',  '&#3586;',  '&#3587;',  '&#3588;',  '&#3589;',  '&#3590;',  '&#3591;',  '&#3592;',  '&#3593;',  '&#3594;',  '&#3595;',  '&#3596;',  '&#3597;',  '&#3598;',  '&#3599;',
@@ -139,7 +139,7 @@ $charset_html = array(
         '&#3648;',  '&#3649;',  '&#3650;',  '&#3651;',  '&#3652;',  '&#3653;',  '&#3654;',  '&#3655;',  '&#3656;',  '&#3657;',  '&#3658;',  '&#3659;',  '&#3660;',  '&#3661;',  '&#3662;',  '&#3663;',
         '&#3664;',  '&#3665;',  '&#3666;',  '&#3667;',  '&#3668;',  '&#3669;',  '&#3670;',  '&#3671;',  '&#3672;',  '&#3673;',  '&#3674;',  '&#3675;',   chr(252),   chr(253),   chr(254),   chr(255),
     ),
-    
+
     // ISO-8859-13 (Latin 7)(Baltic Rim)
     'ISO-8859-13' => array(
         '&nbsp;',   '&rdquo;',  '&cent;',   '&pound;',  '&curren;', '&bdquo;',  '&brvbar;', '&sect;',   '&Oslash;', '&copy;',   '&#342;',   '&laquo;',  '&not;',    '&shy;',    '&reg;',    '&AElig;',
@@ -149,7 +149,7 @@ $charset_html = array(
         '&#261;',   '&#303;',   '&#257;',   '&#263;',   '&auml;',   '&aring;',  '&#281;',   '&#275;',   '&#269;',   '&eacute;', '&#378;',   '&#279;',   '&#291;',   '&#311;',   '&#299;',   '&#316;',
         '&scaron;', '&#324;',   '&#326;',   '&oacute;', '&#333;',   '&otilde;', '&ouml;',   '&divide;', '&#371;',   '&#322;',   '&#347;',   '&#363;',   '&uuml;',   '&#380;',   '&#382;',   '&rsquo;',
     ),
-    
+
     // ISO-8859-14 (Latin 8)
     'ISO-8859-14' => array(
         '&nbsp;',   '&#7682;',  '&#7683;',  '&pound;',  '&#266;',   '&#267;',   '&#7690;',  '&sect;',   '&#7808;',  '&copy;',   '&#7810;',  '&#7691;',  '&#7922;',  '&shy;',    '&reg;',    '&Yuml;',
@@ -159,7 +159,7 @@ $charset_html = array(
         '&agrave;', '&aacute;', '&acirc;',  '&atilde;', '&auml;',   '&aring;',  '&aelig;',  '&ccedil;', '&egrave;', '&eacute;', '&ecirc;',  '&euml;',   '&igrave;', '&iacute;', '&icirc;',  '&iuml;',
         '&#373;',   '&ntilde;', '&ograve;', '&oacute;', '&ocirc;',  '&otilde;', '&ouml;',   '&#7787;',  '&oslash;', '&ugrave;', '&uacute;', '&ucirc;',  '&uuml;',   '&yacute;', '&#375;',   '&yuml;',
     ),
-    
+
     // ISO-8859-15 (Latin 9)
     'ISO-8859-15' => array(
         '&nbsp;',   '&iexcl;',  '&cent;',   '&pound;',  '&euro;',   '&yen;',    '&Scaron;', '&sect;',   '&scaron;', '&copy;',   '&ordf;',   '&laquo;',  '&not;',    '&shy;',    '&reg;',    '&macr;',
@@ -169,7 +169,7 @@ $charset_html = array(
         '&agrave;', '&aacute;', '&acirc;',  '&atilde;', '&auml;',   '&aring;',  '&aelig;',  '&ccedil;', '&egrave;', '&eacute;', '&ecirc;',  '&euml;',   '&igrave;', '&iacute;', '&icirc;',  '&iuml;',
         '&eth;',    '&ntilde;', '&ograve;', '&oacute;', '&ocirc;',  '&otilde;', '&ouml;',   '&divide;', '&oslash;', '&ugrave;', '&uacute;', '&ucirc;',  '&uuml;',   '&yacute;', '&thorn;',  '&yuml;',
     ),
-    
+
     // ISO-8859-16 (Central, Eastern and Southern European languages (Albanian, Croatian, Hungarian, Polish, Romanian, Serbian and Slovenian, but also French, German, Italian and Irish Gaelic)
     'ISO-8859-16' => array(
         '&nbsp;',   '&#260;',   '&#261;',   '&#321;',   '&euro;',   '&bdquo;',  '&Scaron;', '&sect;',   '&scaron;', '&copy;',   '&#536;',   '&laquo;',  '&#377;',   '&shy;',    '&#378;',   '&#379;',
@@ -179,11 +179,11 @@ $charset_html = array(
         '&agrave;', '&aacute;', '&acirc;',  '&#259;',   '&auml;',   '&#263;',   '&aelig;',  '&ccedil;', '&egrave;', '&eacute;', '&ecirc;',  '&euml;',   '&igrave;', '&iacute;', '&icirc;',  '&iuml;',
         '&#273;',   '&#324;',   '&ograve;', '&oacute;', '&ocirc;',  '&#337;',   '&ouml;',   '&#347;',   '&#369;',   '&ugrave;', '&uacute;', '&ucirc;',  '&uuml;',   '&#281;',   '&#539;',   '&yuml;',
     ),
-    
+
     // =============================================
     // BELOW IS WINDOW-125* CHARSET HTML ENCODE MAP
     // =============================================
-    
+
     // Windows-1250 (Central Europe)
     'Windows-1250' => array(
         '&euro;',   chr(129),   '&sbquo;',  chr(131),   '&bdquo;',  '&hellip;', '&dagger;', '&Dagger;', chr(136),   '&permil;', '&Scaron;', '&lsaquo;', '&#346;',   '&#356;',   '&#381;',   '&#377;',
@@ -195,7 +195,7 @@ $charset_html = array(
         '&#341;',   '&aacute;', '&acirc;',  '&#259;',   '&auml;',   '&#314;',   '&#263;',   '&ccedil;', '&#269;',   '&eacute;', '&#281;',   '&euml;',   '&#283;',   '&iacute;', '&icirc;',  '&#271;',
         '&#273;',   '&#324;',   '&#328;',   '&oacute;', '&ocirc;',  '&#337;',   '&ouml;',   '&divide;', '&#345;',   '&#367;',   '&uacute;', '&#369;',   '&uuml;',   '&yacute;', '&#355;',   '&#729;',
     ),
-    
+
     // Windows-1251 (Cyrillic)
     'Windows-1251' => array(
         '&#1026;',  '&#1027;',  '&sbquo;',  '&#1107;',  '&bdquo;',  '&hellip;', '&dagger;', '&Dagger;', '&euro;',   '&permil;', '&#1033;',  '&lsaquo;', '&#1034;',  '&#1036;',  '&#1035;',  '&#1039;',
@@ -207,7 +207,7 @@ $charset_html = array(
         '&#1072;',  '&#1073;',  '&#1074;',  '&#1075;',  '&#1076;',  '&#1077;',  '&#1078;',  '&#1079;',  '&#1080;',  '&#1081;',  '&#1082;',  '&#1083;',  '&#1084;',  '&#1085;',  '&#1086;',  '&#1087;',
         '&#1088;',  '&#1089;',  '&#1090;',  '&#1091;',  '&#1092;',  '&#1093;',  '&#1094;',  '&#1095;',  '&#1096;',  '&#1097;',  '&#1098;',  '&#1099;',  '&#1100;',  '&#1101;',  '&#1102;',  '&#1103;',
     ),
-    
+
     // Windows-1252 (Western Europe)
     'Windows-1252' => array(
         '&euro;',   '&#129;',   '&sbquo;',  '&fnof;',   '&bdquo;',  '&hellip;', '&dagger;', '&Dagger;', '&circ;',   '&permil;', '&Scaron;', '&lsaquo;', '&OElig;',  '&#141;',   '&#381;',   '&#143;',
@@ -220,7 +220,7 @@ $charset_html = array(
         '&agrave;', '&aacute;', '&acirc;',  '&atilde;', '&auml;',   '&aring;',  '&aelig;',  '&ccedil;', '&egrave;', '&eacute;', '&ecirc;',  '&euml;',   '&igrave;', '&iacute;', '&icirc;',  '&iuml;',
         '&eth;',    '&ntilde;', '&ograve;', '&oacute;', '&ocirc;',  '&otilde;', '&ouml;',   '&divide;', '&oslash;', '&ugrave;', '&uacute;', '&ucirc;',  '&uuml;',   '&yacute;', '&thorn;',  '&yuml;',
     ),
-    
+
     // Windows-1253 (Greek)
     'Windows-1253' => array(
         '&euro;',   chr(129),   '&sbquo;',  '&fnof;',   '&bdquo;',  '&hellip;', '&dagger;', '&Dagger;', chr(136),   '&permil;', chr(138),   '&lsaquo;', chr(140),   chr(141),   chr(142),   chr(143),
@@ -230,9 +230,9 @@ $charset_html = array(
         '&#912;',   '&Alpha;',  '&Beta;',   '&Gamma;',  '&Delta;',  '&Epsilon;','&Zeta;',   '&Eta;',    '&Theta;',  '&Iota;',   '&Kappa;',  '&Lambda;', '&Mu;',     '&Nu;',     '&Xi;',     '&Omicron;',
         '&Pi;',     '&Rho;',    chr(210),   '&Sigma;',  '&Tau;',    '&Upsilon;','&Phi;',    '&Chi;',    '&Psi;',    '&Omega;',  '&#938;',   '&#939;',   '&#940;',   '&#941;',   '&#942;',   '&#943;',
         '&#944;',   '&alpha;',  '&beta;',   '&gamma;',  '&delta;',  '&epsilon;','&zeta;',   '&eta;',    '&theta;',  '&iota;',   '&kappa;',  '&lambda;', '&mu;',     '&nu;',     '&xi;',     '&omicron;',
-        '&pi;',     '&rho;',    '&sigmaf;', '&sigma;',  '&tau;',    '&upsilon;','&phi;',    '&chi;',    '&psi;',    '&omega;',  '&#970;',   '&#971;',   '&#972;',   '&#973;',   '&#974;',   chr(255),    
+        '&pi;',     '&rho;',    '&sigmaf;', '&sigma;',  '&tau;',    '&upsilon;','&phi;',    '&chi;',    '&psi;',    '&omega;',  '&#970;',   '&#971;',   '&#972;',   '&#973;',   '&#974;',   chr(255),
     ),
-    
+
     // Windows-1254 (Greek)
     'Windows-1254' => array(
         '&euro;',   chr(129),   '&sbquo;',  '&fnof;',   '&bdquo;',  '&hellip;', '&dagger;', '&Dagger;', '&circ;',   '&permil;', '&Scaron;', '&lsaquo;', '&OElig;',  chr(141),   chr(142),   chr(143),
@@ -244,7 +244,7 @@ $charset_html = array(
         '&agrave;', '&aacute;', '&acirc;',  '&atilde;', '&auml;',   '&aring;',  '&aelig;',  '&ccedil;', '&egrave;', '&eacute;', '&ecirc;',  '&euml;',   '&igrave;', '&iacute;', '&icirc;',  '&iuml;',
         '&#287;',   '&ntilde;', '&ograve;', '&oacute;', '&ocirc;',  '&otilde;', '&ouml;',   '&divide;', '&oslash;', '&ugrave;', '&uacute;', '&ucirc;',  '&uuml;',   '&#305;',   '&#351;',   '&yuml;',
     ),
-    
+
     // Windows-1255 (Hebrew)
     'Windows-1255' => array(
         '&euro;',   chr(129),   '&sbquo;',  '&fnof;',   '&bdquo;',  '&hellip;', '&dagger;', '&Dagger;', '&circ;',   '&permil;', chr(138),   '&lsaquo;', chr(140),   chr(141),   chr(142),   chr(143),
@@ -256,7 +256,7 @@ $charset_html = array(
         '&#1488;',  '&#1489;',  '&#1490;',  '&#1491;',  '&#1492;',  '&#1493;',  '&#1494;',  '&#1495;',  '&#1496;',  '&#1497;',  '&#1498;',  '&#1499;',  '&#1500;',  '&#1501;',  '&#1502;',  '&#1503;',
         '&#1504;',  '&#1505;',  '&#1506;',  '&#1507;',  '&#1508;',  '&#1509;',  '&#1510;',  '&#1511;',  '&#1512;',  '&#1513;',  '&#1514;',  chr(251),   chr(252),   '&lrm;',    '&rlm;',    chr(255),
     ),
-    
+
     // Windows-1256 (Arabic)
     'Windows-1256' => array(
         '&euro;',   '&#1662;',  '&sbquo;',  '&fnof;',   '&bdquo;',  '&hellip;', '&dagger;', '&Dagger;', '&circ;',   '&permil;', '&#1657;',  '&lsaquo;', '&OElig;',  '&#1670;',  '&#1688;',  '&#1672;',
@@ -268,7 +268,7 @@ $charset_html = array(
         '&agrave;', '&#1604;',  '&acirc;',  '&#1605;',  '&#1606;',  '&#1607;',  '&#1608;',  '&ccedil;', '&egrave;', '&eacute;', '&ecirc;',  '&euml;',   '&#1609;',  '&#1610;',  '&icirc;',  '&iuml;',
         '&#1611;',  '&#1612;',  '&#1613;',  '&#1614;',  '&ocirc;',  '&#1615;',  '&#1616;',  '&divide;', '&#1617;',  '&ugrave;', '&#1618;',  '&ucirc;',  '&uuml;',   '&lrm;',    '&rlm;',    '&#1746;',
     ),
-    
+
     // Windows-1257 (Baltic Rim)
     'Windows-1257' => array(
         '&euro;',   chr(129),   '&sbquo;',  chr(131),   '&bdquo;',  '&hellip;', '&dagger;', '&Dagger;', chr(136),   '&permil;', chr(138),   '&lsaquo;', chr(140),   '&uml;',    '&#711;',   '&cedil;',
@@ -280,7 +280,7 @@ $charset_html = array(
         '&#261;',   '&#303;',   '&#257;',   '&#263;',   '&auml;',   '&aring;',  '&#281;',   '&#275;',   '&#269;',   '&eacute;', '&#378;',   '&#279;',   '&#291;',   '&#311;',   '&#299;',   '&#316;',
         '&scaron;', '&#324;',   '&#326;',   '&oacute;', '&#333;',   '&otilde;', '&ouml;',   '&divide;', '&#371;',   '&#322;',   '&#347;',   '&#363;',   '&uuml;',   '&#380;',   '&#382;',   '&#729;',
     ),
-    
+
     // Windows-1258 (Vietnam)
     'Windows-1258' => array(
         '&euro;',   chr(129),   '&sbquo;',  '&fnof;',   '&bdquo;',  '&hellip;', '&dagger;', '&Dagger;', '&circ;',   '&permil;', chr(138),   '&lsaquo;', '&OElig;',  chr(141),   chr(142),   chr(143),
@@ -301,8 +301,8 @@ $charset_entity = array(
     '&macr;'    => '&#175;',    '&Otilde;'  => '&#213;',    '&sect;'    => '&#167;',    '&lowast;'  => '&#8727;',   '&nu;'      => '&#957;', 
     '&middot;'  => '&#183;',    '&otilde;'  => '&#245;',    '&shy;'     => '&#173;',    '&micro;'   => '&#181;',    '&Omega;'   => '&#937;', 
     '&tilde;'   => '&#732;',    '&Ouml;'    => '&#214;',    '&sup1;'    => '&#185;',    '&nabla;'   => '&#8711;',   '&omega;'   => '&#969;', 
-    '&uml;'     => '&#168;',    '&ouml;'    => '&#246;',    '&trade;'   => '&#8482;',   '&ne;'      => '&#8800;',   '&Omicron'  => '&#927;', 
-    '&Aacute;'  => '&#193;',    '&Scaron;'  => '&#352;',    '&weierp;'  => '&#8472;',   '&ni;'      => '&#8715;',   '&omicron'  => '&#959;', 
+    '&uml;'     => '&#168;',    '&ouml;'    => '&#246;',    '&trade;'   => '&#8482;',   '&ne;'      => '&#8800;',   '&Omicron;' => '&#927;', 
+    '&Aacute;'  => '&#193;',    '&Scaron;'  => '&#352;',    '&weierp;'  => '&#8472;',   '&ni;'      => '&#8715;',   '&omicron;' => '&#959;', 
     '&aacute;'  => '&#225;',    '&scaron;'  => '&#353;',    '&bdquo;'   => '&#8222;',   '&notin;'   => '&#8713;',   '&Phi;'     => '&#934;', 
     '&Acirc;'   => '&#194;',    '&szlig;'   => '&#223;',    '&laquo;'   => '&#171;',    '&nsub;'    => '&#8836;',   '&phi;'     => '&#966;', 
     '&acirc;'   => '&#226;',    '&THORN;'   => '&#222;',    '&ldquo;'   => '&#8220;',   '&oplus;'   => '&#8853;',   '&Pi;'      => '&#928;', 
@@ -319,10 +319,10 @@ $charset_entity = array(
     '&Ccedil;'  => '&#199;',    '&yacute;'  => '&#253;',    '&thinsp;'  => '&#8201;',   '&rfloor;'  => '&#8971;',   '&tau;'     => '&#964;', 
     '&ccedil;'  => '&#231;',    '&yuml;'    => '&#255;',    '&zwj;'     => '&#8205;',   '&sdot;'    => '&#8901;',   '&Theta;'   => '&#920;', 
     '&Eacute;'  => '&#201;',    '&Yuml;'    => '&#376;',    '&zwnj;'    => '&#8204;',   '&sim;'     => '&#8764;',   '&theta;'   => '&#952;', 
-    '&eacute;'  => '&#233;',    '&cent;'    => '&#162;',    '&deg;'     => '&#176;',    '&sub;'     => '&#8834;',   '&thetasy'  => '&#977;', 
+    '&eacute;'  => '&#233;',    '&cent;'    => '&#162;',    '&deg;'     => '&#176;',    '&sub;'     => '&#8834;',   '&thetasy;' => '&#977;', 
     '&Ecirc;'   => '&#202;',    '&curren;'  => '&#164;',    '&divide;'  => '&#247;',    '&sube;'    => '&#8838;',   '&upsih;'   => '&#978;', 
-    '&ecirc;'   => '&#234;',    '&euro;'    => '&#8364;',   '&frac12;'  => '&#189;',    '&sum;'     => '&#8721;',   '&Upsilon'  => '&#933;', 
-    '&Egrave;'  => '&#200;',    '&pound;'   => '&#163;',    '&frac14;'  => '&#188;',    '&sup;'     => '&#8835;',   '&upsilon'  => '&#965;', 
+    '&ecirc;'   => '&#234;',    '&euro;'    => '&#8364;',   '&frac12;'  => '&#189;',    '&sum;'     => '&#8721;',   '&Upsilon;' => '&#933;', 
+    '&Egrave;'  => '&#200;',    '&pound;'   => '&#163;',    '&frac14;'  => '&#188;',    '&sup;'     => '&#8835;',   '&upsilon;' => '&#965;', 
     '&egrave;'  => '&#232;',    '&yen;'     => '&#165;',    '&frac34;'  => '&#190;',    '&supe;'    => '&#8839;',   '&Xi;'      => '&#926;', 
     '&ETH;'     => '&#208;',    '&brvbar;'  => '&#166;',    '&ge;'      => '&#8805;',   '&there4;'  => '&#8756;',   '&xi;'      => '&#958;', 
     '&eth;'     => '&#240;',    '&bull;'    => '&#8226;',   '&le;'      => '&#8804;',   '&Alpha;'   => '&#913;',    '&Zeta;'    => '&#918;', 
@@ -330,11 +330,11 @@ $charset_entity = array(
     '&euml;'    => '&#235;',    '&dagger;'  => '&#8224;',   '&sup2;'    => '&#178;',    '&Beta;'    => '&#914;',    '&crarr;'   => '&#8629;',
     '&Iacute;'  => '&#205;',    '&Dagger;'  => '&#8225;',   '&sup3;'    => '&#179;',    '&beta;'    => '&#946;',    '&darr;'    => '&#8595;',
     '&iacute;'  => '&#237;',    '&frasl;'   => '&#8260;',   '&times;'   => '&#215;',    '&Chi;'     => '&#935;',    '&dArr;'    => '&#8659;',
-    '&Icirc;'   => '&#206;',    '&hellip;'  => '&#8230;',   '&alefsym'  => '&#8501;',   '&chi;'     => '&#967;',    '&harr;'    => '&#8596;',
+    '&Icirc;'   => '&#206;',    '&hellip;'  => '&#8230;',   '&alefsym;' => '&#8501;',   '&chi;'     => '&#967;',    '&harr;'    => '&#8596;',
     '&icirc;'   => '&#238;',    '&iexcl;'   => '&#161;',    '&and;'     => '&#8743;',   '&Delta;'   => '&#916;',    '&hArr;'    => '&#8660;',
     '&Igrave;'  => '&#204;',    '&image;'   => '&#8465;',   '&ang;'     => '&#8736;',   '&delta;'   => '&#948;',    '&larr;'    => '&#8592;',
-    '&igrave;'  => '&#236;',    '&iquest;'  => '&#191;',    '&asymp;'   => '&#8776;',   '&Epsilon'  => '&#917;',    '&lArr;'    => '&#8656;',
-    '&Iuml;'    => '&#207;',    '&lrm;'     => '&#8206;',   '&cap;'     => '&#8745;',   '&epsilon'  => '&#949;',    '&rarr;'    => '&#8594;',
+    '&igrave;'  => '&#236;',    '&iquest;'  => '&#191;',    '&asymp;'   => '&#8776;',   '&Epsilon;' => '&#917;',    '&lArr;'    => '&#8656;',
+    '&Iuml;'    => '&#207;',    '&lrm;'     => '&#8206;',   '&cap;'     => '&#8745;',   '&epsilon;' => '&#949;',    '&rarr;'    => '&#8594;',
     '&iuml;'    => '&#239;',    '&mdash;'   => '&#8212;',   '&cong;'    => '&#8773;',   '&Eta;'     => '&#919;',    '&rArr;'    => '&#8658;',
     '&Ntilde;'  => '&#209;',    '&ndash;'   => '&#8211;',   '&cup;'     => '&#8746;',   '&eta;'     => '&#951;',    '&uarr;'    => '&#8593;',
     '&ntilde;'  => '&#241;',    '&not;'     => '&#172;',    '&empty;'   => '&#8709;',   '&Gamma;'   => '&#915;',    '&uArr;'    => '&#8657;',
