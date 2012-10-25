@@ -93,6 +93,7 @@ $txt['tp_general_settingsDesc'] = 'This is the general settings for tapatalk';
 $txt['tp_other_settingsDesc'] = 'Taptalk information';
 $txt['tp_select_boards'] = 'Select Boards to HIDE on Tapatalk';
 $txt['tp_register_page_url'] = 'Register page url';
+$txt['tp_push_key'] = 'Push key';
 $txt['taptalk_descp'] = '<strong>Tapatalk for SMF Plugin</strong></br>
 For SMF 2.0 RC5/Final, <a href = "http://www.tapatalk.com">http://www.tapatalk.com</a></br></br>
 
