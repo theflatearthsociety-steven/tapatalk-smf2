@@ -103,10 +103,149 @@ $indexes = array(
 			'updated' => 'updated'
 		),
 	),
-	);
+);
 	
-	$installed = $smcFunc['db_create_table']('{db_prefix}tapatalk_users', $columns, $indexes, array(), 'update', 'ignore');
+$installed = $smcFunc['db_create_table']('{db_prefix}tapatalk_users', $columns, $indexes, array(), 'update', 'ignore');
 
+//Creating columns....
+$push_columns = array(
+	'userid' => array(
+		'name' => 'userid',
+		'type' => 'int',
+		'size' => '10',
+		'default' => 0,
+		'null' => false,
+	),
+	'type' => array(
+		'name' => 'type',
+		'type' => 'varchar',
+		'size' => '10',
+		'default' => 1,
+		'null' => false,
+	),
+		'id' => array(
+		'name' => 'id',
+		'type' => 'int',
+		'size' => '10',
+		'default' => 1,
+		'null' => false,
+	),
+		'subid' => array(
+		'name' => 'subid',
+		'type' => 'int',
+		'size' => '10',
+		'default' => 1,
+		'null' => false,
+	),
+		'title' => array(
+		'name' => 'title',
+		'type' => 'varchar',
+		'size' => '250',
+		'default' => 1,
+		'null' => false,
+	),
+			'author' => array(
+		'name' => 'author',
+		'type' => 'varchar',
+		'size' => '100',
+		'default' => 1,
+		'null' => false,
+	),
+			'dateline' => array(
+		'name' => 'dateline',
+		'type' => 'int',
+		'size' => '10',
+		'default' => 1,
+		'null' => false,
+	),
+			'status' => array(
+		'name' => 'status',
+		'type' => 'tinyint',
+		'size' => '4',
+		'default' => 1,
+		'null' => false,
+	),	
+	);
+
+
+//Creating indexes...
+$push_indexes = array(
+	'userid' => array(
+		'name' => 'userid',
+		'type' => 'index',
+		'columns' => array(
+			'userid' => 'userid'
+		),
+	),
+	'type' => array(
+		'name' => 'type',
+		'type' => 'index',
+		'columns' => array(
+			'type' => 'type'
+		),
+	),
+	'id' => array(
+		'name' => 'id',
+		'type' => 'index',
+		'columns' => array(
+			'id' => 'id'
+		),
+	),
+		'subid' => array(
+		'name' => 'subid',
+		'type' => 'index',
+		'columns' => array(
+			'subid' => 'subid'
+		),
+	),
+			'title' => array(
+		'name' => 'title',
+		'type' => 'index',
+		'columns' => array(
+			'title' => 'title'
+		),
+	),
+				'author' => array(
+		'name' => 'author',
+		'type' => 'index',
+		'columns' => array(
+			'author' => 'author'
+		),
+	),
+				'dateline' => array(
+		'name' => 'dateline',
+		'type' => 'index',
+		'columns' => array(
+			'dateline' => 'dateline'
+		),
+	),
+					'status' => array(
+		'name' => 'status',
+		'type' => 'index',
+		'columns' => array(
+			'status' => 'status'
+		),
+	),
+);
+	
+$installed = $smcFunc['db_create_table']('{db_prefix}tapatalk_push', $push_columns, $push_indexes, array(), 'update', 'ignore');
+
+$smcFunc['db_query']('', '
+	ALTER TABLE {db_prefix}tapatalk_users
+	ADD `quote` SMALLINT( 5 ) NOT NULL DEFAULT \'1\' AFTER `subscribe` ,
+    ADD `tag` SMALLINT( 5 ) NOT NULL DEFAULT \'1\' AFTER `quote`',
+	array(
+		'db_error_skip' => true,
+	)
+);
+
+$smcFunc['db_query']('', '
+	ALTER TABLE {db_prefix}tapatalk_users
+	CHANGE `updated` `updated` INT( 10 ) NOT NULL ',
+	array(
+		'db_error_skip' => true,
+	)
+);
  if($direct_install)
 	echo 'Done....';
  

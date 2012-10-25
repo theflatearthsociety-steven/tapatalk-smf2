@@ -426,7 +426,7 @@ function get_online_users_func()
 
 function get_user_info_func()
 {
-    global $context, $txt, $modSettings;
+    global $context, $txt, $modSettings, $user_info, $smcFunc;
 
     $custom_fields = array();
 
@@ -548,7 +548,44 @@ function get_user_info_func()
             'value' => new xmlrpcval($context['member']['language'], 'base64')
         ), 'struct');
     }
+    
+    //Add push status custom fields
+    if(isset($_GET['u']) && !empty($_GET['u']))
+        $queried_userid = $_GET['u'];
+    else
+    {
+        $loaded_id = loadMemberData($_GET['user'], true);
+        $queried_userid = is_array($loaded_id)? $loaded_id[0] : $loaded_id;
+    }
 
+    if($queried_userid == $user_info['id'] && isset($modSettings['tp_pushEnabled'])&& $modSettings['tp_pushEnabled'])
+    {
+        $request = $smcFunc['db_query']('', '
+            SELECT tu.*
+            FROM {db_prefix}tapatalk_users tu
+            WHERE tu.userid = {int:userid}',
+            array(
+                'userid' => $queried_userid,
+            )
+        );
+        while($row = $smcFunc['db_fetch_assoc']($request))
+        {
+            foreach($row as $name => $value)
+            {
+                $display_name = getDisplayNameByTableKey($name);
+                if($display_name)
+                {
+                    $display_value = $value? 'On':'Off';
+                    $custom_fields[] = new xmlrpcval(array(
+                        'name'  => new xmlrpcval($display_name, 'base64'),
+                        'value' => new xmlrpcval($display_value, 'base64')
+                    ), 'struct');
+                }
+            }
+        }
+    }
+
+    
     $xmlrpc_user_info = new xmlrpcval(array(
         'user_id'               => new xmlrpcval($context['member']['id'], 'string'),
         'post_count'            => new xmlrpcval(!isset($context['disabled_fields']['posts']) ? $context['member']['posts'] : '', 'int'),
@@ -1351,6 +1388,8 @@ function update_push_status_func()
             $update_params[] = 'announcement='.($_POST['settings']['all'] ? 1 : 0);
             $update_params[] = 'pm='.($_POST['settings']['all'] ? 1 : 0);
             $update_params[] = 'subscribe='.($_POST['settings']['all'] ? 1 : 0);
+            $update_params[] = 'quote='.($_POST['settings']['all'] ? 1 : 0);
+            $update_params[] = 'tag='.($_POST['settings']['all'] ? 1 : 0);                        
         }
         else
         {
@@ -1362,6 +1401,12 @@ function update_push_status_func()
             
             if (isset($_POST['settings']['sub']))
                 $update_params[] = 'subscribe='.($_POST['settings']['sub'] ? 1 : 0);
+                
+            if (isset($_POST['settings']['sub']))
+                $update_params[] = 'quote='.($_POST['settings']['quote'] ? 1 : 0);
+
+            if (isset($_POST['settings']['sub']))
+                $update_params[] = 'tag='.($_POST['settings']['tag'] ? 1 : 0);
         }
         if ($update_params)
         {

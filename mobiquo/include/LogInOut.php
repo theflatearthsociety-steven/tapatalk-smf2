@@ -454,9 +454,10 @@ function DoLogin()
 		'username'  => Tapatalk_Input::STRING,
 		'password'  => Tapatalk_Input::STRING,
 		'anonymous' => Tapatalk_Input::INT,
-		'push'      => Tapatalk_Input::STRING,
+		'push'      => Tapatalk_Input::STRING
 	), $request_params);
-	if ($input['push']) update_push();
+	if ($input['push']) 
+	    update_push();
 	
 	// Are you banned?
 	is_not_banned(true);
@@ -686,15 +687,15 @@ function update_push()
 	{
 		$request = $smcFunc['db_insert']('ignore',
 					'{db_prefix}tapatalk_users',
-					array('userid' => 'int'),
-					array($user_info['id']),
+					array('userid' => 'int', 'updated' => 'int'),
+					array($user_info['id'], time()),
 					array('userid')
 				);
 		if ($smcFunc['db_affected_rows']($request) == 0)
 		{
 			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}tapatalk_users
-				SET updated = CURRENT_TIMESTAMP 
+				SET updated = '.time().' 
 				WHERE userid = {int:user_id}',
 				array(
 					'user_id' => $user_info['id'],

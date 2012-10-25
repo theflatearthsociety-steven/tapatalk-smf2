@@ -29,6 +29,18 @@
 				}
 			}]]></add>
         </operation>
+        <operation>
+            <search position="replace"><![CDATA[			notifyMembersBoard($notifyData);]]></search>
+            <add><![CDATA[			notifyMembersBoard($notifyData);
+			global $boarddir;
+			if (function_exists('tapatalk_push'))
+				tapatalk_push_quote_tag($msgOptions['id'], true);
+			else if(file_exists($boarddir . '/mobiquo/push_hook.php'))
+			{
+				include($boarddir . '/mobiquo/push_hook.php');
+				tapatalk_push_quote_tag($msgOptions['id'], true);
+			}]]></add>
+        </operation>
     </file>
         <file name="$sourcedir/PersonalMessage.php">
         <operation>

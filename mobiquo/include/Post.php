@@ -1999,6 +1999,14 @@ function Post2()
 				'topic' => $topic,
 			);
 			notifyMembersBoard($notifyData);
+			global $boarddir;
+			if (function_exists('tapatalk_push'))
+				tapatalk_push_quote_tag($msgOptions['id'], true);
+			else if(file_exists($boarddir . '/mobiquo/push_hook.php'))
+			{
+				include($boarddir . '/mobiquo/push_hook.php');
+				tapatalk_push_quote_tag($msgOptions['id'], true);
+			}
 		}
 		elseif (empty($_REQUEST['msg']))
 		{

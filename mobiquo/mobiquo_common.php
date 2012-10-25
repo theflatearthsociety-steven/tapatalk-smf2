@@ -387,6 +387,7 @@ function get_topic_info($fid, $tid)
     $smcFunc['db_free_result']($request);
     
     if(empty($topic)) return array();
+    
     // Check for notifications on this topic
     $request = $smcFunc['db_query']('', '
         SELECT sent, id_topic
@@ -738,4 +739,17 @@ function mobi_table_exist($table_name)
     db_extend();
     $tables = $smcFunc['db_list_tables'](false, $db_prefix . $table_name);
     return !empty($tables);
+}
+
+function getDisplayNameByTableKey($key)
+{
+    $display_key_map = array(
+    'pm'       => 'PM push',
+    'subscribe'=> 'Subscription topic push',
+    'liked'    => 'Likes push',
+    'quote'    => 'Quotes push',
+    'newtopic' => 'Subscription forum push',
+    'tag'      => 'Mention push',
+    );
+    return isset($display_key_map[$key])? $display_key_map[$key]: '';
 }
