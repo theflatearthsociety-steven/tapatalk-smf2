@@ -62,7 +62,7 @@ function tapatalk_push_quote_tag($post_id, $newtopic = false, $pushed_user_ids =
             $request = $smcFunc['db_query']('', '
                 SELECT tu.userid
                 FROM {db_prefix}tapatalk_users tu
-                WHERE tu.quote = 1 AND tu.userid IN ({array_int:quoteids})' ,
+                WHERE tu.quote = 1 AND tu.userid IN ({'.(is_array($quote_ids) ? 'array_int': 'int').':quoteids})' ,
                 array(
                     'quoteids' => $quote_ids,
                 )

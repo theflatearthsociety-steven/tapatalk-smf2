@@ -868,6 +868,8 @@ function action_get_subscribed_topic()
 }
 function action_update_push_status() {}
 
+function action_get_alert() {}
+
 function action_get_participated_topic()
 {
     global $smcFunc, $scripturl, $user_info, $context, $modSettings, $topic_per_page, $start_num, $search_user;

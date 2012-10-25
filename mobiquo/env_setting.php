@@ -701,5 +701,14 @@ switch ($request_name) {
             get_error('Parameter Error');
         }
         break;
+    case 'get_alert':
+        if ($params_num == 2 ) {
+            $_POST['page'] = (isset($xmlrpc_params[0]) && $xmlrpc_params[0] > 0) ? $xmlrpc_params[0] : 1;
+            $_POST['perpage'] = (isset($xmlrpc_params[1]) && $xmlrpc_params[1] > 0) ? $xmlrpc_params[1] : 20;
+            $_GET['action'] = 'get_alert';
+        }else {
+            get_error('Parameter Error');
+        }
+        break;
 }
 

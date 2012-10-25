@@ -455,4 +455,11 @@ $server_param = array(
         'signature' => array(array($xmlrpcStruct, $xmlrpcStruct),
                              array($xmlrpcStruct, $xmlrpcStruct, $xmlrpcBase64, $xmlrpcBase64)),
     ),
+    
+    'get_alert' => array(
+        'function' => 'get_alert_func',
+        'signature' => array(array($xmlrpcStruct, $xmlrpcInt, $xmlrpcInt),
+                             array($xmlrpcStruct, $xmlrpcInt),
+                             array($xmlrpcStruct)),
+    ),
 );

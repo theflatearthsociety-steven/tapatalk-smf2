@@ -1428,3 +1428,66 @@ function update_push_status_func()
         'struct');
     return new xmlrpcresp($result); 
 }
+
+
+function get_alert_func()
+{
+    global $user_info, $smcFunc, $user_profile, $scripturl, $modSettings, $settings;
+
+    $alert_format = array(
+        'sub'       => '%s replied to "%s"',
+        'like'      => '%s liked your post in thread "%s"',
+        'thank'     => '%s thanked your post in thread "%s"',
+        'quote'     => '%s quoted your post in thread "%s"',
+        'tag'       => '%s mentioned you in thread "%s"',
+        'newtopic'  => '%s started a new thread "%s"',
+        'pm'        => '%s sent you a message "%s"',
+        'ann'       => '%sNew Announcement "%s"',
+    );
+
+    $start = ($_POST['page']-1)*$_POST['perpage'];
+    $current_userid = $user_info['id'];
+    
+    if($current_userid == 0)
+        return_fault();
+
+    $alerts = array();
+    $request = $smcFunc['db_query']('', '
+        SELECT * FROM {db_prefix}tapatalk_push
+        WHERE userid = {int:current_userid} LIMIT {int:start}, {int:perpage}',
+        array(
+            'current_userid' => $current_userid,
+            'start'          => $start,
+            'perpage'        => $_POST['perpage']
+        )
+    );
+    while ($result = $smcFunc['db_fetch_assoc']($request))
+    {
+        if (!isset($alert_format[$result['type']])) continue;
+
+        $message = sprintf($alert_format[$result['type']], $result['author'], mobiquo_encode($result['title']));
+        $userids = loadMemberData($result['author'], true);
+        $userid = is_array($userids)? $userids[0] : $userids;
+        $profile = $user_profile[$userid];
+        if (!empty($settings['show_user_images']) && empty($profile['options']['show_no_avatars']))
+        {
+            $avatar = $profile['avatar'] == '' ? ($profile['id_attach'] > 0 ? (empty($profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) : '') : (stristr($profile['avatar'], 'http://') ? $profile['avatar'] : $modSettings['avatar_url'] . '/' . $profile['avatar']);
+        }
+        $alert = array(
+            'user_id'       => new xmlrpcval($userid, 'string'),
+            'username'      => new xmlrpcval($result['author'], 'base64'),
+            'icon_url'      => new xmlrpcval($avatar, 'string'),
+            'message'       => new xmlrpcval($message, 'base64'),
+            'timestamp'     => new xmlrpcval($result['dateline'], 'string'),
+            'content_type'  => new xmlrpcval($result['type'], 'string'),
+            'content_id'    => new xmlrpcval($result['subid'], 'string'),
+        );
+        $alerts[] = new xmlrpcval($alert, 'struct');
+    }
+    $total_num = count($alerts);
+    $return_data = array(
+        'total' => new xmlrpcval($total_num, 'int'),
+        'items' => new xmlrpcval($alerts, 'array')
+    );
+    return new xmlrpcresp(new xmlrpcval($return_data, 'struct'));
+}
