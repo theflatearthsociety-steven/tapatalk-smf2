@@ -753,3 +753,78 @@ function getDisplayNameByTableKey($key)
     );
     return isset($display_key_map[$key])? $display_key_map[$key]: '';
 }
+
+function tp_get_forum_icon($id, $type = 'forum', $lock = false, $new = false)
+{
+    if (!in_array($type, array('link', 'category', 'forum')))
+        $type = 'forum';
+   
+    $icon_name = $type;
+    if ($type != 'link')
+    {
+        if ($lock) $icon_name .= '_lock';
+        if ($new) $icon_name .= '_new';
+    }
+   
+    $icon_map = array(
+        'category_lock_new' => array('category_lock', 'category_new', 'lock_new', 'category', 'lock', 'new'),
+        'category_lock'     => array('category', 'lock'),
+        'category_new'      => array('category', 'new'),
+        'lock_new'          => array('lock', 'new'),
+        'forum_lock_new'    => array('forum_lock', 'forum_new', 'lock_new', 'forum', 'lock', 'new'),
+        'forum_lock'        => array('forum', 'lock'),
+        'forum_new'         => array('forum', 'new'),
+        'category'          => array(),
+        'forum'             => array(),
+        'lock'              => array(),
+        'new'               => array(),
+        'link'              => array(),
+    );
+   
+    $final = empty($icon_map[$icon_name]);
+   
+    if ($url = tp_get_forum_icon_by_name($id, $icon_name, $final))
+        return $url;
+   
+    foreach ($icon_map[$icon_name] as $sub_name)
+    {
+        $final = empty($icon_map[$sub_name]);
+        if ($url = tp_get_forum_icon_by_name($id, $sub_name, $final))
+            return $url;
+    }
+   
+    return '';
+}
+
+function tp_get_forum_icon_by_name($id, $name, $final)
+{
+	global $boarddir, $boardurl;
+	
+    $tapatalk_forum_icon_dir = $boarddir.'/mobiquo/forum_icons/';
+    $tapatalk_forum_icon_url = $boardurl.'/mobiquo/forum_icons/';
+   
+    $filename_array = array(
+        $name.'_'.$id.'.png',
+        $name.'_'.$id.'.jpg',
+        $id.'.png', $id.'.jpg',
+        $name.'.png',
+        $name.'.jpg',
+    );
+   
+    foreach ($filename_array as $filename)
+    {
+        if (file_exists($tapatalk_forum_icon_dir.$filename))
+        {
+            return $tapatalk_forum_icon_url.$filename;
+        }
+    }
+   
+    if ($final) {
+        if (file_exists($tapatalk_forum_icon_dir.'default.png'))
+            return $tapatalk_forum_icon_url.'default.png';
+        else if (file_exists($tapatalk_forum_icon_dir.'default.jpg'))
+            return $tapatalk_forum_icon_url.'default.jpg';
+    }
+   
+    return '';
+}

@@ -176,14 +176,9 @@ function build_board($boards, $is_cat = false)
             $is_subscribed = false;
         }
 
-        if (file_exists($boarddir.'/mobiquo/forum_icons/'.$board['id'].'.png'))
-            $logo_url = $boardurl.'/mobiquo/forum_icons/'.$board['id'].'.png';
-        else if (file_exists($boarddir.'/mobiquo/forum_icons/'.$board['id'].'.jpg'))
-            $logo_url = $boardurl.'/mobiquo/forum_icons/'.$board['id'].'.jpg';
-        else if (file_exists($boarddir.'/mobiquo/forum_icons/default.png'))
-            $logo_url = $boardurl.'/mobiquo/forum_icons/default.png';
-        else if (file_exists($boarddir.'/mobiquo/forum_icons/default.jpg'))
-            $logo_url = $boardurl.'/mobiquo/forum_icons/default.jpg';
+        $is_link_forum = isset($board['redirect']) && !empty($board['redirect']);
+        $tp_board_id = $is_cat ? preg_replace('/c/', '', $board['id']): $board['id'];
+        $logo_url =  ($tp_logo_url = tp_get_forum_icon($tp_board_id,$is_link_forum ? 'link' : ($is_cat ? 'category' : 'forum'), false, $new_post) )? $tp_logo_url : $logo_url;
         $xmlrpc_forum = array(
             'forum_id'      => new xmlrpcval($board['id'], 'string'),
             'forum_name'    => new xmlrpcval(basic_clean($board['name']), 'base64'),
