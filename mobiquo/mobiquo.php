@@ -6,7 +6,10 @@ if (function_exists('set_magic_quotes_runtime'))
     @set_magic_quotes_runtime(0);
 
 error_reporting(0);
-
+if($_SERVER['REQUEST_METHOD'] == 'GET')
+{
+    include 'web.php';
+}
 require('lib/xmlrpc.inc');
 require('lib/xmlrpcs.inc');
 require('server_define.php');

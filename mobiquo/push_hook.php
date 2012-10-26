@@ -235,8 +235,8 @@ function tt_push_clean($str)
 function store_as_alert($push_data)
 {
 	global $smcFunc, $db_prefix;
-
     db_extend();
+
     $matched_tables = $smcFunc['db_list_tables'](false, $db_prefix . "tapatalk_push");
     if(!empty($matched_tables))
 	{
@@ -245,7 +245,7 @@ function store_as_alert($push_data)
 		$request = $smcFunc['db_insert']('ignore',
 					'{db_prefix}tapatalk_push',
 					array('userid' => 'int', 'type' => 'string', 'id' => 'int', 'subid' => 'int', 'title' => 'string', 'author' => 'string', 'dateline' => 'int'),
-					array($push_data['userid'], $push_data['type'], $push_data['id'], isset($push_data['subid'])? $push_data['subid'] : ' ', $push_data['title'], $push_data['author'], $push_data['dateline']),
+					array($push_data['userid'], $push_data['type'], $push_data['id'], isset($push_data['subid'])? $push_data['subid'] : 0, $push_data['title'], $push_data['author'], $push_data['dateline']),
 					array('userid')
 		);
 		$affected_rows = $smcFunc['db_affected_rows']($request);
