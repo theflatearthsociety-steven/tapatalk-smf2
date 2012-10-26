@@ -479,7 +479,7 @@ function mobiquo_parse_bbc($message, $smileys = true, $cache_id = '', $parse_tag
 {
     global $user_info, $modSettings, $context;
     
-    $message = preg_replace('/\[(\/?)code\]/si', '[$1quote]', $message);
+    $message = preg_replace('/\[(\/?)(code|php|html)\]/si', '[$1quote]', $message);
     $message = process_list_tag($message);
     $message = preg_replace('/\[(youtube|yt)\](.*?)\[\/\1\]/sie', "video_bbcode_format('$1', '$2')", $message);
     $user_info['time_format'] = $user_info['user_time_format'];

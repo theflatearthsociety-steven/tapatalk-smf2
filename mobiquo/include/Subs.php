@@ -819,8 +819,8 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'acronym',
 				'type' => 'unparsed_equals',
-				'before' => '<acronym title="$1">',
-				'after' => '</acronym>',
+				'before' => '',
+				'after' => '($1)',
 				'quoted' => 'optional',
 				'disabled_after' => ' ($1)',
 			),
@@ -1042,7 +1042,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'hr',
 				'type' => 'closed',
-				'content' => '<hr />',
+				'content' => '--------------------------------------------------------------------------<br>',
 				'block_level' => true,
 			),
 //			array(
