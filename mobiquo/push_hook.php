@@ -234,7 +234,7 @@ function tt_push_clean($str)
 
 function store_as_alert($push_data)
 {
-	global $smcFunc, $db_prefix;
+	global $smcFunc, $db_prefix, $modSettings;
     db_extend();
 
     $matched_tables = $smcFunc['db_list_tables'](false, $db_prefix . "tapatalk_push");
@@ -249,6 +249,29 @@ function store_as_alert($push_data)
 					array('userid')
 		);
 		$affected_rows = $smcFunc['db_affected_rows']($request);
+	}
+	$current_time = time();
+	// Check outdated push data and clean
+	if(isset($modSettings['tp_alert_clean_time']) && !empty($modSettings['tp_alert_clean_time']))
+	{
+		$last_clean_time = $modSettings['tp_alert_clean_time'];
+		$clean_period = 1*24*60*60;
+		if($current_time - $last_clean_time > $clean_period)
+		{
+			$d_request = $smcFunc['db_query']('', '
+				DELETE
+				FROM {db_prefix}tapatalk_push
+					WHERE dateline < {int:outdateTime}',
+				array(
+					'outdateTime' => $current_time - 30*24*60*60
+				)
+			);
+			updateSettings(array('tp_alert_clean_time' => $current_time),true);
+		}
+	}
+	else
+	{
+		updateSettings(array('tp_alert_clean_time' => $current_time));
 	}
 }
 
