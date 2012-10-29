@@ -36,6 +36,7 @@ switch ($request_name) {
         if ($params_num == 2 || $params_num == 4) {
             $_POST['user'] = $request_params[0];
             $_POST['password'] = $request_params[1];
+            $_POST['passwrd'] = $request_params[1];
             $_POST['cookielength'] = -1;
             $_GET['action'] = 'login2';
             if($params_num == 4)

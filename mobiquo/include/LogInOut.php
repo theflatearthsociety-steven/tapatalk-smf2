@@ -194,6 +194,8 @@ function Login2()
 			$context['login_errors'] = array($txt['username_no_exist']);
 			return;
 		}
+		unset($_REQUEST['hash_passwrd']);
+		unset($_REQUEST['password']);
 	}
 
 	$user_settings = $smcFunc['db_fetch_assoc']($request);
@@ -234,7 +236,7 @@ function Login2()
 		}
 	}
 	else
-		$sha_passwd = sha1(strtolower($user_settings['member_name']) . un_htmlspecialchars($_POST['passwrd']));
+		$sha_passwd = sha1(strtolower($user_settings['member_name']) . un_htmlspecialchars($_REQUEST['passwrd']));
 
 	// Bad password!  Thought you could fool the database?!
 	if ($user_settings['passwd'] != $sha_passwd)
