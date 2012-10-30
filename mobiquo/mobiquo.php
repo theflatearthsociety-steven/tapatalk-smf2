@@ -1,6 +1,8 @@
 <?php
 
 define('IN_MOBIQUO', true);
+// Get everything started up...
+define('SMF', 1);
 
 if (function_exists('set_magic_quotes_runtime'))
     @set_magic_quotes_runtime(0);
