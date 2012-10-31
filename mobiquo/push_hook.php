@@ -38,6 +38,8 @@ function tapatalk_push_reply($post_id)
                 'url'  => $boardurl,
                 'data' => base64_encode(serialize(array($ttp_data))),
             );
+            if(isset($modSettings['tp_push_key']) && !empty($modSettings['tp_push_key']))
+                $ttp_post_data['key'] = $modSettings['tp_push_key'];
             $return_status = tt_do_post_request($ttp_post_data);
         }
     }
@@ -87,6 +89,8 @@ function tapatalk_push_quote_tag($post_id, $newtopic = false, $pushed_user_ids =
                     'url'  => $boardurl,
                     'data' => base64_encode(serialize(array($ttp_data))),
                 );
+                if(isset($modSettings['tp_push_key']) && !empty($modSettings['tp_push_key']))
+                    $ttp_post_data['key'] = $modSettings['tp_push_key'];
                 $return_status = tt_do_post_request($ttp_post_data);
             }
         }
@@ -127,6 +131,8 @@ function tapatalk_push_quote_tag($post_id, $newtopic = false, $pushed_user_ids =
                     'url'  => $boardurl,
                     'data' => base64_encode(serialize(array($ttp_data))),
                 );
+                if(isset($modSettings['tp_push_key']) && !empty($modSettings['tp_push_key']))
+                    $ttp_post_data['key'] = $modSettings['tp_push_key'];
                 $return_status = tt_do_post_request($ttp_post_data);
             }
         }
@@ -181,6 +187,8 @@ function tapatalk_push_pm()
                     'url'  => $boardurl,
                     'data' => base64_encode(serialize(array($ttp_data))),
                 );
+                if(isset($modSettings['tp_push_key']) && !empty($modSettings['tp_push_key']))
+                    $ttp_post_data['key'] = $modSettings['tp_push_key'];
                 $return_status = tt_do_post_request($ttp_post_data);
             }
         }
