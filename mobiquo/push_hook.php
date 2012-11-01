@@ -142,9 +142,10 @@ function tapatalk_push_pm()
 {
     global $user_info, $smcFunc, $boardurl, $modSettings;
 
+
     if(!$modSettings['tp_pushEnabled'] || (!function_exists('curl_init') && !ini_get('allow_url_fopen')))
         return;
-    if (isset($_REQUEST['recipient_to']) && is_array($_REQUEST['recipient_to']) && !empty($_REQUEST['recipient_to']) && isset($_REQUEST['subject']))
+    if (isset($_POST['recipient_to']) && is_array($_POST['recipient_to']) && !empty($_POST['recipient_to']) && isset($_POST['subject']))
     {
         $timestr = time();
         $id_pm_req = $smcFunc['db_query']('', '
@@ -167,7 +168,7 @@ function tapatalk_push_pm()
                 FROM {db_prefix}tapatalk_users tu
                 WHERE tu.userid IN ({array_int:recipient_to}) AND tu.pm = 1',
                 array(
-                    'recipient_to' => $_REQUEST['recipient_to'],//$recipientList['to'],
+                    'recipient_to' => $_POST['recipient_to'],//$recipientList['to'],
                 )
             );
             while($row = $smcFunc['db_fetch_assoc']($request))
@@ -178,7 +179,7 @@ function tapatalk_push_pm()
                     'userid'    => $row['userid'],
                     'type'      => 'pm',
                     'id'        => $id_pm['id_pm'],
-                    'title'     => tt_push_clean($_REQUEST['subject']),
+                    'title'     => tt_push_clean($_POST['subject']),
                     'author'    => tt_push_clean($user_info['name']),
                     'dateline'  => time(),
                 );
