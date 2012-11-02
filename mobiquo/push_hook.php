@@ -60,38 +60,42 @@ function tapatalk_push_quote_tag($post_id, $newtopic = false, $pushed_user_ids =
         if(preg_match_all('/\[quote author=(.*?) link=.*?\]/si', $message, $quote_matches))
         {
             $quotedUsers = $quote_matches[1];
-            $quote_ids = loadMemberData($quotedUsers, true);
-            $request = $smcFunc['db_query']('', '
-                SELECT tu.userid
-                FROM {db_prefix}tapatalk_users tu
-                WHERE tu.quote = 1 AND tu.userid IN ({'.(is_array($quote_ids) ? 'array_int': 'int').':quoteids})' ,
-                array(
-                    'quoteids' => $quote_ids,
-                )
-            );
-            while($row = $smcFunc['db_fetch_assoc']($request))
+            $loaded_id = loadMemberData($quotedUsers, true);
+            $quote_ids = is_array($loaded_id)? $loaded_id : array($loaded_id);
+            if(!empty($quote_ids))
             {
-                if ($row['userid'] == $user_info['id']) continue;
-                if (in_array($row['userid'], $pushed_user_ids)) continue;
-                
-                $ttp_data = array(
-                    'userid'    => $row['userid'],
-                    'type'      => 'quote',
-                    'id'        => ($newtopic ? $topic : $context['current_topic']),
-                    'subid'     => $post_id,
-                    'title'     => tt_push_clean($_POST['subject']),
-                    'author'    => tt_push_clean($user_info['name']),
-                    'dateline'  => time(),
+                $request = $smcFunc['db_query']('', '
+                    SELECT tu.userid
+                    FROM {db_prefix}tapatalk_users tu
+                    WHERE tu.quote = 1 AND tu.userid IN ({'.(is_array($quote_ids) ? 'array_int': 'int').':quoteids})' ,
+                    array(
+                        'quoteids' => $quote_ids,
+                    )
                 );
-                $pushed_user_ids[] = $row['userid'];
-                store_as_alert($ttp_data);
-                $ttp_post_data = array(
-                    'url'  => $boardurl,
-                    'data' => base64_encode(serialize(array($ttp_data))),
-                );
-                if(isset($modSettings['tp_push_key']) && !empty($modSettings['tp_push_key']))
-                    $ttp_post_data['key'] = $modSettings['tp_push_key'];
-                $return_status = tt_do_post_request($ttp_post_data);
+                while($row = $smcFunc['db_fetch_assoc']($request))
+                {
+                    if ($row['userid'] == $user_info['id']) continue;
+                    if (in_array($row['userid'], $pushed_user_ids)) continue;
+                    
+                    $ttp_data = array(
+                        'userid'    => $row['userid'],
+                        'type'      => 'quote',
+                        'id'        => ($newtopic ? $topic : $context['current_topic']),
+                        'subid'     => $post_id,
+                        'title'     => tt_push_clean($_POST['subject']),
+                        'author'    => tt_push_clean($user_info['name']),
+                        'dateline'  => time(),
+                    );
+                    $pushed_user_ids[] = $row['userid'];
+                    store_as_alert($ttp_data);
+                    $ttp_post_data = array(
+                        'url'  => $boardurl,
+                        'data' => base64_encode(serialize(array($ttp_data))),
+                    );
+                    if(isset($modSettings['tp_push_key']) && !empty($modSettings['tp_push_key']))
+                        $ttp_post_data['key'] = $modSettings['tp_push_key'];
+                    $return_status = tt_do_post_request($ttp_post_data);
+                }
             }
         }
         //@ push
@@ -102,38 +106,42 @@ function tapatalk_push_quote_tag($post_id, $newtopic = false, $pushed_user_ids =
                 if ($tag) $tags[1][$index] = $tag;
             }
             $tagged_usernames =  array_unique($tags[1]);
-            $tag_ids = loadMemberData($tagged_usernames, true);
-            $request = $smcFunc['db_query']('', '
-                SELECT tu.userid
-                FROM {db_prefix}tapatalk_users tu
-                WHERE tu.tag = 1 AND tu.userid IN ({array_int:tag_ids})' ,
-                array(
-                    'tag_ids' => $tag_ids,
-                )
-            );
-            while($row = $smcFunc['db_fetch_assoc']($request))
+            $loaded_id = loadMemberData($tagged_usernames, true);
+            $tag_ids = is_array($loaded_id)? $loaded_id : array($loaded_id);
+            if(!empty($tag_ids))
             {
-                if ($row['userid'] == $user_info['id']) continue;
-                if (in_array($row['userid'], $pushed_user_ids)) continue;
-                
-                $ttp_data = array(
-                    'userid'    => $row['userid'],
-                    'type'      => 'tag',
-                    'id'        => ($newtopic ? $topic : $context['current_topic']),
-                    'subid'     => $post_id,
-                    'title'     => tt_push_clean($_POST['subject']),
-                    'author'    => tt_push_clean($user_info['name']),
-                    'dateline'  => time(),
+                $request = $smcFunc['db_query']('', '
+                    SELECT tu.userid
+                    FROM {db_prefix}tapatalk_users tu
+                    WHERE tu.tag = 1 AND tu.userid IN ({array_int:tag_ids})' ,
+                    array(
+                        'tag_ids' => $tag_ids,
+                    )
                 );
-                $pushed_user_ids[] = $row['userid'];
-                store_as_alert($ttp_data);
-                $ttp_post_data = array(
-                    'url'  => $boardurl,
-                    'data' => base64_encode(serialize(array($ttp_data))),
-                );
-                if(isset($modSettings['tp_push_key']) && !empty($modSettings['tp_push_key']))
-                    $ttp_post_data['key'] = $modSettings['tp_push_key'];
-                $return_status = tt_do_post_request($ttp_post_data);
+                while($row = $smcFunc['db_fetch_assoc']($request))
+                {
+                    if ($row['userid'] == $user_info['id']) continue;
+                    if (in_array($row['userid'], $pushed_user_ids)) continue;
+                    
+                    $ttp_data = array(
+                        'userid'    => $row['userid'],
+                        'type'      => 'tag',
+                        'id'        => ($newtopic ? $topic : $context['current_topic']),
+                        'subid'     => $post_id,
+                        'title'     => tt_push_clean($_POST['subject']),
+                        'author'    => tt_push_clean($user_info['name']),
+                        'dateline'  => time(),
+                    );
+                    $pushed_user_ids[] = $row['userid'];
+                    store_as_alert($ttp_data);
+                    $ttp_post_data = array(
+                        'url'  => $boardurl,
+                        'data' => base64_encode(serialize(array($ttp_data))),
+                    );
+                    if(isset($modSettings['tp_push_key']) && !empty($modSettings['tp_push_key']))
+                        $ttp_post_data['key'] = $modSettings['tp_push_key'];
+                    $return_status = tt_do_post_request($ttp_post_data);
+                }
             }
         }
     }
@@ -204,7 +212,7 @@ function tt_do_post_request($data)
 
     if (ini_get('allow_url_fopen'))
     {
-        $fp = fsockopen($push_host, 80, &$errno, &$errstr, 5);
+        $fp = fsockopen($push_host, 80, $errno, $errstr, 5);
         
         if(!$fp)
             return false;
