@@ -60,8 +60,7 @@ function tapatalk_push_quote_tag($post_id, $newtopic = false, $pushed_user_ids =
         if(preg_match_all('/\[quote author=(.*?) link=.*?\]/si', $message, $quote_matches))
         {
             $quotedUsers = $quote_matches[1];
-            $loaded_id = loadMemberData($quotedUsers, true);
-            $quote_ids = is_array($loaded_id)? $loaded_id : array($loaded_id);
+            $quote_ids = verify_smf_userids_from_names($quotedUsers);
             if(!empty($quote_ids))
             {
                 $request = $smcFunc['db_query']('', '
@@ -106,8 +105,7 @@ function tapatalk_push_quote_tag($post_id, $newtopic = false, $pushed_user_ids =
                 if ($tag) $tags[1][$index] = $tag;
             }
             $tagged_usernames =  array_unique($tags[1]);
-            $loaded_id = loadMemberData($tagged_usernames, true);
-            $tag_ids = is_array($loaded_id)? $loaded_id : array($loaded_id);
+            $tag_ids = verify_smf_userids_from_names($tagged_usernames);
             if(!empty($tag_ids))
             {
                 $request = $smcFunc['db_query']('', '
@@ -292,3 +290,32 @@ function store_as_alert($push_data)
 	}
 }
 
+function verify_smf_userids_from_names($names)
+{
+    $direct_ids = array();
+    $valid_names = array();
+    $verified_ids = array();
+    foreach($names as $index => $user)
+    {
+        if(is_numeric($user) && $user == intval($user))
+            $direct_ids[] = $user;
+        else
+            $valid_names[] = $user;
+    }
+    if(!empty($valid_names))
+    {
+        $loaded_ids = loadMemberData($valid_names, true);
+        //make sure tids only contains integer values
+        if(is_array($loaded_ids))
+        {
+            foreach($loaded_ids as $idx => $loaded_id)
+                if($loaded_id == intval($loaded_id))
+                    $verified_ids[] = $loaded_id;
+        }
+        else
+            if($loaded_ids == intval($loaded_ids))
+                    $verified_ids[] = $loaded_ids;
+    }
+    $verified_ids = array_unique(array_merge($direct_ids, $verified_ids));
+    return $verified_ids;
+}
