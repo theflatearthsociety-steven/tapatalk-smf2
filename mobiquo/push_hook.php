@@ -309,11 +309,11 @@ function verify_smf_userids_from_names($names)
         if(is_array($loaded_ids))
         {
             foreach($loaded_ids as $idx => $loaded_id)
-                if($loaded_id == intval($loaded_id))
+                if(is_numeric($loaded_id) && $loaded_id == intval($loaded_id))
                     $verified_ids[] = $loaded_id;
         }
         else
-            if($loaded_ids == intval($loaded_ids))
+            if(is_numeric($loaded_ids) && $loaded_ids == intval($loaded_ids))
                     $verified_ids[] = $loaded_ids;
     }
     $verified_ids = array_unique(array_merge($direct_ids, $verified_ids));
