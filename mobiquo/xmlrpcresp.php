@@ -120,7 +120,9 @@ function get_topic_func()
     $users = array();
     foreach($context['topics'] as $topic)
     {
-        $users[] = $topic['first_post']['member']['id'];
+        $u_id = $topic['first_post']['member']['id'];
+        if(is_numeric($u_id) && $u_id != 0)
+            $users[] = $u_id;
     }
 
     loadMemberData(array_unique($users));

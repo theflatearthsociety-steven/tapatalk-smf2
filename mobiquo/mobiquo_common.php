@@ -301,7 +301,7 @@ function parse_bbcode($str)
         '#\[color=(\#[\da-fA-F]{3}|\#[\da-fA-F]{6}|[A-Za-z]{1,20}|rgb\(\d{1,3}, ?\d{1,3}, ?\d{1,3}\))\](.*?)\[/color\]#si',
     );
     
-    if ($GLOBALS['return_html']) {
+    if (isset($GLOBALS['return_html']) && $GLOBALS['return_html']) {
         $str = htmlspecialchars($str);
         $replace = array(
             '<$1>$2</$1>',
@@ -484,7 +484,7 @@ function mobiquo_parse_bbc($message, $smileys = true, $cache_id = '', $parse_tag
     $message = preg_replace('/\[(youtube|yt)\](.*?)\[\/\1\]/sie', "video_bbcode_format('$1', '$2')", $message);
     $user_info['time_format'] = $user_info['user_time_format'];
     $modSettings['todayMod'] = $modSettings['todayMod_bak'];
-    $message = $context['user_post_avaible']? $message : preg_replace('/\[hide\](.*?)\[\/hide\]/','',$message);
+    $message = isset($context['user_post_avaible']) && $context['user_post_avaible']? $message : preg_replace('/\[hide\](.*?)\[\/hide\]/','',$message);
     $message = str_replace('[spoiler]', "\nSpoiler for Hiden:\n[quote]", $message);
     $message = str_replace('[/spoiler]', '[/quote]', $message);
     $message = parse_bbc($message, $smileys, $cache_id, $parse_tags);
