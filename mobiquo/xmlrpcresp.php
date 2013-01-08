@@ -198,10 +198,15 @@ function get_thread_func()
         if(!empty($message['attachment'])) {
             foreach($message['attachment'] as $attachment)
             {
+                $split_strs = preg_split('/\./', $attachment['name']);
+                if(count($split_strs) < 2)
+                    $file_type = 'others';
+                else
+                    $file_type = $split_strs[count($split_strs) -1];
                 $xmlrpc_attachment = new xmlrpcval(array(
                     'filename'      => new xmlrpcval(basic_clean($attachment['name']), 'base64'),
                     'filesize'      => new xmlrpcval($attachment['byte_size'], 'int'),
-                    'content_type'  => new xmlrpcval($attachment['is_image'] ? 'image' : 'others'),
+                    'content_type'  => new xmlrpcval($attachment['is_image'] ? 'image' : $file_type),
                     'thumbnail_url' => new xmlrpcval($attachment['thumbnail']['has_thumb'] ? $attachment['thumbnail']['href'] : ''),
                     'url'           => new xmlrpcval($attachment['href'])
                 ), 'struct');
