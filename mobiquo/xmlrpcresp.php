@@ -79,7 +79,32 @@ function login_func()
         $avatar = $profile['avatar'] == '' ? ($profile['id_attach'] > 0 ? (empty($profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) : '') : (stristr($profile['avatar'], 'http://') ? $profile['avatar'] : $modSettings['avatar_url'] . '/' . $profile['avatar']);
     else
         $avatar = '';
-
+    $push_status = array();
+    if($login_status && !empty($user_info['id']) && isset($modSettings['tp_pushEnabled'])&& $modSettings['tp_pushEnabled'])
+    {
+        $request = $smcFunc['db_query']('', '
+            SELECT tu.*
+            FROM {db_prefix}tapatalk_users tu
+            WHERE tu.userid = {int:userid}',
+            array(
+                'userid' => $user_info['id'],
+            )
+        );
+        while($row = $smcFunc['db_fetch_assoc']($request))
+        {
+            foreach($row as $name => $value)
+            {
+                $display_name = getStarndardNameByTableKey($name);
+                if($display_name)
+                {
+                    $push_status[] = new xmlrpcval(array(
+                        'name'  => new xmlrpcval($display_name, 'string'),
+                        'value' => new xmlrpcval((boolean)$value, 'boolean')
+                    ), 'struct');
+                }
+            }
+        }
+    }
     $response = new xmlrpcval(array(
         'result'        => new xmlrpcval($login_status, 'boolean'),
         'result_text'   => new xmlrpcval($result_text, 'base64'),
@@ -97,8 +122,8 @@ function login_func()
         'can_upload_avatar' => new xmlrpcval(allowedTo('profile_upload_avatar'), 'boolean'),
         'can_search'        => new xmlrpcval(allowedTo('search_posts'), 'boolean'),
         'can_whosonline'    => new xmlrpcval(allowedTo('who_view'), 'boolean'),
+        'push_type'         => new xmlrpcval($push_status, 'array'),
     ), 'struct');
-
     return new xmlrpcresp($response);
 }
 
@@ -564,34 +589,6 @@ function get_user_info_func()
         $loaded_id = loadMemberData($_GET['user'], true);
         $queried_userid = is_array($loaded_id)? $loaded_id[0] : $loaded_id;
     }
-
-    if($queried_userid == $user_info['id'] && isset($modSettings['tp_pushEnabled'])&& $modSettings['tp_pushEnabled'])
-    {
-        $request = $smcFunc['db_query']('', '
-            SELECT tu.*
-            FROM {db_prefix}tapatalk_users tu
-            WHERE tu.userid = {int:userid}',
-            array(
-                'userid' => $queried_userid,
-            )
-        );
-        while($row = $smcFunc['db_fetch_assoc']($request))
-        {
-            foreach($row as $name => $value)
-            {
-                $display_name = getDisplayNameByTableKey($name);
-                if($display_name)
-                {
-                    $display_value = $value? 'On':'Off';
-                    $custom_fields[] = new xmlrpcval(array(
-                        'name'  => new xmlrpcval($display_name, 'base64'),
-                        'value' => new xmlrpcval($display_value, 'base64')
-                    ), 'struct');
-                }
-            }
-        }
-    }
-
     
     $xmlrpc_user_info = new xmlrpcval(array(
         'user_id'               => new xmlrpcval($context['member']['id'], 'string'),

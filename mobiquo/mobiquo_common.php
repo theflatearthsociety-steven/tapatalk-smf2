@@ -741,17 +741,19 @@ function mobi_table_exist($table_name)
     return !empty($tables);
 }
 
-function getDisplayNameByTableKey($key)
+function getStarndardNameByTableKey($key)
 {
-    $display_key_map = array(
-    'pm'       => 'PM push',
-    'subscribe'=> 'Subscription topic push',
-    'liked'    => 'Likes push',
-    'quote'    => 'Quotes push',
-    'newtopic' => 'Subscription forum push',
-    'tag'      => 'Mention push',
+    $starndard_key_map = array(
+        'conv'     => 'conv',
+        'pm'       => 'pm',
+        'subscribe'=> 'sub',
+        'liked'    => 'like',
+        'quote'    => 'quote',
+        'newtopic' => 'newtopic',
+        'tag'      => 'tag',
+        'announcement'      => 'ann',
     );
-    return isset($display_key_map[$key])? $display_key_map[$key]: '';
+    return isset($starndard_key_map[$key])? $starndard_key_map[$key]: '';
 }
 
 function tp_get_forum_icon($id, $type = 'forum', $lock = false, $new = false)
