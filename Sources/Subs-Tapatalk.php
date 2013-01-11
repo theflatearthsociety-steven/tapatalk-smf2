@@ -16,6 +16,7 @@ function Tapatalk_add_admin_areas($adminAreas)
             'subsections' => array(
                 'general' => array($txt['tp_general_settings']),
                 'boards' => array($txt['tp_board_settings']),
+                'rebranding' => array($txt['tp_rebranding_settings']),
                 'others' => array($txt['tp_other_settings']),
             ),
         ),

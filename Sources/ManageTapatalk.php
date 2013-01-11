@@ -25,6 +25,7 @@ function ManageTapatalk()
 		'general' => 'ManageTapatalkGeneral',
 		'others' => 'ManageTapatalkOthers',
 		'boards' => 'ManageTapatalkBoards',
+		'rebranding' => 'ManageTapatalkRebranding',
 	);
 
 	// Load up all the tabs...
@@ -38,6 +39,10 @@ function ManageTapatalk()
 			'boards' => array(
 				'label' => $txt['tp_board_settings'],
 				'description' => $txt['tp_board_settingsDesc'],
+			),
+			'rebranding' => array(
+				'label' => $txt['tp_rebranding_settings'],
+				'description' => $txt['tp_rebranding_settingsDesc'],
 			),
 			'others' => array(
 				'label' => $txt['tp_other_settings'],
@@ -198,6 +203,38 @@ function ManageTapatalkBoards($return_config = false)
 	loadTemplate('Tapatalk');
 	$context['sub_template'] = 'tapatalk_show_boards';
 }
+
+function ManageTapatalkRebranding($return_config = false)
+{
+	global $txt, $scripturl, $context, $settings, $sc, $modSettings;
+
+	$config_vars = array(
+			array('text', 'tp_ipad_msg', 'value'=> isset($modSettings['tp_ipad_msg'])? $modSettings['tp_ipad_msg'] : 'This forum has an app for iPad! Click OK to learn more about Tapatalk.' , 'size' => '50'),
+			array('text', 'tp_ipad_url', 'value'=> isset($modSettings['tp_ipad_url'])? $modSettings['tp_ipad_url'] : 'http://itunes.apple.com/us/app/tapatalk-hd-for-ipad/id481579541?mt=8' ,  'size' => '50'),
+			array('text', 'tp_iphone_msg', 'value'=> isset($modSettings['tp_iphone_msg'])? $modSettings['tp_iphone_msg'] : 'This forum has an app for iPhone and iPod Touch! Click OK to learn more about Tapatalk.' ,  'size' => '50'),
+			array('text', 'tp_iphone_url', 'value'=> isset($modSettings['tp_iphone_url'])? $modSettings['tp_iphone_url'] : 'http://itunes.apple.com/us/app/tapatalk-forum-app/id307880732?mt=8' ,  'size' => '50'),
+			array('text', 'tp_android_msg', 'value'=> isset($modSettings['tp_android_msg'])? $modSettings['tp_android_msg'] : 'This forum has an app for Android. Click OK to learn more about Tapatalk.' ,  'size' => '50'),
+			array('text', 'tp_android_url', 'value'=> isset($modSettings['tp_android_url'])? $modSettings['tp_android_url'] : 'market://details?id=com.quoord.tapatalkpro.activity' ,  'size' => '50'),
+			array('text', 'tp_kf_msg', 'value'=> isset($modSettings['tp_kf_msg'])? $modSettings['tp_kf_msg'] : 'This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk.' ,  'size' => '50'),
+			array('text', 'tp_kf_url', 'value'=> isset($modSettings['tp_kf_url'])? $modSettings['tp_kf_url'] : 'http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkpro.activity' ,  'size' => '50'),
+	);
+
+	if ($return_config)
+		return $config_vars;
+
+	// Saving?
+	if (isset($_GET['save']))
+	{
+		saveDBSettings($config_vars);
+		redirectexit('action=admin;area=tapatalksettings;sa=rebranding');
+	}
+
+	$context['post_url'] = $scripturl . '?action=admin;area=tapatalksettings;sa=rebranding;save';
+	$context['settings_title'] = $txt['tapatalktitle'];
+
+	prepareDBSettingContext($config_vars);
+}
+
 function hide_boards(&$boards_hide_for_tapatalk, $board_content, $hide_all_children = false)
 {
     if(empty($board_content['children']))

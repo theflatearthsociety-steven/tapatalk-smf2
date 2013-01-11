@@ -5,9 +5,20 @@
     <file name="$sourcedir/Load.php">
         <operation>
             <search position="after"><![CDATA[	$context['menu_separator'] = !empty($settings['use_image_buttons']) ? ' ' : ' | ';]]></search>
-            <add><![CDATA[	$jsfile_name = (isset($modSettings['tp_tapatalkNotifierForChromeEnabled']) && $modSettings['tp_tapatalkNotifierForChromeEnabled'] && isset($context['browser']['is_chrome']) && $context['browser']['is_chrome'] ) ? "tapatalkdetect.js" :"tapatalkdetect-nochrome.js";
-	$context['html_headers'] .= '<script type="text/javascript" language="JavaScript" src="' . $boardurl . '/mobiquo/'.$jsfile_name.'"></script>';
-]]></add>
+            <add><![CDATA[	$jsfile_name = "tapatalkdetect.js";//(isset($modSettings['tp_tapatalkNotifierForChromeEnabled']) && $modSettings['tp_tapatalkNotifierForChromeEnabled'] && isset($context['browser']['is_chrome']) && $context['browser']['is_chrome'] ) ? "tapatalkdetect.js" :"tapatalkdetect-nochrome.js";
+    $context['html_headers'] .= '<script type="text/javascript">
+        var tapatalk_iphone_msg = "'.(isset($modSettings['tp_iphone_msg']) ? $modSettings['tp_iphone_msg'] : 'This forum has an app for iPhone and iPod Touch! Click OK to learn more about Tapatalk.') .'";
+        var tapatalk_iphone_url = "'.(isset($modSettings['tapatalk_iphone_url']) ? $modSettings['tapatalk_iphone_url'] : 'http://itunes.apple.com/us/app/tapatalk-forum-app/id307880732?mt=8').'";
+        var tapatalk_ipad_msg = "'.(isset($modSettings['tapatalk_ipad_msg']) ? $modSettings['tapatalk_ipad_msg'] : 'This forum has an app for iPad! Click OK to learn more about Tapatalk.').'";
+        var tapatalk_ipad_url = "'.(isset($modSettings['tapatalk_ipad_url']) ? $modSettings['tapatalk_ipad_url'] : 'http://itunes.apple.com/us/app/tapatalk-hd-for-ipad/id481579541?mt=8').'";
+        var tapatalk_kindle_msg = "'.(isset($modSettings['tapatalk_kindle_msg']) ? $modSettings['tapatalk_kindle_msg'] : 'This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk.').'";
+        var tapatalk_kindle_url = "'.(isset($modSettings['tapatalk_kindle_url']) ? $modSettings['tapatalk_kindle_url'] : 'http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkpro.activity').'";
+        var tapatalk_android_msg = "'.(isset($modSettings['tapatalk_android_msg']) ? $modSettings['tapatalk_android_msg'] : 'This forum has an app for Android. Click OK to learn more about Tapatalk.').'";
+        var tapatalk_android_url = "'.(isset($modSettings['tapatalk_android_url']) ? $modSettings['tapatalk_android_url'] : 'market://details?id=com.quoord.tapatalkpro.activity').'";
+        var tapatalk_chrome_enable = '.(isset($modSettings['tp_tapatalkNotifierForChromeEnabled']) && $modSettings['tp_tapatalkNotifierForChromeEnabled'] && isset($context['browser']['is_chrome']) && $context['browser']['is_chrome']? 'true' : 'false').';
+        var tapatalkdir = "mobiquo";
+    </script>';
+	$context['html_headers'] .= '<script type="text/javascript" language="JavaScript" src="' . $boardurl . '/mobiquo/'.$jsfile_name.'"></script>';]]></add>
         </operation>
     </file>
         <file name="$sourcedir/Post.php">
@@ -71,7 +82,8 @@
 $txt['tapatalktitle'] = 'Tapatalk Settings';
 $txt['tp_general_settings'] = 'General';
 $txt['tp_other_settings'] = 'Others';
-$txt['tp_board_settings'] = 'Boards';]]></add>
+$txt['tp_board_settings'] = 'Boards';
+$txt['tp_rebranding_settings'] = 'Rebranding Settings';]]></add>
         </operation>
         </file>
         <file name="$themedir/languages/ManageSettings.english.php">
@@ -83,14 +95,24 @@ $txt['tp_pushEnabled'] = 'Enable push for Tapatalk users';
 $txt['tapatalkEnabled'] = 'Enable tapatalk';
 $txt['tp_guestOkayEnabled'] = 'Enable forum view for guest by tapatalk';
 $txt['tp_tapatalkNotifierForChromeEnabled'] = 'Enable Tapatalk Notifier in Chrome';
+$txt['tp_ipad_msg'] = 'iPad Product Message';
+$txt['tp_ipad_url'] = 'iPad Product URL';
+$txt['tp_iphone_msg'] = 'iPhone Product Message';
+$txt['tp_iphone_url'] = 'iPhone Product URL';
+$txt['tp_android_msg'] = 'Android Product Message';
+$txt['tp_android_url'] = 'Android Product URL';
+$txt['tp_kf_msg'] = 'Kindle Fire Product Message';
+$txt['tp_kf_url'] = 'Kindle Fire Product URL';
 $txt['tp_general_settings'] = 'General';
 $txt['tp_board_settings'] = 'Boards';
+$txt['tp_rebranding_settings'] = 'Rebranding Settings';
 $txt['tp_other_settings'] = 'Help';
 $txt['tp_parent_board'] = 'Boards1';
 $txt['tp_child_board'] = 'Boards2';
 $txt['tp_board_settingsDesc'] = 'Set the board you want to hide to tapatalk users';
 $txt['tp_general_settingsDesc'] = 'This is the general settings for tapatalk';
 $txt['tp_other_settingsDesc'] = 'Taptalk information';
+$txt['tp_rebranding_settingsDesc'] = 'Settings for build your own users';
 $txt['tp_select_boards'] = 'Select Boards to HIDE on Tapatalk';
 $txt['tp_register_page_url'] = 'Register page url';
 $txt['tp_push_key'] = 'Push key';
@@ -124,6 +146,14 @@ $helptxt['tp_guestOkayEnabled'] = 'Allow non-registered users to access your for
 $helptxt['tp_tapatalkNotifierForChromeEnabled'] = 'User of your forum using Google Chrome web browser will be notified with the availability of \'Tapatalk Notifier for Chrome\'. Tapatalk Notifier for Chrome is a web browser extension that notify your members with a small alert when he received a new Private Message from your forum. This is a one time alert and is a great tool to keep your users engaged with your forum.';
 $helptxt['tp_register_page_url'] = 'Registration URL relative to your forum root path';
 $helptxt['tp_push_key'] = 'Optional. To improve the quality of Push Notification from your forum, please fill-in copy and paste the Push Notification Key from Tapatalk Forum Owner Area to here.';
+$helptxt['tp_ipad_msg'] = 'Customize this message if you are Tapatalk Rebranding Customer and has published your App to Apple App Store. Default: "This forum has an app for iPad! Click OK to learn more about Tapatalk."';
+$helptxt['tp_ipad_url'] = 'Change this URL if you are Tapatalk Rebranding Customer and has obtained your App URL from Apple App Store. Default: http://itunes.apple.com/us/app/tapatalk-hd-for-ipad/id481579541?mt=8';
+$helptxt['tp_iphone_msg'] = 'Customize this message if you are Tapatalk Rebranding Customer and has published your App to Apple App Store. Default: "This forum has an app for iPhone and iPod Touch! Click OK to learn more about Tapatalk."';
+$helptxt['tp_iphone_url'] = 'Change this URL if you are Tapatalk Rebranding Customer and has obtained your App URL from Apple App Store. Default: http://itunes.apple.com/us/app/tapatalk-forum-app/id307880732?mt=8';
+$helptxt['tp_android_msg'] = 'Customize this message if you are Tapatalk Rebranding Customer and has published your App to Google Play. Default: "This forum has an app for Android. Click OK to learn more about Tapatalk."';
+$helptxt['tp_android_url'] = 'Change this URL if you are Tapatalk Rebranding Customer and has obtained your App URL from Google Play. Default: market://details?id=com.quoord.tapatalkpro.activity';
+$helptxt['tp_kf_msg'] = 'Customize this message if you are Tapatalk Rebranding Customer and has published your App to Amazon App Store. Default: "This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk."';
+$helptxt['tp_kf_url'] = 'Change this URL if you are Tapatalk Rebranding Customer and has obtained your App URL from Amazon App Store. Default: http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkpro.activity';
 //Tapatalk ends]]></add>
         </operation>
         </file>
