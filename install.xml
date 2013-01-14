@@ -103,6 +103,7 @@ $txt['tp_android_msg'] = 'Android Product Message';
 $txt['tp_android_url'] = 'Android Product URL';
 $txt['tp_kf_msg'] = 'Kindle Fire Product Message';
 $txt['tp_kf_url'] = 'Kindle Fire Product URL';
+$txt['tp_allow_usergroup'] = 'Allow usergroup on Tapatalk';
 $txt['tp_general_settings'] = 'General';
 $txt['tp_board_settings'] = 'Boards';
 $txt['tp_rebranding_settings'] = 'Rebranding Settings';
@@ -154,6 +155,7 @@ $helptxt['tp_android_msg'] = 'Customize this message if you are Tapatalk Rebrand
 $helptxt['tp_android_url'] = 'Change this URL if you are Tapatalk Rebranding Customer and has obtained your App URL from Google Play. Default: market://details?id=com.quoord.tapatalkpro.activity';
 $helptxt['tp_kf_msg'] = 'Customize this message if you are Tapatalk Rebranding Customer and has published your App to Amazon App Store. Default: "This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk."';
 $helptxt['tp_kf_url'] = 'Change this URL if you are Tapatalk Rebranding Customer and has obtained your App URL from Amazon App Store. Default: http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkpro.activity';
+$helptxt['tp_allow_usergroup'] = 'Allow usergroups to login via Tapatalk, leave this option empty means that all usergroups users can login via Tapatalk. Different usergroups should be departed by comma, for example, "3,11,6" which means only users who belongs to 3,6 and 11 usergroups can login via Tapatalk.';
 //Tapatalk ends]]></add>
         </operation>
         </file>

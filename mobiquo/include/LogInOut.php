@@ -460,7 +460,20 @@ function DoLogin()
 	), $request_params);
 	if ($input['push']) 
 	    update_push();
-	
+
+	if(isset($modSettings['tp_allow_usergroup']) && !empty($modSettings['tp_allow_usergroup']))
+	{
+		$allow_tapatalk = false;
+		$allow_usergroups = explode(',', $modSettings['tp_allow_usergroup']);
+		foreach($user_info['groups'] as $group_id)
+		{
+			if(in_array($group_id, $allow_usergroups))
+				$allow_tapatalk = true;
+		}
+		if(!$allow_tapatalk)
+			get_error('You are not allowed to login via Tapatalk, please contact your forum administrator.');
+	}
+
 	// Are you banned?
 	is_not_banned(true);
 
