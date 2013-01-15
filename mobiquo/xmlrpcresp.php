@@ -9,7 +9,7 @@ function get_config_func()
     $config_list = array(
         'is_open'    => new xmlrpcval( ($maintenance == 0 && $modSettings['tapatalkEnabled']) ? true : false, 'boolean'),
         'guest_okay' => new xmlrpcval($modSettings['allow_guestAccess'] && $modSettings['tp_guestOkayEnabled']? true : false, 'boolean'),
-        'push'       => new xmlrpcval($modSettings['tp_pushEnabled']? true: false,'string'),
+        'push'       => new xmlrpcval(isset($modSettings['tp_pushEnabled'])&& $modSettings['tp_pushEnabled']? true: false,'string'),
         'reg_url'       => new xmlrpcval($modSettings['tp_register_page_url'],'string'),
 
     );
@@ -1451,9 +1451,11 @@ function get_alert_func()
 
     $start = ($_POST['page']-1)*$_POST['perpage'];
     $current_userid = $user_info['id'];
-    
     if($current_userid == 0)
-        return_fault();
+        return new xmlrpcresp(new xmlrpcval(array(
+            'result'        => new xmlrpcval(false, 'boolean'),
+            'result_text'   => new xmlrpcval("You should loggin to do that!", 'base64'),
+        )));
 
     $alerts = array();
     $request = $smcFunc['db_query']('', '
