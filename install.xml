@@ -159,4 +159,12 @@ $helptxt['tp_allow_usergroup'] = 'Allow usergroups to login via Tapatalk, leave 
 //Tapatalk ends]]></add>
         </operation>
         </file>
+
+        <file name="$sourcedir/ModerationCenter.php">
+        <operation>
+            <search position="before"><![CDATA[			'time_started' => timeformat($row['time_started']),
+			'last_updated' => timeformat($row['time_updated']),]]></search>
+            <add><![CDATA[			'timestamp_started' => $row['time_started'],]]></add>
+        </operation>
+        </file>
 </modification>

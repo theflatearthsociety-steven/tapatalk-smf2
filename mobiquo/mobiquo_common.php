@@ -415,6 +415,7 @@ function get_topic_info($fid, $tid)
     $topic['is_locked'] = !empty($topic['locked']);
     $topic['is_approved'] = !empty($topic['approved']);
     $topic['new']       = $topic['new_from'] <= $topic['id_msg_modified'];
+    $topic['last_poster_timestamp'] = $topic['last_poster_time'];
     $topic['last_poster_time'] = timeformat($topic['last_poster_time']);
     $topic['first_poster_time'] = timeformat($topic['first_poster_time']);
     

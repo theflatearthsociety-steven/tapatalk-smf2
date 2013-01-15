@@ -256,6 +256,7 @@ function get_thread_func()
     'post_author_display_name'  => new xmlrpcval(basic_clean($message['member']['name']), 'base64'),
             'icon_url'          => new xmlrpcval($avatar),
             'post_time'         => new xmlrpcval($message['time'], 'dateTime.iso8601'),
+            'timestamp'         => new xmlrpcval($message['timestamp'], 'string'),
             'attachments'       => new xmlrpcval($attachments, 'array'),
 
             'is_online'         => new xmlrpcval($message['member']['online']['is_online'] ? true : false, 'boolean'),
@@ -632,6 +633,7 @@ function get_user_reply_post_func()
             'short_content'     => new xmlrpcval(basic_clean($post['body'], 100), 'base64'),
             'icon_url'          => new xmlrpcval($topic_info['first_poster_avatar']),
             'post_time'         => new xmlrpcval($post['time'], 'dateTime.iso8601'),
+            'timestamp'         => new xmlrpcval($post['timestamp'], 'string'),
             'reply_number'      => new xmlrpcval($topic_info['num_replies'], 'int'),
             'view_number'       => new xmlrpcval($topic_info['num_views'], 'int'),
             'new_post'          => new xmlrpcval($topic_info['new'] ? true : false, 'boolean'),
@@ -731,6 +733,7 @@ function get_unread_topic_func()
             'post_author_name'  => new xmlrpcval(basic_clean($topic['last_post']['member']['name']), 'base64'),
     'post_author_display_name'  => new xmlrpcval(basic_clean($topic['last_post']['member']['name']), 'base64'),
             'post_time'         => new xmlrpcval($topic['last_post']['time'],'dateTime.iso8601'),
+            'timestamp'         => new xmlrpcval($topic['last_post']['timestamp'], 'string'),
             'reply_number'      => new xmlrpcval($topic['replies'], 'int'),
             'view_number'       => new xmlrpcval($topic['views'], 'int'),
             'short_content'     => new xmlrpcval(basic_clean($topic_info['last_body']), 'base64'),
@@ -808,6 +811,7 @@ function get_new_topic_func()
     'post_author_display_name'  => new xmlrpcval(basic_clean($topic['poster']['name']), 'base64'),
             'new_post'          => new xmlrpcval($topic['is_new'], 'boolean'),
             'post_time'         => new xmlrpcval($topic['time'], 'dateTime.iso8601'),
+            'timestamp'         => new xmlrpcval($topic['timestamp'], 'string'),
             'icon_url'          => new xmlrpcval($topic['poster']['avatar']),
             'can_subscribe'     => new xmlrpcval($topic['can_mark_notify'], 'boolean'),
             'is_subscribed'     => new xmlrpcval($topic['is_marked_notify'], 'boolean'),
@@ -847,6 +851,7 @@ function get_latest_topic_func()
     'post_author_display_name'  => new xmlrpcval(basic_clean($topic['poster']['name']), 'base64'),
             'new_post'          => new xmlrpcval($topic['is_new'], 'boolean'),
             'post_time'         => new xmlrpcval($topic['time'], 'dateTime.iso8601'),
+            'timestamp'         => new xmlrpcval($topic['timestamp'], 'string'),
             'icon_url'          => new xmlrpcval($topic['poster']['avatar']),
             'can_subscribe'     => new xmlrpcval($topic['can_mark_notify'], 'boolean'),
             'is_subscribed'     => new xmlrpcval($topic['is_marked_notify'], 'boolean'),
@@ -927,6 +932,7 @@ function get_subscribed_topic_func()
     'post_author_display_name'  => new xmlrpcval(basic_clean($topic_info['last_display_name']), 'base64'),
             'new_post'          => new xmlrpcval($topic_info['new'] ? true : false, 'boolean'),
             'post_time'         => new xmlrpcval($topic_info['last_poster_time'], 'dateTime.iso8601'),
+            'timestamp'         => new xmlrpcval(forum_time(false,$topic_info['last_poster_timestamp']), 'string'),
             'icon_url'          => new xmlrpcval($topic_info['last_poster_avatar']),
             'can_subscribe'     => new xmlrpcval($topic_info['can_mark_notify'], 'boolean'),
             'is_subscribed'     => new xmlrpcval($topic_info['is_marked_notify'], 'boolean'),
@@ -1199,6 +1205,7 @@ function search_topic_func()
                 'short_content'     => new xmlrpcval(basic_clean($topic['matches'][0]['body']), 'base64'),
                 'icon_url'          => new xmlrpcval($topic['matches'][0]['member']['avatar']['href']),
                 'post_time'         => new xmlrpcval($topic['matches'][0]['time'], 'dateTime.iso8601'),
+                'timestamp'         => new xmlrpcval($topic['matches'][0]['timestamp'], 'string'),
                 'reply_number'      => new xmlrpcval($topic_info['num_replies'], 'int'),
                 'view_number'       => new xmlrpcval($topic_info['num_views'], 'int'),
                 'new_post'          => new xmlrpcval($topic_info['new'], 'boolean'),
@@ -1251,6 +1258,7 @@ function search_post_func()
                 'short_content'     => new xmlrpcval(basic_clean($topic['matches'][0]['body']), 'base64'),
                 'icon_url'          => new xmlrpcval($topic['matches'][0]['member']['avatar']['href']),
                 'post_time'         => new xmlrpcval($topic['matches'][0]['time'], 'dateTime.iso8601'),
+                'timestamp'         => new xmlrpcval($topic['matches'][0]['timestamp'], 'string'),
                 'reply_number'      => new xmlrpcval($topic_info['num_replies'], 'int'),
                 'view_number'       => new xmlrpcval($topic_info['num_views'], 'int'),
                 'new_post'          => new xmlrpcval($topic_info['new'], 'boolean'),
@@ -1350,7 +1358,6 @@ function m_get_report_post_func()
         {
             $avatar = $profile['avatar'] == '' ? ($profile['id_attach'] > 0 ? (empty($profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) : '') : (stristr($profile['avatar'], 'http://') ? $profile['avatar'] : $modSettings['avatar_url'] . '/' . $profile['avatar']);
         }
-
         $post_list[] = new xmlrpcval(array(
             'forum_id'          => new xmlrpcval($board_id),
             'forum_name'        => new xmlrpcval(basic_clean($board_name), 'base64'),
@@ -1362,6 +1369,7 @@ function m_get_report_post_func()
             'post_author_id'    => new xmlrpcval(basic_clean($post['author']['id']), 'string'),
             'icon_url'          => new xmlrpcval($avatar),
             'post_time'         => new xmlrpcval($post['time_started'], 'dateTime.iso8601'),
+            'timestamp'         => new xmlrpcval($post['timestamp_started'], 'string'),
             'short_content'     => new xmlrpcval(basic_clean($post['body'], 100), 'base64'),
             'can_delete'        => new xmlrpcval(allowedTo('delete_any'), 'boolean'),
         ), 'struct');
