@@ -68,13 +68,17 @@ $server_param = array(
 
     'get_user_topic' => array(
         'function'  => 'get_user_topic_func',
-        'signature' => array(array($xmlrpcStruct, $xmlrpcBase64)),
+        'signature' => array(array($xmlrpcStruct),
+                             array($xmlrpcStruct, $xmlrpcBase64),
+                             array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcString)),
         'docstring' => 'parameter should be array(string)',
     ),
 
     'get_user_reply_post' => array(
         'function'  => 'get_user_reply_post_func',
-        'signature' => array(array($xmlrpcStruct, $xmlrpcBase64)),
+        'signature' => array(array($xmlrpcStruct),
+                             array($xmlrpcStruct, $xmlrpcBase64),
+                             array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcString)),
         'docstring' => 'parameter should be array(int,int,int,string)',
     ),
     
@@ -110,7 +114,10 @@ $server_param = array(
         'signature' => array(array($xmlrpcArray),
                              array($xmlrpcStruct, $xmlrpcBase64),
                              array($xmlrpcStruct, $xmlrpcInt, $xmlrpcInt),
-                             array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcInt, $xmlrpcInt)),
+                             array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcInt, $xmlrpcInt),
+                             array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcInt, $xmlrpcInt, $xmlrpcString),
+                             array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcInt, $xmlrpcInt, $xmlrpcString, $xmlrpcString),
+                             ),
         'docstring' => 'no need parameters for get_subscribed_topic',
     ),
 

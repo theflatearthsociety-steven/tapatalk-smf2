@@ -867,7 +867,7 @@ function action_get_alert() {}
 
 function action_get_participated_topic()
 {
-    global $smcFunc, $scripturl, $user_info, $context, $modSettings, $topic_per_page, $start_num, $search_user;
+    global $smcFunc, $scripturl, $user_info, $context, $modSettings, $topic_per_page, $start_num, $search_user, $user_id;
 
     $searchz_user_id = $user_info['id'];
 
@@ -880,6 +880,8 @@ function action_get_participated_topic()
         list ($searchz_user_id) = $memberResult;
     }
 
+    if ($user_id)
+        $searchz_user_id = $user_id;
     // All the topics with notification on...
     $request = $smcFunc['db_query']('', '
         SELECT m.id_topic, MAX(m.id_msg) as id_msg, b.id_board, b.name AS board_name

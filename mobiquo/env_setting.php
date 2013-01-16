@@ -271,20 +271,26 @@ switch ($request_name) {
         }
         break;
     case 'get_user_reply_post':
-        if ($params_num == 1) {
+        if ($params_num <= 2) {
             $_GET['action'] = 'profile';
             $_GET['area'] = 'showposts';
-            $_GET['user'] = $request_params[0];
+            if (isset($request_params[1]) && !empty($request_params[1]))
+                $_GET['u'] = $request_params[1];
+            elseif (isset($request_params[0]))
+                $_GET['user'] = $request_params[0];
         } else {
             get_error('Parameter Error');
         }
         break;
     case 'get_user_topic':
-        if ($params_num == 1) {
+        if ($params_num <= 2) {
             $_GET['action'] = 'profile';
             $_GET['area'] = 'showposts';
             $_GET['sa'] = 'topics';
-            $_GET['user'] = $request_params[0];
+            if (isset($request_params[1]) && !empty($request_params[1]))
+                $_GET['u'] = $request_params[1];
+            elseif (isset($request_params[0]))
+                $_GET['user'] = $request_params[0];
         } else {
             get_error('Parameter Error');
         }
@@ -435,7 +441,7 @@ switch ($request_name) {
                 $end_num = $start_num + 49;
             }
             $topic_per_page = $end_num - $start_num + 1;
-        } elseif ($params_num == 3) {
+        } elseif ($params_num == 3 || $params_num == 4 || $params_num == 5) {
             $search_user = $request_params[0];
             $start_num = intval(isset($request_params[1]) ? $request_params[1] : '0');
             $end_num = intval(isset($request_params[2]) ? $request_params[2] : '19');
@@ -445,6 +451,13 @@ switch ($request_name) {
                 $end_num = $start_num + 49;
             }
             $topic_per_page = $end_num - $start_num + 1;
+            if($params_num == 5)
+            {
+                if(isset($request_params[4]) && intval($request_params[4]))
+                {
+                    $user_id = $request_params[4];
+                }
+            }
         }
         break;
     case 'get_quote_post':
