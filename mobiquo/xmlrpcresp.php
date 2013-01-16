@@ -13,6 +13,10 @@ function get_config_func()
         'reg_url'       => new xmlrpcval($modSettings['tp_register_page_url'],'string'),
 
     );
+    if(allowedTo('search_posts'))
+        $config_list['guest_search'] = new xmlrpcval('1', 'string');
+    if(allowedTo('who_view'))
+        $config_list['guest_whosonline'] = new xmlrpcval('1', 'string');
     foreach($mobiquo_config as $key => $value)
     {
         if (!in_array($key, array('is_open', 'guest_okay', 'mod_function', 'conflict_mod', 'push')))
