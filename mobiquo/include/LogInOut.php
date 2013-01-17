@@ -450,15 +450,8 @@ function DoLogin()
 	    $user_info['groups'] = array_merge($user_info['groups'], $user_settings['additional_groups']);
 
 	//Add by tapatalk
-	require_once('input.php');
 	global $request_params;
-	$input = Tapatalk_Input::filterXmlInput(array(
-		'username'  => Tapatalk_Input::STRING,
-		'password'  => Tapatalk_Input::STRING,
-		'anonymous' => Tapatalk_Input::INT,
-		'push'      => Tapatalk_Input::STRING
-	), $request_params);
-	if ($input['push']) 
+	if (isset($request_params[3]) && $request_params[3]) 
 	    update_push();
 
 	if(isset($modSettings['tp_allow_usergroup']) && !empty($modSettings['tp_allow_usergroup']))
