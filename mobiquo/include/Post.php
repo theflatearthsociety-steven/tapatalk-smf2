@@ -1196,9 +1196,10 @@ function Post2()
 	if (!empty($topic))
 	{
 		$request = $smcFunc['db_query']('', '
-			SELECT locked, is_sticky, id_poll, approved, id_first_msg, id_last_msg, id_member_started, id_board
-			FROM {db_prefix}topics
-			WHERE id_topic = {int:current_topic}
+			SELECT t.locked, t.is_sticky, t.id_poll, t.approved, t.id_first_msg, t.id_last_msg, t.id_member_started, t.id_board, m.subject
+			FROM {db_prefix}topics AS t
+				INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+			WHERE t.id_topic = {int:current_topic}
 			LIMIT 1',
 			array(
 				'current_topic' => $topic,
@@ -1215,6 +1216,22 @@ function Post2()
 		if ($topic_info['id_board'] != $board)
 			fatal_lang_error('not_a_topic');
 	}
+
+		// Get a response prefix (like 'Re:') in the default forum language.
+	if (!isset($context['response_prefix']) && !($context['response_prefix'] = cache_get_data('response_prefix')))
+	{
+		if ($language === $user_info['language'])
+			$context['response_prefix'] = $txt['response_prefix'];
+		else
+		{
+			loadLanguage('index', $language, false);
+			$context['response_prefix'] = $txt['response_prefix'];
+			loadLanguage('index');
+		}
+		cache_put_data('response_prefix', $context['response_prefix'], 600);
+	}
+	if (trim($context['response_prefix']) != '' && $topic_info['subject'] != '' && $smcFunc['strpos']($topic_info['subject'], trim($context['response_prefix'])) !== 0)
+		$_POST['subject'] = $context['response_prefix'] . $topic_info['subject'];
 
 	// Replying to a topic?
 	if (!empty($topic) && !isset($_REQUEST['msg']))
