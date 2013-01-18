@@ -91,7 +91,7 @@ $txt['tp_rebranding_settings'] = 'Rebranding Settings';]]></add>
             <search position="after"><![CDATA[?>]]></search>
             <add><![CDATA[//Tapatalk
 $txt['tapatalktitle'] = 'Tapatalk Settings';
-$txt['tp_pushEnabled'] = 'Enable push for Tapatalk users';
+$txt['tp_pushEnabled'] = 'Enable Tapatalk Push Notification';
 $txt['tapatalkEnabled'] = 'Enable tapatalk';
 $txt['tp_guestOkayEnabled'] = 'Enable forum view for guest by tapatalk';
 $txt['tp_tapatalkNotifierForChromeEnabled'] = 'Enable Tapatalk Notifier in Chrome';
@@ -103,7 +103,7 @@ $txt['tp_android_msg'] = 'Android Product Message';
 $txt['tp_android_url'] = 'Android Product URL';
 $txt['tp_kf_msg'] = 'Kindle Fire Product Message';
 $txt['tp_kf_url'] = 'Kindle Fire Product URL';
-$txt['tp_allow_usergroup'] = 'Allow usergroup on Tapatalk';
+$txt['tp_allow_usergroup'] = 'Usergroup allowed on Tapatalk';
 $txt['tp_general_settings'] = 'General';
 $txt['tp_board_settings'] = 'Boards';
 $txt['tp_rebranding_settings'] = 'Rebranding Settings';
@@ -117,7 +117,7 @@ $txt['tp_rebranding_settingsDesc'] = 'Settings for build your own users';
 $txt['tp_select_boards'] = 'Select Boards to HIDE on Tapatalk';
 $txt['tp_disable_newtopic'] = 'Disable New Topic For Boards';
 $txt['tp_register_page_url'] = 'Register page url';
-$txt['tp_push_key'] = 'Push key';
+$txt['tp_push_key'] = 'Push Notification Key';
 $txt['taptalk_descp'] = '<strong>Tapatalk for SMF Plugin</strong></br><br>
 For SMF 2.0 RC5/Final, <a href = "http://www.tapatalk.com">http://www.tapatalk.com</a></br>
 For more remote settings, please check <a style="color:red;" href = "http://tapatalk.com/landing.php"><u>here</u></a>.<br><br>
