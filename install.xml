@@ -41,17 +41,6 @@
 			}]]></add>
         </operation>
         <operation>
-            <search position="replace"><![CDATA[	elseif (empty($topic) && $request_name != 'remove_attachment')
-	{]]></search>
-            <add><![CDATA[	elseif (empty($topic) && $request_name != 'remove_attachment')
-	{
-		//tapatalk add
-		$dis_new_topic_boards = explode(',',$modSettings['boards_disable_new_topic']);
-		if(in_array($_GET['board'], $dis_new_topic_boards))
-			get_error('New topic from Tapatalk is forbbiden in this board, contact the forum administrator to know more.');
-		//tapatalk end]]></add>
-        </operation>
-        <operation>
             <search position="replace"><![CDATA[			notifyMembersBoard($notifyData);]]></search>
             <add><![CDATA[			notifyMembersBoard($notifyData);
 			global $boarddir;
