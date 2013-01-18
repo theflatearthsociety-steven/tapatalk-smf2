@@ -101,22 +101,40 @@ function ManageTapatalkBoards($return_config = false)
 			$_POST['brd'] = array_unique($_POST['brd']);
 			$brds = implode(",",$_POST['brd']);
 		}
-		$hide_boards = array(
+		if(!empty($_POST['dsa_brd']))
+		{
+			fix_brd_value();
+			//No Double Entries ;)
+			$_POST['dsa_brd'] = array_unique($_POST['dsa_brd']);
+			$dsa_brds = implode(",",$_POST['dsa_brd']);
+		}
+		$changed_boards = array(
 			'boards_hide_for_tapatalk' => empty($brds)? '': $brds,
+			'boards_disable_new_topic' => empty($dsa_brds)? '': $dsa_brds,
 		);
-		updateSettings($hide_boards);
+		updateSettings($changed_boards);
 
 		//Redirect ;)
 		redirectexit('action=admin;area=tapatalksettings;sa=boards');
 	}
 
     $boards_hide_for_tp = array();
-    if (isset($modSettings['boards_hide_for_tapatalk']))
+    $boards_disable_new_tp = array();
+    if (isset($modSettings['boards_hide_for_tapatalk']) || isset($modSettings['boards_disable_new_topic']))
     {
-        $boards_from_setting = explode(",",$modSettings['boards_hide_for_tapatalk']);
-        foreach($boards_from_setting as $arr_id => $board_id)
-            $boards_hide_for_tp[$board_id] = $board_id;
-         
+        if(isset($modSettings['boards_hide_for_tapatalk']))
+        {
+            $boards_from_setting = explode(",",$modSettings['boards_hide_for_tapatalk']);
+            foreach($boards_from_setting as $arr_id => $board_id)
+                $boards_hide_for_tp[$board_id] = $board_id;
+        }
+        
+        if(isset($modSettings['boards_disable_new_topic']))
+        {
+            $boards_from_setting = explode(",",$modSettings['boards_disable_new_topic']);
+            foreach($boards_from_setting as $arr_id => $board_id)
+                $boards_disable_new_tp[$board_id] = $board_id;
+        }
     }
     else
     {
@@ -165,6 +183,7 @@ function ManageTapatalkBoards($return_config = false)
 			'id' => $row['id_board'],
 			'name' => $row['name'],
 			'is_moderator' => isset($boards_hide_for_tp[$row['id_board']]),
+			'is_disabled_new_tp' => isset($boards_disable_new_tp[$row['id_board']]),
 			'child_level' => $row['child_level'],
 		);
 	}
@@ -197,6 +216,7 @@ function ManageTapatalkBoards($return_config = false)
 	}
 
 	$context['all_checked'] = $context['num_boards'] == count($boards_hide_for_tp);
+	$context['dsa_all_checked'] = $context['num_boards'] == count($boards_disable_new_tp);
 	$context['post_url'] = $scripturl . '?action=admin;area=tapatalksettings;sa=boards;save;';
 	$context['settings_title'] = $txt['tapatalktitle'];
 

@@ -41,6 +41,17 @@
 			}]]></add>
         </operation>
         <operation>
+            <search position="replace"><![CDATA[	elseif (empty($topic) && $request_name != 'remove_attachment')
+	{]]></search>
+            <add><![CDATA[	elseif (empty($topic) && $request_name != 'remove_attachment')
+	{
+		//tapatalk add
+		$dis_new_topic_boards = explode(',',$modSettings['boards_disable_new_topic']);
+		if(in_array($_GET['board'], $dis_new_topic_boards))
+			get_error('New topic from Tapatalk is forbbiden in this board, contact the forum administrator to know more.');
+		//tapatalk end]]></add>
+        </operation>
+        <operation>
             <search position="replace"><![CDATA[			notifyMembersBoard($notifyData);]]></search>
             <add><![CDATA[			notifyMembersBoard($notifyData);
 			global $boarddir;
@@ -110,11 +121,12 @@ $txt['tp_rebranding_settings'] = 'Rebranding Settings';
 $txt['tp_other_settings'] = 'Help';
 $txt['tp_parent_board'] = 'Boards1';
 $txt['tp_child_board'] = 'Boards2';
-$txt['tp_board_settingsDesc'] = 'Set the board you want to hide to tapatalk users';
-$txt['tp_general_settingsDesc'] = 'This is the general settings for tapatalk';
+$txt['tp_board_settingsDesc'] = 'Settings related to boards';
+$txt['tp_general_settingsDesc'] = 'These are general settings for tapatalk';
 $txt['tp_other_settingsDesc'] = 'Taptalk information';
 $txt['tp_rebranding_settingsDesc'] = 'Settings for build your own users';
 $txt['tp_select_boards'] = 'Select Boards to HIDE on Tapatalk';
+$txt['tp_disable_newtopic'] = 'Disable New Topic For Boards';
 $txt['tp_register_page_url'] = 'Register page url';
 $txt['tp_push_key'] = 'Push key';
 $txt['taptalk_descp'] = '<strong>Tapatalk for SMF Plugin</strong></br><br>
@@ -156,6 +168,8 @@ $helptxt['tp_android_url'] = 'Change this URL if you are Tapatalk Rebranding Cus
 $helptxt['tp_kf_msg'] = 'Customize this message if you are Tapatalk Rebranding Customer and has published your App to Amazon App Store. Default: "This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk."';
 $helptxt['tp_kf_url'] = 'Change this URL if you are Tapatalk Rebranding Customer and has obtained your App URL from Amazon App Store. Default: http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkpro.activity';
 $helptxt['tp_allow_usergroup'] = 'Allow usergroups to login via Tapatalk, leave this option empty means that all usergroups users can login via Tapatalk. Different usergroups should be departed by comma, for example, "3,11,6" which means only users who belongs to 3,6 and 11 usergroups can login via Tapatalk.';
+$helptxt['tp_hide_boards'] = 'Hide forums you don\'t want them to be listed in Tapatalk app.';
+$helptxt['tp_dsa_boards'] = 'Prevent Tapatalk users to create new topic in the selected sub-forums. This feature is useful if certain forums requires additional topic fields or permission that Tapatalk does not support.';
 //Tapatalk ends]]></add>
         </operation>
         </file>

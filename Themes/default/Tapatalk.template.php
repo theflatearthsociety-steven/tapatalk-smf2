@@ -24,31 +24,27 @@ function template_tapatalk_show_boards()
 	// ]]></script>';
 
 	echo '
+	<div id="admincenter">
 	<form name="creator" action="', $context['post_url'], '" method="post" accept-charset="', $context['character_set'], '"', !empty($context['force_form_onsubmit']) ? ' onsubmit="' . $context['force_form_onsubmit'] . '"' : '', '>
-		<table width="80%" border="0" cellspacing="0" cellpadding="0" class="tborder" align="center">
-			<tr>
-				<td>
+		
+			
 					<table border="0" cellspacing="0" cellpadding="4" width="100%">';
 
 	// Is there a custom title?
 	if (isset($context['settings_title']))
 		echo '
-						<tr class="titlebg">
-							<td colspan="3">', $context['settings_title'], '</td>
-						</tr>';
+		<div class="cat_bar">
+<h3 class="catbg"> Tapatalk Settings </h3>
+		</div>';
 
-	// Have we got some custom code to insert?
-	if (!empty($context['settings_message']))
-		echo '
-						<tr>
-							<td class="windowbg2" colspan="3">', $context['settings_message'], '</td>
-						</tr>';
-
-	//Load the Boards...
+	//Hide boards option
 	echo '	
 						<tr>
 							<td class="windowbg2" colspan="3">
 								<fieldset class="windowbg2" style="padding: 10px; margin-left: 5px; margin-right: 5px;">
+								<a id="" class="help" onclick="return reqWin(this.href);" href="http://localhost/SMF202_copy/index.php?action=helpadmin;help=tp_hide_boards">
+<img align="right" class="icon" alt="Help" src="http://localhost/SMF202_copy/Themes/default/images/helptopics.gif">
+</a>
 										<strong>' . $txt['tp_select_boards'] . '</strong><br />
 										<table id="searchBoardsExpand" width="100%" border="0" cellpadding="1" cellspacing="0" align="center" style="margin-top: 1ex;">';
 
@@ -83,17 +79,60 @@ function template_tapatalk_show_boards()
 									</fieldset> 
 								</td>
 							</tr>';
-			echo '
+//disable new topic option
+	echo '	
 						<tr>
-							<td class="windowbg2" colspan="3" align="center" valign="middle"><input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), ' /></td>
+							<td class="windowbg2" colspan="3">
+								<fieldset class="windowbg2" style="padding: 10px; margin-left: 5px; margin-right: 5px;">
+<a id="" class="help" onclick="return reqWin(this.href);" href="http://localhost/SMF202_copy/index.php?action=helpadmin;help=tp_dsa_boards">
+<img align="right" class="icon" alt="Help" src="http://localhost/SMF202_copy/Themes/default/images/helptopics.gif">
+</a>
+										<strong>' . $txt['tp_disable_newtopic'] . '</strong><br />
+										<table id="searchBoardsExpand" width="100%" border="0" cellpadding="1" cellspacing="0" align="center" style="margin-top: 1ex;">';
+
+			$alternate = true;
+			foreach ($context['board_columns'] as $board)
+			{
+				if ($alternate)
+					echo '
+											<tr>';
+				echo '
+												<td width="50%">';
+
+				if (!empty($board) && empty($board['child_ids']))
+					echo '
+													<label for="dsa_brd', $board['id'], '" style="margin-left: ', $board['child_level'], 'ex;"><input type="checkbox" id="dsa_brd', $board['id'], '" name="dsa_brd[', $board['id'], ']" value="', $board['id'], '"', $board['is_disabled_new_tp'] ? ' checked="checked"' : '', ' class="check" />', $board['name'], '</label>';
+				elseif (!empty($board))
+					echo '
+													<a href="javascript:void(0);" onclick="selectBoards([', implode(', ', $board['child_ids']), ']); return false;" style="text-decoration: underline;">', $board['name'], '</a>';
+
+				echo '
+												</td>';
+				if (!$alternate)
+					echo '
+											</tr>';
+
+				$alternate = !$alternate;
+			}
+
+			echo '
+										</table><br />
+										<input type="checkbox" name="dsa_all" id="check_all" value=""'.($context['dsa_all_checked'] ? ' checked="checked"' : '').' onclick="invertAll(this, this.form, \'dsa_brd\');" class="check" /><i> <label for="dsa_check_all">', $txt['check_all'], '</label></i><br />
+									</fieldset> 
+								</td>
+							</tr>';
+			echo '
+			
+						<tr>
+						
+							<td class="windowbg2" colspan="3" align="right" valign="right">
+							<input  class="button_submit" type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), ' /></td>
 						</tr>';
 
 	echo '
 					</table>
-				</td>
-			</tr>
-		</table>
+				
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-	</form>';
+	</form></div>';
 }
 ?>

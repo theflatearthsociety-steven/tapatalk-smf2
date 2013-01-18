@@ -1302,6 +1302,12 @@ function Post2()
 		// Now don't be silly, new topics will get their own id_msg soon enough.
 		unset($_REQUEST['msg'], $_POST['msg'], $_GET['msg']);
 
+		//tapatalk add
+		$dis_new_topic_boards = explode(',',$modSettings['boards_disable_new_topic']);
+		if(in_array($_GET['board'], $dis_new_topic_boards))
+			get_error('New topic from Tapatalk is forbbiden in this board, contact the forum administrator to know more.');
+		//tapatalk end
+
 		// Do like, the permissions, for safety and stuff...
 		$becomesApproved = true;
 		if ($modSettings['postmod_active'] && !allowedTo('post_new') && allowedTo('post_unapproved_topics'))
