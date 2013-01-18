@@ -625,6 +625,9 @@ function mobiquo_encode($str, $mode = '')
             
             $str = str_replace($charset_chr, $charset_html[$charset], $str);
             $str = @html_entity_decode($str, ENT_QUOTES, 'UTF-8');
+            if($charset == 'ISO-8859-1') {
+                $str = utf8_encode($str);
+            }
         }
     }
     else if ($support_mb)
@@ -667,6 +670,9 @@ function mobiquo_encode($str, $mode = '')
         else
         {
             $str = @html_entity_decode($str, ENT_QUOTES, 'UTF-8');
+            if($charset == 'ISO-8859-1') {
+                $str = utf8_encode($str);
+            }
         }
     }
     
