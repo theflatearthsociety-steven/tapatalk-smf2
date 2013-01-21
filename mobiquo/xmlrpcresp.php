@@ -198,6 +198,13 @@ function get_topic_func()
         $topic_list[] = $xmlrpc_topic;
     }
 
+    $mobiquo_can_post = true;
+    if(isset($modSettings['boards_disable_new_topic']) && !empty($modSettings['boards_disable_new_topic']))
+    {
+        $dis_new_topic_boards = explode(',',$modSettings['boards_disable_new_topic']);
+        $mobiquo_can_post = !in_array($_GET['board'], $dis_new_topic_boards);
+    }
+
     $response = new xmlrpcval(
         array(
             'total_topic_num' => new xmlrpcval($mode == 'TOP' ? $board_info['sticky_num'] : $board_info['total_topics'] - $board_info['sticky_num'], 'int'),
@@ -205,7 +212,7 @@ function get_topic_func()
             'forum_id'        => new xmlrpcval($board_info['id'], 'string'),
             'forum_name'      => new xmlrpcval(basic_clean($board_info['name']), 'base64'),
             'topics'          => new xmlrpcval($topic_list, 'array'),
-            'can_post'        => new xmlrpcval($context['can_post_new'] ? true : false, 'boolean'),
+            'can_post'        => new xmlrpcval($context['can_post_new'] && $mobiquo_can_post ? true : false, 'boolean'),
             'can_upload'      => new xmlrpcval($context['can_post_attachment'] ? true : false, 'boolean'),
         ),
         'struct'
