@@ -177,6 +177,7 @@ function get_topic_func()
             'topic_author_name' => new xmlrpcval(basic_clean($topic['first_post']['member']['username']), 'base64'),
     'topic_author_display_name' => new xmlrpcval(basic_clean($topic['first_post']['member']['name']), 'base64'),
             'last_reply_time'   => new xmlrpcval($topic['last_post']['time'],'dateTime.iso8601'),
+            'timestamp'         => new xmlrpcval($topic['last_post']['timestamp'], 'string'),
             'reply_number'      => new xmlrpcval($topic['replies'], 'int'),
             'view_number'       => new xmlrpcval($topic['views'], 'int'),
             'short_content'     => new xmlrpcval(mobiquo_parse_bbc(post_html_clean(basic_clean($topic['first_post']['preview']))), 'base64'),
@@ -601,11 +602,12 @@ function get_user_info_func()
         $loaded_id = loadMemberData($_GET['user'], true);
         $queried_userid = is_array($loaded_id)? $loaded_id[0] : $loaded_id;
     }
-    
     $xmlrpc_user_info = new xmlrpcval(array(
         'user_id'               => new xmlrpcval($context['member']['id'], 'string'),
         'post_count'            => new xmlrpcval(!isset($context['disabled_fields']['posts']) ? $context['member']['posts'] : '', 'int'),
         'reg_time'              => new xmlrpcval($context['member']['registered'], 'dateTime.iso8601'),
+        'reg_timestamp'         => new xmlrpcval($context['member']['registered_timestamp'], 'string'),
+        'timestamp'             => new xmlrpcval($context['member']['last_login_timestamp'], 'string'),
         'last_activity_time'    => new xmlrpcval($context['member']['last_login'], 'dateTime.iso8601'),
         'icon_url'              => new xmlrpcval($context['member']['avatar']['href']),
         'display_name'          => new xmlrpcval(basic_clean($context['member']['name']), 'base64'),
@@ -680,6 +682,7 @@ function get_user_topic_func()
             'short_content'     => new xmlrpcval(basic_clean($topic_info['first_body']), 'base64'),
             'icon_url'          => new xmlrpcval($topic_info['last_poster_avatar']),
             'last_reply_time'   => new xmlrpcval($topic_info['last_poster_time'], 'dateTime.iso8601'),
+            'timestamp'         => new xmlrpcval($topic_info['last_poster_timestamp'], 'string'),
             'reply_number'      => new xmlrpcval($topic_info['num_replies'], 'int'),
             'view_number'       => new xmlrpcval($topic_info['num_views'], 'int'),
             'new_post'          => new xmlrpcval($topic_info['new'], 'boolean'),
@@ -1111,6 +1114,7 @@ function get_box_func()
             'msg_id'        => new xmlrpcval($pm['id']),
             'msg_state'     => new xmlrpcval($pm['is_unread'] ? 1 : ($pm['is_replied_to'] ? 3 : 2), 'int'),
             'sent_date'     => new xmlrpcval($pm['time'],'dateTime.iso8601'),
+            'timestamp'     => new xmlrpcval($pm['timestamp'], 'string'),
             'msg_from'      => new xmlrpcval(basic_clean($pm['msg_from']), 'base64'),
             'icon_url'      => new xmlrpcval($pm['member']['avatar']['href']),
             'msg_to'        => new xmlrpcval($msg_to, 'array'),
@@ -1144,6 +1148,7 @@ function get_message_func()
         'msg_to'        => new xmlrpcval($context['pm']['recipients'], 'array'),
         'icon_url'      => new xmlrpcval($context['pm']['member']['avatar']['href']),
         'sent_date'     => new xmlrpcval($context['pm']['time'],'dateTime.iso8601'),
+        'timestamp'     => new xmlrpcval($context['pm']['timestamp'], 'string'),
         'msg_subject'   => new xmlrpcval(basic_clean($context['pm']['subject']), 'base64'),
         'text_body'     => new xmlrpcval(post_html_clean($context['pm']['body']), 'base64'),
         'is_online'     => new xmlrpcval($context['pm']['member']['online']['is_online'] ? true : false, 'boolean'),

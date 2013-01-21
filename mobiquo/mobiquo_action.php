@@ -1449,6 +1449,7 @@ function action_get_message()
         'username' => $pm['member_name'],
         'name' => $pm['real_name'],
         'time' => timeformat($pm['msgtime']),
+        'timestamp' => $pm['msgtime'],
         'subject' => $pm['subject'],
         'body' => mobiquo_parse_bbc($pm['body'], false, 'pm' . $msg_id),
         'recipients' => array(),
