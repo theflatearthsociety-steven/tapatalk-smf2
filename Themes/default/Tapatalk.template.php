@@ -117,7 +117,7 @@ function template_tapatalk_show_boards()
 
 			echo '
 										</table><br />
-										<input type="checkbox" name="dsa_all" id="check_all" value=""'.($context['dsa_all_checked'] ? ' checked="checked"' : '').' onclick="invertAll(this, this.form, \'dsa_brd\');" class="check" /><i> <label for="dsa_check_all">', $txt['check_all'], '</label></i><br />
+										<input type="checkbox" name="dsa_all" id="check_all" value=""'.(isset($context['dsa_all_checked']) && $context['dsa_all_checked'] ? ' checked="checked"' : '').' onclick="invertAll(this, this.form, \'dsa_brd\');" class="check" /><i> <label for="dsa_check_all">', $txt['check_all'], '</label></i><br />
 									</fieldset> 
 								</td>
 							</tr>';
