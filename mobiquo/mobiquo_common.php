@@ -758,7 +758,7 @@ function getStarndardNameByTableKey($key)
         'quote'    => 'quote',
         'newtopic' => 'newtopic',
         'tag'      => 'tag',
-        'announcement'      => 'ann',
+        'announcement'      => '',
     );
     return isset($starndard_key_map[$key])? $starndard_key_map[$key]: '';
 }
