@@ -149,7 +149,7 @@ function tapatalk_push_pm()
     global $user_info, $smcFunc, $boardurl, $modSettings;
 
 
-    if(!$modSettings['tp_pushEnabled'] || (!function_exists('curl_init') && !ini_get('allow_url_fopen')))
+    if(!isset($modSettings['tp_pushEnabled']) || !$modSettings['tp_pushEnabled'] || (!function_exists('curl_init') && !ini_get('allow_url_fopen')))
         return;
     if (isset($_POST['recipient_to']) && is_array($_POST['recipient_to']) && !empty($_POST['recipient_to']) && isset($_POST['subject']))
     {
@@ -318,4 +318,34 @@ function verify_smf_userids_from_names($names)
     }
     $verified_ids = array_unique(array_merge($direct_ids, $verified_ids));
     return $verified_ids;
+}
+
+if (!function_exists('http_build_query')) {
+
+    function http_build_query($data, $prefix = null, $sep = '', $key = '')
+    {
+        $ret = array();
+        foreach ((array )$data as $k => $v) {
+            $k = urlencode($k);
+            if (is_int($k) && $prefix != null) {
+                $k = $prefix . $k;
+            }
+ 
+            if (!empty($key)) {
+                $k = $key . "[" . $k . "]";
+            }
+ 
+            if (is_array($v) || is_object($v)) {
+                array_push($ret, http_build_query($v, "", $sep, $k));
+            } else {
+                array_push($ret, $k . "=" . urlencode($v));
+            }
+        }
+ 
+        if (empty($sep)) {
+            $sep = ini_get("arg_separator.output");
+        }
+ 
+        return implode($sep, $ret);
+    }
 }
