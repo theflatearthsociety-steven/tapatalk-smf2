@@ -15,7 +15,7 @@
         var tapatalk_kindle_url = "'.(isset($modSettings['tapatalk_kindle_url']) ? $modSettings['tapatalk_kindle_url'] : 'http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkpro.activity').'";
         var tapatalk_android_msg = "'.(isset($modSettings['tapatalk_android_msg']) ? $modSettings['tapatalk_android_msg'] : 'This forum has an app for Android. Click OK to learn more about Tapatalk.').'";
         var tapatalk_android_url = "'.(isset($modSettings['tapatalk_android_url']) ? $modSettings['tapatalk_android_url'] : 'market://details?id=com.quoord.tapatalkpro.activity').'";
-        var tapatalk_chrome_enable = '.(isset($modSettings['tp_tapatalkNotifierForChromeEnabled']) && $modSettings['tp_tapatalkNotifierForChromeEnabled'] && isset($context['browser']['is_chrome']) && $context['browser']['is_chrome']? 'true' : 'false').';
+        var tapatalk_chrome_enable = '.(isset($modSettings['tp_tapatalkNotifierForChromeEnabled']) && $modSettings['tp_tapatalkNotifierForChromeEnabled'] ? 'true' : 'false').';
         var tapatalkdir = "mobiquo";
     </script>';
 	$context['html_headers'] .= '<script type="text/javascript" language="JavaScript" src="' . $boardurl . '/mobiquo/'.$jsfile_name.'"></script>';]]></add>
