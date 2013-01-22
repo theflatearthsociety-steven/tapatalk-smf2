@@ -4,7 +4,7 @@ if (!defined('SMF'))
     die('Hacking attempt...');
 
 //Admin Areas
-function Tapatalk_add_admin_areas($adminAreas)
+function Tapatalk_add_admin_areas(&$adminAreas)
 {
     global $txt;
     $adminAreas['config']['areas'] += array(
