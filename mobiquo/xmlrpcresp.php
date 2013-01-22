@@ -235,15 +235,13 @@ function get_thread_func()
         if(!empty($message['attachment'])) {
             foreach($message['attachment'] as $attachment)
             {
-                $split_strs = preg_split('/\./', $attachment['name']);
-                if(count($split_strs) < 2)
-                    $file_type = 'others';
-                else
-                    $file_type = $split_strs[count($split_strs) -1];
+                $extension = pathinfo($attachment['name'], PATHINFO_EXTENSION);
+                if(empty($extension))
+                    $extension = 'other';
                 $xmlrpc_attachment = new xmlrpcval(array(
                     'filename'      => new xmlrpcval(basic_clean($attachment['name']), 'base64'),
                     'filesize'      => new xmlrpcval($attachment['byte_size'], 'int'),
-                    'content_type'  => new xmlrpcval($attachment['is_image'] ? 'image' : $file_type),
+                    'content_type'  => new xmlrpcval($attachment['is_image'] ? 'image' : $extension),
                     'thumbnail_url' => new xmlrpcval($attachment['thumbnail']['has_thumb'] ? $attachment['thumbnail']['href'] : ''),
                     'url'           => new xmlrpcval($attachment['href'])
                 ), 'struct');
@@ -946,7 +944,7 @@ function get_subscribed_topic_func()
     'post_author_display_name'  => new xmlrpcval(basic_clean($topic_info['last_display_name']), 'base64'),
             'new_post'          => new xmlrpcval($topic_info['new'] ? true : false, 'boolean'),
             'post_time'         => new xmlrpcval($topic_info['last_poster_time'], 'dateTime.iso8601'),
-            'timestamp'         => new xmlrpcval(forum_time(false,$topic_info['last_poster_timestamp']), 'string'),
+            'timestamp'         => new xmlrpcval($topic_info['last_poster_timestamp'], 'string'),
             'icon_url'          => new xmlrpcval($topic_info['last_poster_avatar']),
             'can_subscribe'     => new xmlrpcval($topic_info['can_mark_notify'], 'boolean'),
             'is_subscribed'     => new xmlrpcval($topic_info['is_marked_notify'], 'boolean'),

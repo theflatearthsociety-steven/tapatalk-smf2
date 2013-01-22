@@ -837,3 +837,29 @@ function tp_get_forum_icon_by_name($id, $name, $final)
    
     return '';
 }
+
+function update_push()
+{
+	global $smcFunc, $user_info, $db_prefix;
+	
+	if ($user_info['id'] && mobi_table_exist('tapatalk_users'))
+	{
+		$request = $smcFunc['db_insert']('ignore',
+					'{db_prefix}tapatalk_users',
+					array('userid' => 'int', 'updated' => 'int'),
+					array($user_info['id'], time()),
+					array('userid')
+				);
+		if ($smcFunc['db_affected_rows']($request) == 0)
+		{
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}tapatalk_users
+				SET updated = '.time().' 
+				WHERE userid = {int:user_id}',
+				array(
+					'user_id' => $user_info['id'],
+				)
+			);
+		}
+	}
+}

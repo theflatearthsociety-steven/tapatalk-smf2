@@ -66,9 +66,9 @@ function ManageTapatalkGeneral($return_config = false)
             array('check', 'tp_pushEnabled'),
             array('check', 'tp_guestOkayEnabled'),
             array('check', 'tp_tapatalkNotifierForChromeEnabled'),
-            array('text',  'tp_register_page_url', 'value'=> isset($modSettings['tp_register_page_url'])? $modSettings['tp_register_page_url']: 'index.php?action=register', 'size' => '30'),
-            array('text',  'tp_push_key', 'size' => '20'),
-            array('text',  'tp_allow_usergroup', 'size' => '20')
+            array('text',  'tp_register_page_url', 'value'=> isset($modSettings['tp_register_page_url'])? $modSettings['tp_register_page_url']: 'index.php?action=register', 'size' => '42'),
+            array('text',  'tp_push_key', 'size' => '42'),
+            array('text',  'tp_allow_usergroup', 'size' => '42')
     );
 
     if ($return_config)
@@ -230,14 +230,14 @@ function ManageTapatalkRebranding($return_config = false)
     global $txt, $scripturl, $context, $settings, $sc, $modSettings;
 
     $config_vars = array(
-            array('text', 'tp_ipad_msg', 'value'=> isset($modSettings['tp_ipad_msg'])? $modSettings['tp_ipad_msg'] : 'This forum has an app for iPad! Click OK to learn more about Tapatalk.' , 'size' => '50'),
-            array('text', 'tp_ipad_url', 'value'=> isset($modSettings['tp_ipad_url'])? $modSettings['tp_ipad_url'] : 'http://itunes.apple.com/us/app/tapatalk-hd-for-ipad/id481579541?mt=8' ,  'size' => '50'),
-            array('text', 'tp_iphone_msg', 'value'=> isset($modSettings['tp_iphone_msg'])? $modSettings['tp_iphone_msg'] : 'This forum has an app for iPhone and iPod Touch! Click OK to learn more about Tapatalk.' ,  'size' => '50'),
-            array('text', 'tp_iphone_url', 'value'=> isset($modSettings['tp_iphone_url'])? $modSettings['tp_iphone_url'] : 'http://itunes.apple.com/us/app/tapatalk-forum-app/id307880732?mt=8' ,  'size' => '50'),
-            array('text', 'tp_android_msg', 'value'=> isset($modSettings['tp_android_msg'])? $modSettings['tp_android_msg'] : 'This forum has an app for Android. Click OK to learn more about Tapatalk.' ,  'size' => '50'),
-            array('text', 'tp_android_url', 'value'=> isset($modSettings['tp_android_url'])? $modSettings['tp_android_url'] : 'market://details?id=com.quoord.tapatalkpro.activity' ,  'size' => '50'),
-            array('text', 'tp_kf_msg', 'value'=> isset($modSettings['tp_kf_msg'])? $modSettings['tp_kf_msg'] : 'This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk.' ,  'size' => '50'),
-            array('text', 'tp_kf_url', 'value'=> isset($modSettings['tp_kf_url'])? $modSettings['tp_kf_url'] : 'http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkpro.activity' ,  'size' => '50'),
+            array('text', 'tp_ipad_msg', 'value'=> isset($modSettings['tp_ipad_msg'])? $modSettings['tp_ipad_msg'] : 'This forum has an app for iPad! Click OK to learn more about Tapatalk.' , 'size' => '80'),
+            array('text', 'tp_ipad_url', 'value'=> isset($modSettings['tp_ipad_url'])? $modSettings['tp_ipad_url'] : 'http://itunes.apple.com/us/app/tapatalk-hd-for-ipad/id481579541?mt=8' ,  'size' => '80'),
+            array('text', 'tp_iphone_msg', 'value'=> isset($modSettings['tp_iphone_msg'])? $modSettings['tp_iphone_msg'] : 'This forum has an app for iPhone and iPod Touch! Click OK to learn more about Tapatalk.' ,  'size' => '80'),
+            array('text', 'tp_iphone_url', 'value'=> isset($modSettings['tp_iphone_url'])? $modSettings['tp_iphone_url'] : 'http://itunes.apple.com/us/app/tapatalk-forum-app/id307880732?mt=8' ,  'size' => '80'),
+            array('text', 'tp_android_msg', 'value'=> isset($modSettings['tp_android_msg'])? $modSettings['tp_android_msg'] : 'This forum has an app for Android. Click OK to learn more about Tapatalk.' ,  'size' => '80'),
+            array('text', 'tp_android_url', 'value'=> isset($modSettings['tp_android_url'])? $modSettings['tp_android_url'] : 'market://details?id=com.quoord.tapatalkpro.activity' ,  'size' => '80'),
+            array('text', 'tp_kf_msg', 'value'=> isset($modSettings['tp_kf_msg'])? $modSettings['tp_kf_msg'] : 'This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk.' ,  'size' => '80'),
+            array('text', 'tp_kf_url', 'value'=> isset($modSettings['tp_kf_url'])? $modSettings['tp_kf_url'] : 'http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkpro.activity' ,  'size' => '80'),
     );
 
     if ($return_config)

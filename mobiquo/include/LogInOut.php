@@ -449,24 +449,6 @@ function DoLogin()
 	if (!empty($user_settings['additional_groups']) && $user_settings['additional_groups'][0] !== '')
 	    $user_info['groups'] = array_merge($user_info['groups'], $user_settings['additional_groups']);
 
-	//Add by tapatalk
-	global $request_params;
-	if (isset($request_params[3]) && $request_params[3]) 
-	    update_push();
-
-	if(isset($modSettings['tp_allow_usergroup']) && !empty($modSettings['tp_allow_usergroup']))
-	{
-		$allow_tapatalk = false;
-		$allow_usergroups = explode(',', $modSettings['tp_allow_usergroup']);
-		foreach($user_info['groups'] as $group_id)
-		{
-			if(in_array($group_id, $allow_usergroups))
-				$allow_tapatalk = true;
-		}
-		if(!$allow_tapatalk)
-			get_error('You are not allowed to login via Tapatalk, please contact your forum administrator.');
-	}
-
 	// Are you banned?
 	is_not_banned(true);
 
@@ -687,29 +669,4 @@ function validatePasswordFlood($id_member, $password_flood_value = false, $was_c
 
 }
 
-function update_push()
-{
-	global $smcFunc, $user_info, $db_prefix;
-	
-	if ($user_info['id'] && mobi_table_exist('tapatalk_users'))
-	{
-		$request = $smcFunc['db_insert']('ignore',
-					'{db_prefix}tapatalk_users',
-					array('userid' => 'int', 'updated' => 'int'),
-					array($user_info['id'], time()),
-					array('userid')
-				);
-		if ($smcFunc['db_affected_rows']($request) == 0)
-		{
-			$smcFunc['db_query']('', '
-				UPDATE {db_prefix}tapatalk_users
-				SET updated = '.time().' 
-				WHERE userid = {int:user_id}',
-				array(
-					'user_id' => $user_info['id'],
-				)
-			);
-		}
-	}
-}
 ?>

@@ -1640,6 +1640,49 @@ function before_action_reply_topic()
     check_topic_notify();
 }
 
+function before_action_reply_post()
+{
+	global $smcFunc, $topic, $board, $context, $language, $txt;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT t.locked, t.is_sticky, t.id_poll, t.approved, t.id_first_msg, t.id_last_msg, t.id_member_started, t.id_board, m.subject
+		FROM {db_prefix}topics AS t
+			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+		WHERE t.id_topic = {int:current_topic}
+		LIMIT 1',
+		array(
+			'current_topic' => $topic,
+		)
+	);
+	$topic_info = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
+
+	// Though the topic should be there, it might have vanished.
+	if (!is_array($topic_info))
+		fatal_lang_error('topic_doesnt_exist');
+
+	// Did this topic suddenly move? Just checking...
+	if ($topic_info['id_board'] != $board)
+		fatal_lang_error('not_a_topic');
+
+	// Get a response prefix (like 'Re:') in the default forum language.
+	if (!isset($context['response_prefix']) && !($context['response_prefix'] = cache_get_data('response_prefix')))
+	{
+		if ($language === $user_info['language'])
+			$context['response_prefix'] = $txt['response_prefix'];
+		else
+		{
+			loadLanguage('index', $language, false);
+			$context['response_prefix'] = $txt['response_prefix'];
+			loadLanguage('index');
+		}
+		cache_put_data('response_prefix', $context['response_prefix'], 600);
+	}
+	if (trim($context['response_prefix']) != '' && $topic_info['subject'] != '' && $smcFunc['strpos']($topic_info['subject'], trim($context['response_prefix'])) !== 0)
+		$_POST['subject'] = $context['response_prefix'] . $topic_info['subject'];
+	
+}
+
 function before_action_save_raw_post()
 {
     check_topic_notify();
@@ -1884,6 +1927,27 @@ function after_action_get_topic()
         while ($row = $smcFunc['db_fetch_assoc']($request))
             $subscribed_tids[] = $row['id_topic'];
     }
+}
+
+function after_action_login()
+{
+    //Add by tapatalk
+	global $request_params, $user_info, $modSettings;
+	if (isset($request_params[3]) && $request_params[3]) 
+	    update_push();
+
+	if(isset($modSettings['tp_allow_usergroup']) && !empty($modSettings['tp_allow_usergroup']))
+	{
+		$allow_tapatalk = false;
+		$allow_usergroups = explode(',', $modSettings['tp_allow_usergroup']);
+		foreach($user_info['groups'] as $group_id)
+		{
+			if(in_array($group_id, $allow_usergroups))
+				$allow_tapatalk = true;
+		}
+		if(!$allow_tapatalk)
+			get_error('You are not allowed to login via Tapatalk, please contact your forum administrator.');
+	}
 }
 
 function before_action_m_ban_user()

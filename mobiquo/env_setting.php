@@ -455,7 +455,7 @@ switch ($request_name) {
             {
                 if(isset($request_params[4]) && intval($request_params[4]))
                 {
-                    $user_id = $request_params[4];
+                    $user_id = intval($request_params[4]);
                 }
             }
         }
