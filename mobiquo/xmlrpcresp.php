@@ -1484,7 +1484,7 @@ function get_alert_func()
     $alerts = array();
     $request = $smcFunc['db_query']('', '
         SELECT * FROM {db_prefix}tapatalk_push
-        WHERE userid = {int:current_userid} LIMIT {int:start}, {int:perpage}',
+        WHERE userid = {int:current_userid} ORDER BY dateline DESC LIMIT {int:start}, {int:perpage}',
         array(
             'current_userid' => $current_userid,
             'start'          => $start,
@@ -1510,7 +1510,7 @@ function get_alert_func()
             'message'       => new xmlrpcval($message, 'base64'),
             'timestamp'     => new xmlrpcval($result['dateline'], 'string'),
             'content_type'  => new xmlrpcval($result['type'], 'string'),
-            'content_id'    => new xmlrpcval($result['subid'], 'string'),
+            'content_id'    => new xmlrpcval($result['type'] == 'pm' ? $result['id'] : $result['subid'], 'string'),
         );
         $alerts[] = new xmlrpcval($alert, 'struct');
     }
