@@ -8,13 +8,13 @@
             <add><![CDATA[	$jsfile_name = "tapatalkdetect.js";//(isset($modSettings['tp_tapatalkNotifierForChromeEnabled']) && $modSettings['tp_tapatalkNotifierForChromeEnabled'] && isset($context['browser']['is_chrome']) && $context['browser']['is_chrome'] ) ? "tapatalkdetect.js" :"tapatalkdetect-nochrome.js";
     $context['html_headers'] .= '<script type="text/javascript">
         var tapatalk_iphone_msg = "'.(isset($modSettings['tp_iphone_msg']) ? $modSettings['tp_iphone_msg'] : 'This forum has an app for iPhone and iPod Touch! Click OK to learn more about Tapatalk.') .'";
-        var tapatalk_iphone_url = "'.(isset($modSettings['tapatalk_iphone_url']) ? $modSettings['tapatalk_iphone_url'] : 'http://itunes.apple.com/us/app/tapatalk-forum-app/id307880732?mt=8').'";
-        var tapatalk_ipad_msg = "'.(isset($modSettings['tapatalk_ipad_msg']) ? $modSettings['tapatalk_ipad_msg'] : 'This forum has an app for iPad! Click OK to learn more about Tapatalk.').'";
-        var tapatalk_ipad_url = "'.(isset($modSettings['tapatalk_ipad_url']) ? $modSettings['tapatalk_ipad_url'] : 'http://itunes.apple.com/us/app/tapatalk-hd-for-ipad/id481579541?mt=8').'";
-        var tapatalk_kindle_msg = "'.(isset($modSettings['tapatalk_kindle_msg']) ? $modSettings['tapatalk_kindle_msg'] : 'This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk.').'";
-        var tapatalk_kindle_url = "'.(isset($modSettings['tapatalk_kindle_url']) ? $modSettings['tapatalk_kindle_url'] : 'http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkpro.activity').'";
-        var tapatalk_android_msg = "'.(isset($modSettings['tapatalk_android_msg']) ? $modSettings['tapatalk_android_msg'] : 'This forum has an app for Android. Click OK to learn more about Tapatalk.').'";
-        var tapatalk_android_url = "'.(isset($modSettings['tapatalk_android_url']) ? $modSettings['tapatalk_android_url'] : 'market://details?id=com.quoord.tapatalkpro.activity').'";
+        var tapatalk_iphone_url = "'.(isset($modSettings['tp_iphone_url']) ? $modSettings['tp_iphone_url'] : 'http://itunes.apple.com/us/app/tapatalk-forum-app/id307880732?mt=8').'";
+        var tapatalk_ipad_msg = "'.(isset($modSettings['tp_ipad_msg']) ? $modSettings['tp_ipad_msg'] : 'This forum has an app for iPad! Click OK to learn more about Tapatalk.').'";
+        var tapatalk_ipad_url = "'.(isset($modSettings['tp_ipad_url']) ? $modSettings['tp_ipad_url'] : 'http://itunes.apple.com/us/app/tapatalk-hd-for-ipad/id481579541?mt=8').'";
+        var tapatalk_kindle_msg = "'.(isset($modSettings['tp_kindle_msg']) ? $modSettings['tp_kindle_msg'] : 'This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk.').'";
+        var tapatalk_kindle_url = "'.(isset($modSettings['tp_kindle_url']) ? $modSettings['tp_kindle_url'] : 'http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkpro.activity').'";
+        var tapatalk_android_msg = "'.(isset($modSettings['tp_android_msg']) ? $modSettings['tp_android_msg'] : 'This forum has an app for Android. Click OK to learn more about Tapatalk.').'";
+        var tapatalk_android_url = "'.(isset($modSettings['tp_android_url']) ? $modSettings['tp_android_url'] : 'market://details?id=com.quoord.tapatalkpro.activity').'";
         var tapatalk_chrome_enable = '.(isset($modSettings['tp_tapatalkNotifierForChromeEnabled']) && $modSettings['tp_tapatalkNotifierForChromeEnabled'] ? 'true' : 'false').';
         var tapatalkdir = "mobiquo";
     </script>';
