@@ -1303,9 +1303,12 @@ function Post2()
 		unset($_REQUEST['msg'], $_POST['msg'], $_GET['msg']);
 
 		//tapatalk add
-		$dis_new_topic_boards = explode(',',$modSettings['boards_disable_new_topic']);
-		if(in_array($_GET['board'], $dis_new_topic_boards))
-			get_error('New topic from Tapatalk is forbbiden in this board, contact the forum administrator to know more.');
+		if(isset($modSettings['boards_disable_new_topic']) && !empty($modSettings['boards_disable_new_topic']))
+		{
+			$dis_new_topic_boards = explode(',',$modSettings['boards_disable_new_topic']);
+			if(in_array($_GET['board'], $dis_new_topic_boards))
+				get_error('New topic from Tapatalk is forbbiden in this board, contact the forum administrator to know more.');
+		}
 		//tapatalk end
 
 		// Do like, the permissions, for safety and stuff...
