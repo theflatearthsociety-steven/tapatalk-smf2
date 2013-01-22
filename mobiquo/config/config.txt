@@ -25,7 +25,7 @@ subscribe_load = 1
 pm_load = 1
 inbox_stat = 1
 searchid = 1
-
+alert = 1
 advanced_search = 1
 push_type = quote,tag,sub,pm
 /* For mod conflict situation.
