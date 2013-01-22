@@ -42,8 +42,8 @@ function template_tapatalk_show_boards()
 						<tr>
 							<td class="windowbg2" colspan="3">
 								<fieldset class="windowbg2" style="padding: 10px; margin-left: 5px; margin-right: 5px;">
-								<a id="" class="help" onclick="return reqWin(this.href);" href="http://localhost/SMF202_copy/index.php?action=helpadmin;help=tp_hide_boards">
-<img align="right" class="icon" alt="Help" src="http://localhost/SMF202_copy/Themes/default/images/helptopics.gif">
+								<a id="" class="help" onclick="return reqWin(this.href);" href="index.php?action=helpadmin;help=tp_hide_boards">
+<img align="right" class="icon" alt="Help" src="Themes/default/images/helptopics.gif">
 </a>
 										<strong>' . $txt['tp_select_boards'] . '</strong><br />
 										<table id="searchBoardsExpand" width="100%" border="0" cellpadding="1" cellspacing="0" align="center" style="margin-top: 1ex;">';
@@ -84,8 +84,8 @@ function template_tapatalk_show_boards()
 						<tr>
 							<td class="windowbg2" colspan="3">
 								<fieldset class="windowbg2" style="padding: 10px; margin-left: 5px; margin-right: 5px;">
-<a id="" class="help" onclick="return reqWin(this.href);" href="http://localhost/SMF202_copy/index.php?action=helpadmin;help=tp_dsa_boards">
-<img align="right" class="icon" alt="Help" src="http://localhost/SMF202_copy/Themes/default/images/helptopics.gif">
+<a id="" class="help" onclick="return reqWin(this.href);" href="index.php?action=helpadmin;help=tp_dsa_boards">
+<img align="right" class="icon" alt="Help" src="Themes/default/images/helptopics.gif">
 </a>
 										<strong>' . $txt['tp_disable_newtopic'] . '</strong><br />
 										<table id="searchBoardsExpand" width="100%" border="0" cellpadding="1" cellspacing="0" align="center" style="margin-top: 1ex;">';
