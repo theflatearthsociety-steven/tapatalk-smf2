@@ -165,8 +165,7 @@ function ManageTapatalkBoards($return_config = false)
     $request = $smcFunc['db_query']('', "
         SELECT b.id_cat, c.name AS cat_name, b.id_board, b.name, b.child_level
         FROM {db_prefix}boards AS b
-            LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-        WHERE 1");
+            LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)");
     $context['num_boards'] = $smcFunc['db_num_rows']($request);
     $context['categories'] = array();
     while ($row = $smcFunc['db_fetch_assoc']($request))
