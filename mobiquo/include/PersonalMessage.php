@@ -2183,7 +2183,7 @@ function MessagePost2()
 	{
 		$context['current_label_redirect'] = $context['current_label_redirect'] . ';done=sent';
 		global $boarddir;
-		if (function_exists('tapatalk_push'))
+		if (function_exists('tapatalk_push_pm'))
 			tapatalk_push_pm();
 		else if(file_exists($boarddir . '/mobiquo/push_hook.php'))
 		{

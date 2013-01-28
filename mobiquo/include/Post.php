@@ -2009,7 +2009,7 @@ function Post2()
 			);
 			notifyMembersBoard($notifyData);
 			global $boarddir;
-			if (function_exists('tapatalk_push'))
+			if (function_exists('tapatalk_push_quote_tag'))
 				tapatalk_push_quote_tag($msgOptions['id'], true);
 			else if(file_exists($boarddir . '/mobiquo/push_hook.php'))
 			{
@@ -2024,7 +2024,7 @@ function Post2()
 			{
 				sendNotifications($topic, 'reply');
 				global $boarddir;
-				if (function_exists('tapatalk_push'))
+				if (function_exists('tapatalk_push_reply'))
 					tapatalk_push_reply($msgOptions['id']);
 				else if(file_exists($boarddir . '/mobiquo/push_hook.php'))
 				{
