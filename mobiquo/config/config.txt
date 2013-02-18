@@ -19,7 +19,7 @@ soft_delete = 0
 delete_reason = 0
 
 disable_pm_verification = 1
-
+announcement = 0
 emoji = 1
 subscribe_load = 1
 pm_load = 1
