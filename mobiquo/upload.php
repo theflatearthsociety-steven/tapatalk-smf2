@@ -16,7 +16,7 @@ function showTestScreen()
 {
 	echo "Attachment Upload Interface for Tapatalk Application<br>";
 	echo "<br>
-<a href=\"http://tapatalk.com/api/api.php\" target=\"_blank\">Tapatalk API for Universal Forum Access</a> | <a href=\"http://tapatalk.com/mobile.php\" target=\"_blank\">Tapatalk Mobile Applications</a><br>
+<a href=\"http://tapatalk.com/api/api.php\" target=\"_blank\">Tapatalk API for Universal Forum Access</a> | <a href=\"http://tapatalk.com/build.php\" target=\"_blank\">Build Your Own</a><br>
 For more details, please visit <a href=\"http://tapatalk.com\" target=\"_blank\">http://tapatalk.com</a>";
 	exit;
 }
