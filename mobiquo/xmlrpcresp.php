@@ -446,10 +446,20 @@ function get_online_users_func()
         {
             $avatar = $profile['avatar'] == '' ? ($profile['id_attach'] > 0 ? (empty($profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) : '') : (stristr($profile['avatar'], 'http://') ? $profile['avatar'] : $modSettings['avatar_url'] . '/' . $profile['avatar']);
         }
+        $from = 'browser';
+        if(isset($user['query']['USER_AGENT']))
+        {
+            $userAgent = $user['query']['USER_AGENT'];
+            if(strpos($userAgent,'Android') !== false || strpos($userAgent,'iPhone') !== false || strpos($userAgent,'BlackBerry') !== false)
+                $from = 'mobile';
+            if(strpos($userAgent,'Tapatalk') !== false)
+                $from = 'tapatalk';
+        }
         $user_list[] = new xmlrpcval(array(
             'user_name'     => new xmlrpcval($user['username'], 'base64'),
             'display_name'  => new xmlrpcval(basic_clean($user['name']), 'base64'),
             'display_text'  => new xmlrpcval(basic_clean($user['action']), 'base64'),
+            'from'          => new xmlrpcval($from, 'string'),
             'icon_url'      => new xmlrpcval($avatar)
         ), 'struct');
     }
