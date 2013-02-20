@@ -4,14 +4,14 @@ defined('IN_MOBIQUO') or exit;
 
 function get_config_func()
 {
-    global $mobiquo_config, $user_info, $modSettings, $maintenance;
+    global $mobiquo_config, $user_info, $modSettings, $maintenance, $mmessage;
 
     $config_list = array(
         'is_open'    => new xmlrpcval( ($maintenance == 0 && $modSettings['tapatalkEnabled']) ? true : false, 'boolean'),
         'guest_okay' => new xmlrpcval($modSettings['allow_guestAccess'] && $modSettings['tp_guestOkayEnabled']? true : false, 'boolean'),
         'push'       => new xmlrpcval(isset($modSettings['tp_pushEnabled'])&& $modSettings['tp_pushEnabled']? true: false,'string'),
         'reg_url'       => new xmlrpcval($modSettings['tp_register_page_url'],'string'),
-
+        'result_text'=> new xmlrpcval($maintenance == 1 ? $mmessage : ($modSettings['tapatalkEnabled']? '' : 'Sorry, taptalk is disabled by this forum administrator') , 'base64'),
     );
     if(allowedTo('search_posts'))
         $config_list['guest_search'] = new xmlrpcval('1', 'string');
