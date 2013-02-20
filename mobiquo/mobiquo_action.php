@@ -1003,7 +1003,7 @@ function action_get_inbox_stat()
     $totalUnreadNotifications = 0;
     while ($row = $smcFunc['db_fetch_assoc']($request))
     {
-        if ($row['id_msg_modified'] > $row['new_from']) $totalUnreadNotifications++;
+        if ($row['id_msg_modified'] > $row['new_from'] || $row['id_msg_modified'] == $row['new_from']) $totalUnreadNotifications++;
     }
 
     $context['totalUnreadNotifications'] = $totalUnreadNotifications;
