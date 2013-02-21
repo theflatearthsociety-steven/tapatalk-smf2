@@ -320,6 +320,7 @@ function parse_bbcode($str)
 
 function basic_clean($str, $cut = 0)
 {
+    global $modSettings;
     $str = preg_replace('/<a.*?>Quote from:.*?<\/a>/', ' ', $str);
     $str = strip_tags($str);
     $str = to_utf8($str);
@@ -335,7 +336,28 @@ function basic_clean($str, $cut = 0)
         $str = trim($str);
         $str = cutstr($str, $cut);
     }
-    
+    // custom content replacement.
+    if(isset($modSettings['tp_custom_content_replacement']) && !empty($modSettings['tp_custom_content_replacement']))
+    {
+        $custom_replacement = $modSettings['tp_custom_content_replacement'];
+        if(!empty($custom_replacement))
+        {
+            $replace_arr = explode("\n", $custom_replacement);
+            foreach ($replace_arr as $replace)
+            {
+                preg_match('/^\s*(\'|")((\#|\/|\!).+\3[ismexuADUX]*?)\1\s*,\s*(\'|")(.*?)\4\s*$/', $replace,$matches);
+                if(count($matches) == 6)
+                {
+                    $temp_post = $str;
+                    $str = @preg_replace($matches[2], $matches[5], $str);
+                    if(empty($str))
+                    {
+                        $str = $temp_post;
+                    }
+                }    
+            }
+        }
+    }
     return trim($str);
 }
 

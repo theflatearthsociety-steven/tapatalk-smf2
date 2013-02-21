@@ -68,7 +68,15 @@ function ManageTapatalkGeneral($return_config = false)
             array('check', 'tp_tapatalkNotifierForChromeEnabled'),
             array('text',  'tp_register_page_url', 'value'=> isset($modSettings['tp_register_page_url'])? $modSettings['tp_register_page_url']: 'index.php?action=register', 'size' => '42'),
             array('text',  'tp_push_key', 'size' => '42'),
-            array('text',  'tp_allow_usergroup', 'size' => '42')
+            array('text',  'tp_allow_usergroup', 'size' => '42'),
+            array('large_text',  'tp_custom_content_replacement', 'value'=> isset($modSettings['tp_custom_content_replacement'])? $modSettings['tp_custom_content_replacement']: '# For each sample blow, remove the \'#\' ahead to test
+# More infor: http://support.tapatalk.com/threads/advanced-plugin-usage.17106/
+
+# Sample 1, replace all string \'abc\' in post content to \'xyz\'
+# \'/abc/\', \'xyz\'
+
+# Sample 2, replace [JAVA] BBCODE to [QUOTE] for better display in tapatalk
+# \'/\[java\](.*?)\[\/java\]/si\', \'[quote]$1[/quote]\'', 'size' => '8', 'cols' => '40'),
     );
 
     if ($return_config)

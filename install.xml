@@ -118,6 +118,7 @@ $txt['tp_select_boards'] = 'Select Boards to HIDE on Tapatalk';
 $txt['tp_disable_newtopic'] = 'Disable New Topic For Boards';
 $txt['tp_register_page_url'] = 'Register page url';
 $txt['tp_push_key'] = 'Push Notification Key';
+$txt['tp_custom_content_replacement'] = 'Thread Content Replacement(Advanced)';
 $txt['taptalk_descp'] = '<strong>Tapatalk for SMF Plugin</strong></br><br>
 For SMF 2.0 RC5/Final, <a href = "http://www.tapatalk.com">http://www.tapatalk.com</a></br>
 For more remote settings, please check <a style="color:red;" href = "http://tapatalk.com/landing.php"><u>here</u></a>.<br><br>
@@ -159,6 +160,7 @@ $helptxt['tp_kf_url'] = 'Change this URL if you are Tapatalk Rebranding Customer
 $helptxt['tp_allow_usergroup'] = 'Allow usergroups to login via Tapatalk, leave this option empty means that all usergroups users can login via Tapatalk. Different usergroups should be departed by comma, for example, "3,11,6" which means only users who belongs to 3,6 and 11 usergroups can login via Tapatalk.';
 $helptxt['tp_hide_boards'] = 'Hide forums you don\'t want them to be listed in Tapatalk app.';
 $helptxt['tp_dsa_boards'] = 'Prevent Tapatalk users to create new topic in the selected sub-forums. This feature is useful if certain forums requires additional topic fields or permission that Tapatalk does not support.';
+$helptxt['tp_custom_content_replacement'] = 'Ability to match and replace thread content using PHP preg_replace function(http://www.php.net/manual/en/function.preg-replace.php). E.g. "\'pattern\', \'replacement\'" . You can define more than one replace rule on each line.';
 //Tapatalk ends]]></add>
         </operation>
         </file>
@@ -170,7 +172,7 @@ $helptxt['tp_dsa_boards'] = 'Prevent Tapatalk users to create new topic in the s
             <add><![CDATA[			'timestamp_started' => $row['time_started'],]]></add>
         </operation>
         </file>
-        <file name="$themedir/default/Who.template.php">
+        <file name="$themedir/Who.template.php">
         <operation>
             <search position="replace"><![CDATA[global $context, $settings, $options, $scripturl, $txt;]]></search>
             <add><![CDATA[global $context, $settings, $options, $scripturl, $txt, $boardurl;]]></add>
@@ -187,6 +189,14 @@ $helptxt['tp_dsa_boards'] = 'Prevent Tapatalk users to create new topic in the s
 </a>' : ''), $context['can_send_pm'] ? '<a href="' . $member['online']['href'] . '" title="' . $member['online']['label'] . '">' : '', $settings['use_image_buttons'] ? '<img src="' . $member['online']['image_href'] . '" alt="' . $member['online']['text'] . '" align="bottom" />' : $member['online']['text'], $context['can_send_pm'] ? '</a>' : '', '
 									', isset($context['disabled_fields']['icq']) ? '' : $member['icq']['link'] , ' ', isset($context['disabled_fields']['msn']) ? '' : $member['msn']['link'], ' ', isset($context['disabled_fields']['yim']) ? '' : $member['yim']['link'], ' ', isset($context['disabled_fields']['aim']) ? '' : $member['aim']['link'], '
 								</span>';]]></add>
+        </operation>
+        </file>
+        <file name="$themedir/Admin.template.php">
+        <operation>
+            <search position="replace"><![CDATA[					echo '
+							<textarea rows="', ($config_var['size'] ? $config_var['size'] : 4), '" cols="30" ', $javascript, $disabled, ' name="', $config_var['name'], '" id="', $config_var['name'], '">', $config_var['value'], '</textarea>';]]></search>
+            <add><![CDATA[					echo '
+							<textarea rows="', ($config_var['size'] ? $config_var['size'] : 4), '" cols="',($config_var['cols'] ? $config_var['cols'] : 30),'" ', $javascript, $disabled, ' name="', $config_var['name'], '" id="', $config_var['name'], '">', $config_var['value'], '</textarea>';]]></add>
         </operation>
         </file>
 </modification>
