@@ -349,10 +349,11 @@ function get_post_detail($reset = false)
     // Do the censor thang.
     censorText($message['body']);
     censorText($message['subject']);
-
+//error_log(print_r($message['body'], true), 3, 'my.log');
     // Run BBC interpreter on the message.
     $message['body'] = mobiquo_parse_bbc($message['body'], 0, $message['id_msg']);
-
+//error_log(print_r("\n\n", true), 3, 'my.log');
+//error_log(print_r($message['body'], true), 3, 'my.log');
     // Compose the memory eat- I mean message array.
     $output = array(
         'smileys_enabled' => $message['smileys_enabled'],
@@ -772,6 +773,46 @@ function action_get_new_topic()
     $smcFunc['db_free_result']($request);
 
     $context['posts'] = $posts;
+}
+
+function action_register()
+{
+    global $sourcedir, $context;
+
+    checkSession();
+
+    foreach ($_POST as $key => $value)
+        if (!is_array($_POST[$key]))
+            $_POST[$key] = htmltrim__recursive(str_replace(array("\n", "\r"), '', $_POST[$key]));
+
+    $regOptions = array(
+        'interface' => 'admin',
+        'username' => $_POST['user'],
+        'email' => $_POST['email'],
+        'password' => $_POST['password'],
+        'password_check' => $_POST['password'],
+        'check_reserved_name' => true,
+        'check_password_strength' => false,
+        'check_email_ban' => false,
+        'send_welcome_email' => isset($_POST['emailPassword']) || empty($_POST['password']),
+        'require' => isset($_POST['emailActivate']) ? 'activation' : 'nothing',
+        'memberGroup' => empty($_POST['group']) || !allowedTo('manage_membergroups') ? 0 : (int) $_POST['group'],
+    );
+
+    define('mobi_register',1);
+    require_once($sourcedir . '/Subs-Members.php');
+    $memberID = registerMember($regOptions);
+
+    if (!empty($memberID))
+    {
+        $context['new_member'] = array(
+            'id' => $memberID,
+            'name' => $_POST['user'],
+            'href' => $scripturl . '?action=profile;u=' . $memberID,
+            'link' => '<a href="' . $scripturl . '?action=profile;u=' . $memberID . '">' . $_POST['user'] . '</a>',
+        );
+        $context['registration_done'] = sprintf($txt['admin_register_done'], $context['new_member']['link']);
+    }
 }
 
 function action_get_subscribed_forum()
@@ -1635,6 +1676,25 @@ function before_action_create_message()
     }
 }
 
+function before_action_register()
+{
+    global $modSettings, $params_num;
+    
+    if(!isset($modSettings['tp_push_key']) || empty($modSettings['tp_push_key']))
+        fatal_lang_error('Forum is not configured well, please contact administrator to set up push key for the forum!');
+
+    if($params_num == 5)
+    {
+        $email_response = getEmailFromScription($_POST['token'], $_POST['code'], $options->tp_push_key);
+        if(empty($email_response))
+            fatal_lang_error('Failed to connect to tapatalk server, please try again later.');
+        if( (!isset($_POST['email']) || empty($_POST['email'])) && (!isset($email_response['email']) || empty($email_response['email'])))
+            fatal_lang_error('You need to input an email or re-login tapatalk id to use default email of tapatalk id.');
+        $_POST['emailActivate'] = $email_response['result'] && isset($email_response['email']) && !empty($email_response['email']) && ($email_response['email'] == $_POST['email']) ? false : true;
+    }
+    
+
+}
 function before_action_reply_topic()
 {
     check_topic_notify();

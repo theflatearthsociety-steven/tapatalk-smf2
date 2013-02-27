@@ -16,7 +16,32 @@ $server_param = array(
                              array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcBase64)),
         'docstring' => 'authorize need two parameters,the first is user name(Base64), second is password.',
     ),
+    
+    'register' => array(
+        'function'  => 'register_func',
+        'signature' => array(array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcBase64, $xmlrpcBase64, $xmlrpcString, $xmlrpcString),
+                            array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcBase64, $xmlrpcBase64)),
+        'docstring' => 'register need four parameters,the first is user name(Base64), second is password(Base64), third is md5(TapatalkID token), fourth is md5 of au_id join email of tapatalk id.',
+    ),
 
+    'forget_password' => array(
+        'function'  => 'forget_password_func',
+        'signature' => array(array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcString, $xmlrpcString),),
+        'docstring' => 'forget_password need three parameters,the first is user name(Base64), second and thrid is validation token and code(String).',
+    ),
+
+    'update_password' => array(
+        'function'  => 'update_password_func',
+        'signature' => array(array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcBase64),
+                        array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcString, $xmlrpcString),),
+        'docstring' => 'update_password need three parameters,the first is user name(Base64), second and thrid is validation token and code(String).',
+    ),
+
+    'update_email' => array(
+        'function'  => 'update_email_func',
+        'signature' => array(array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcBase64),),
+        'docstring' => 'update_email need three parameters,the first is user name(Base64), second and thrid is validation token and code(String).',
+    ),
     'get_forum' => array(
         'function'  => 'get_forum_func',
         'signature' => array(array($xmlrpcStruct, $xmlrpcBoolean, $xmlrpcString),

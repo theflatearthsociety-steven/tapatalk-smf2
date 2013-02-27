@@ -47,6 +47,22 @@ switch ($request_name) {
             get_error('Parameter Error');
         }
         break;
+    case 'register':
+        if ($params_num == 3 || $params_num == 5) {
+            $_POST['user'] = $_POST['username'] = $request_params[0];
+            $_POST['password'] = $request_params[1];
+            $_POST['email'] = $request_params[2];
+            if($params_num == 5)
+            {
+                $_POST['token'] = $request_params[3];
+                $_POST['code'] = $request_params[4];
+                if(!isset($_POST['token']) || !isset($_POST['code']) || empty($_POST['token']) || empty($_POST['code']))
+                    get_error('Token or Code cannot be empty');
+            }
+        }else {
+            get_error('Parameter Error');
+        }
+        break;
     case 'get_bookmarked_topic':
         $start_num = intval(isset($request_params[0]) ? $request_params[0] : '0');
         $end_num = intval(isset($request_params[1]) ? $request_params[1] : '19');

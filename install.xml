@@ -184,7 +184,7 @@ $helptxt['tp_custom_content_replacement'] = 'Ability to match and replace thread
 									', isset($context['disabled_fields']['icq']) ? '' : $member['icq']['link'] , ' ', isset($context['disabled_fields']['msn']) ? '' : $member['msn']['link'], ' ', isset($context['disabled_fields']['yim']) ? '' : $member['yim']['link'], ' ', isset($context['disabled_fields']['aim']) ? '' : $member['aim']['link'], '
 								</span>';]]></search>
             <add><![CDATA[			echo '
-								<span class="contact_info floatright">'.((strpos($member['query']['USER_AGENT'], 'Tapatalk') == false)? '<a title="On Tapatalk" href="http://tapatalk.com">
+								<span class="contact_info floatright">'.((strpos($member['query']['USER_AGENT'], 'Tapatalk') !== false)? '<a title="On Tapatalk" href="http://tapatalk.com">
 <img align="bottom" alt="Online" src="'.$boardurl.'/mobiquo/forum_icons/tapatalk-online.png">
 </a>' : ''), $context['can_send_pm'] ? '<a href="' . $member['online']['href'] . '" title="' . $member['online']['label'] . '">' : '', $settings['use_image_buttons'] ? '<img src="' . $member['online']['image_href'] . '" alt="' . $member['online']['text'] . '" align="bottom" />' : $member['online']['text'], $context['can_send_pm'] ? '</a>' : '', '
 									', isset($context['disabled_fields']['icq']) ? '' : $member['icq']['link'] , ' ', isset($context['disabled_fields']['msn']) ? '' : $member['msn']['link'], ' ', isset($context['disabled_fields']['yim']) ? '' : $member['yim']['link'], ' ', isset($context['disabled_fields']['aim']) ? '' : $member['aim']['link'], '
@@ -197,6 +197,17 @@ $helptxt['tp_custom_content_replacement'] = 'Ability to match and replace thread
 							<textarea rows="', ($config_var['size'] ? $config_var['size'] : 4), '" cols="30" ', $javascript, $disabled, ' name="', $config_var['name'], '" id="', $config_var['name'], '">', $config_var['value'], '</textarea>';]]></search>
             <add><![CDATA[					echo '
 							<textarea rows="', ($config_var['size'] ? $config_var['size'] : 4), '" cols="',($config_var['cols'] ? $config_var['cols'] : 30),'" ', $javascript, $disabled, ' name="', $config_var['name'], '" id="', $config_var['name'], '">', $config_var['value'], '</textarea>';]]></add>
+        </operation>
+        </file>
+        <file name="$sourcedir/Subs-Members.php">
+        <operation>
+            <search position="replace"><![CDATA[		is_not_guest();
+		isAllowedTo('moderate_forum');]]></search>
+            <add><![CDATA[		if(!defined('mobi_register'))
+		{
+			is_not_guest();
+			isAllowedTo('moderate_forum');
+		}]]></add>
         </operation>
         </file>
 </modification>

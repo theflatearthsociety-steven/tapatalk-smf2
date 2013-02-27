@@ -1530,3 +1530,14 @@ function get_alert_func()
     );
     return new xmlrpcresp(new xmlrpcval($return_data, 'struct'));
 }
+
+function register_func()
+{
+    global $context;
+        
+    $result = new xmlrpcval(array(
+            'result'        => new xmlrpcval(isset($context['registration_done']), 'boolean'),
+            'result_text'   => new xmlrpcval('', 'base64')),
+        'struct');
+    return new xmlrpcresp($result);
+}

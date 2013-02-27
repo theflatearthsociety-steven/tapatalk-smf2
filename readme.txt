@@ -11,6 +11,7 @@ This mod enables your forum to be accessed by the Tapatalk app. The Tapatalk app
 After installing this mod, head straight to http://tapatalk.com/activate_tapatalk.php and register there. After registering you can enlist your forum into the Tapatalk network.
 
 [center][color=red][size=18pt]Please manually change permission of all files under mobiquo/ folder (including the folder itself) to chmod 755 otherwise it won't work!![/size][/color][/center]
+[center][color=red][size=12pt]Please check on Forum_Root/mobiquo/config/config.txt to make sure that the config content is displayed well.(Forum_Root is the forum url you filled in <a href="http://tapatalk.com/forum_owner.php">forum owner area</a>)[/size][/color][/center]
 
 For more information please visit http://tapatalk.com
 
