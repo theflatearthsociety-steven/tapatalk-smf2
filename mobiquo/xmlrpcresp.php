@@ -67,7 +67,7 @@ function login_func()
     $pm_send = !$user_info['is_guest'] && allowedTo('pm_send');
 
     $login_status = ($context['user']['is_guest'] || (isset($context['disable_login_hashing']) && $context['disable_login_hashing'])) ? false : true;
-    $result_text = (!$login_status && isset($context['login_errors'][0])) ? $context['login_errors'][0] : '';
+    $result_text = (!$login_status && isset($context['login_errors'][0])) ? $context['login_errors'][0].' '.(isset($context['login_errors'][1])? basic_clean($context['login_errors'][1]) : '') : '';
 
     $usergroup_id = array();
     foreach ($user_info['groups'] as $group_id)
@@ -1534,10 +1534,12 @@ function get_alert_func()
 function register_func()
 {
     global $context;
-        
+    
+    if($_POST['emailActivate'])
+        $result_text = 'An confirmation email has been sent, please check the email to activate your account!';
     $result = new xmlrpcval(array(
             'result'        => new xmlrpcval(isset($context['registration_done']), 'boolean'),
-            'result_text'   => new xmlrpcval('', 'base64')),
+            'result_text'   => new xmlrpcval($result_text, 'base64')),
         'struct');
     return new xmlrpcresp($result);
 }
