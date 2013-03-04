@@ -24,7 +24,7 @@ function mobiquo_exit($str = '')
         case       'report_post': return;
         case  'mark_all_as_read': return;
         case     'upload_avatar': if ('action=profile;area=forumprofile;updated' == $str) return;
-        
+        case      'update_email': if(preg_match('/^action=profile;area=account;updated/', $str)) return;
         case     'm_stick_topic': if (preg_match("/^topic=$topic/", $str)) return;
         case     'm_close_topic': if (preg_match("/^topic=$topic/", $str)) return;
         case    'm_delete_topic': if ($str == 'board=' . $board . '.0') return;
@@ -33,7 +33,6 @@ function mobiquo_exit($str = '')
         case     'm_merge_topic': if (preg_match("/^action=mergetopics;sa=done;to=/", $str)) return;
         case        'thank_post': if (preg_match("/^topic=$topic/", $str)) return;
     }
-    
     get_error('Unknown error');
 }
 
