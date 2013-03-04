@@ -1543,3 +1543,44 @@ function register_func()
         'struct');
     return new xmlrpcresp($result);
 }
+
+function update_password_func()
+{
+    global $context;
+
+        $result = new xmlrpcval(array(
+            'result'        => new xmlrpcval(1, 'boolean'),
+            'result_text'   => new xmlrpcval('aaa', 'base64')),
+        'struct');
+    return new xmlrpcresp($result);
+}
+
+function update_email_func()
+{
+    global $context, $txt;
+
+    $result_text = '';
+    if(isset($context['post_errors']) && !empty($context['post_errors']))
+        foreach($context['post_errors'] as $error)
+        {
+            $result_text .= $error;
+            if(isset($txt['profile_error_'.$error]))
+                fatal_lang_error('profile_error_'.$error);
+            }
+
+     $result = new xmlrpcval(array(
+        'result'        => new xmlrpcval(1, 'boolean'),
+        'result_text'   => new xmlrpcval($result_text, 'base64')),
+    'struct');
+    return new xmlrpcresp($result);
+}
+
+function forget_password_func()
+{
+    $result = new xmlrpcval(array(
+        'result'        => new xmlrpcval(isset($_POST['result']) ? $_POST['result'] : 1, 'boolean'),
+        'result_text'   => new xmlrpcval($_POST['result_text'], 'base64'),
+        'verified'      => new xmlrpcval(isset($_POST['verified'])? $_POST['verified'] : false, 'boolean'),),
+    'struct');
+    return new xmlrpcresp($result);
+}

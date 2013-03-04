@@ -26,14 +26,15 @@ $server_param = array(
 
     'forget_password' => array(
         'function'  => 'forget_password_func',
-        'signature' => array(array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcString, $xmlrpcString),),
+        'signature' => array(array($xmlrpcStruct, $xmlrpcBase64),
+                            array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcString, $xmlrpcString)),
         'docstring' => 'forget_password need three parameters,the first is user name(Base64), second and thrid is validation token and code(String).',
     ),
 
     'update_password' => array(
         'function'  => 'update_password_func',
-        'signature' => array(array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcBase64),
-                        array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcString, $xmlrpcString),),
+        'signature' => array(array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcString, $xmlrpcString),
+                            array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcBase64),),
         'docstring' => 'update_password need three parameters,the first is user name(Base64), second and thrid is validation token and code(String).',
     ),
 

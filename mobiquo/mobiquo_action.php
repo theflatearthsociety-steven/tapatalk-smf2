@@ -2028,3 +2028,183 @@ function before_action_m_ban_user()
     else
         fatal_lang_error('invalid_username', false);
 }
+
+function before_action_update_password()
+{
+    global $sourcedir, $modSettings, $cur_profile, $user_info, $language;
+
+    if(isset($_POST['old_password']))
+    {
+        $cur_profile['member_name'] = $user_info['username'];
+        $cur_profile['real_name'] =  $user_info['name'];
+        $cur_profile['email_address'] =  $user_info['email'];
+        $cur_profile['id_member'] =  $user_info['id'];
+        //action 1: from profile clue.
+
+        // Since the password got modified due to all the $_POST cleaning, lets undo it so we can get the correct password
+        $_POST['old_password'] = un_htmlspecialchars($_POST['old_password']);
+
+        // Does the integration want to check passwords?
+        $good_password = in_array(true, call_integration_hook('integrate_verify_password', array($cur_profile['member_name'], $_POST['old_password'], false)), true);
+
+        // Bad password!!!
+        if (!$good_password && $user_info['passwd'] != sha1(strtolower($cur_profile['member_name']) . $_POST['old_password']))
+            fatal_lang_error('profile_error_bad_password', false);
+    }
+    else
+    {
+        //action 2: from email part.
+        if(!isset($modSettings['tp_push_key']) || empty($modSettings['tp_push_key']))
+            get_error('Forum is not configured well, please contact administrator to set up push key for the forum!');
+
+        $email_response = getEmailFromScription($_POST['token'], $_POST['code'], $modSettings['tp_push_key']);
+        $email_response = array('result' => true, 'email' => 'euhowzy@gmail.com');
+        if(empty($email_response))
+            get_error('Failed to connect to tapatalk server, please try again later.');
+        if( !$email_response['result']|| (!isset($email_response['email']) || empty($email_response['email'])))
+            get_error('You need to input an email or re-login tapatalk id to use default email of tapatalk id.');
+
+        require_once($sourcedir . '/Subs-Members.php');
+        $member = list_getMembers(0, 30, 'member_name', '(email_address = {string:email_normal})', array('email_normal' => $email_response['email']));
+        if(!isset($member[0]['id_member']) || empty($member[0]['id_member']))
+            get_error('no email user found.');
+            
+        $cur_profile = $member[0];
+    }
+}
+
+function action_update_password()
+{
+    global $cur_profile, $sourcedir;
+
+    require_once($sourcedir . '/Subs-Auth.php');
+    $passwordErrors = validatePassword($_POST['new_password'], $cur_profile['member_name'], array($cur_profile['real_name'], $cur_profile['email_address']));
+    // Were there errors?
+    if ($passwordErrors != null)
+        fatal_lang_error('profile_error_password_' . $passwordErrors);
+    $passwd = sha1(strtolower($cur_profile['member_name']) . un_htmlspecialchars($_POST['new_password']));
+    updateMemberData($cur_profile['id_member'], array('passwd' => $passwd));
+
+}
+
+function before_action_update_email()
+{
+    global $user_info;
+
+    if(!isset($user_info['id']) || empty($user_info['id']))
+        get_error('You must login to do that.');
+    if($user_info['email'] == $_POST['email_address'])
+        get_error('New email cannot be the same with orignial one.');
+    $_REQUEST['real_name'] = $_POST['real_name'] = $user_info['name'];
+    $_REQUEST['u'] = $_POST['u'] = $user_info['id'];
+    $_REQUEST['save'] = true;
+}
+
+function before_action_forget_password()
+{
+    global $modSettings;
+
+    if(isset($_POST['token']))
+    {
+        if(!isset($modSettings['tp_push_key']) || empty($modSettings['tp_push_key']))
+            get_error('Forum is not configured well, please contact administrator to set up push key for the forum!');
+
+        $email_response = getEmailFromScription($_POST['token'], $_POST['code'], $modSettings['tp_push_key']);
+
+        if(empty($email_response))
+            get_error('Failed to connect to tapatalk server, please try again later.');
+
+        $_POST['email'] = isset($email_response['email']) && !empty($email_response['email']) ? $email_response['email'] : false;
+        $_POST['verified'] = isset($email_response['result']) && $email_response['result'];
+    }
+}
+function action_forget_password()
+{
+    global $smcFunc, $context, $sourcedir;
+
+    checkSession();
+    $where = '';
+    $where_params = array();
+	// Coming with a known ID?
+	if(isset($_POST['username']) && $_POST['username'] != '')
+	{
+		$where = 'member_name = {string:member_name}';
+		$where_params['member_name'] = $_POST['username'];
+		$where_params['email_address'] = isset($_POST['email']) ? $_POST['email'] : '';
+	}
+
+	// You must enter a username/email address.
+	if (empty($where))
+		fatal_lang_error('username_no_exist', false);
+
+	// Find the user!
+	$request = $smcFunc['db_query']('', '
+		SELECT id_member, real_name, member_name, email_address, is_activated, validation_code, lngfile, openid_uri, secret_question
+		FROM {db_prefix}members
+		WHERE ' . $where . '
+		LIMIT 1',
+		array_merge($where_params, array(
+		))
+	);
+	$row = $smcFunc['db_fetch_assoc']($request);
+	if(isset($_POST['verified']) && $_POST['verified'] && $row['email_address'] == $_POST['email'])
+	{
+	    $_POST['reminder_type'] = 'no-reminder';
+	}
+	else{
+	    $_POST['reminder_type'] = 'email';
+	    $_POST['verified'] = false;
+
+	}
+	// find the user?
+	if ($smcFunc['db_num_rows']($request) == 0)
+		fatal_lang_error('username_no_exist', false);
+
+	$context['account_type'] = !empty($row['openid_uri']) ? 'openid' : 'password';
+
+	// If the user isn't activated/approved, give them some feedback on what to do next.
+	if ($row['is_activated'] != 1)
+	{
+		// Awaiting approval...
+		if (trim($row['validation_code']) == '')
+			fatal_error($txt['registration_not_approved'] . ' <a href="' . $scripturl . '?action=activate;user=' . $_POST['user'] . '">' . $txt['here'] . '</a>.', false);
+		else
+			fatal_error($txt['registration_not_activated'] . ' <a href="' . $scripturl . '?action=activate;user=' . $_POST['user'] . '">' . $txt['here'] . '</a>.', false);
+	}
+
+	// You can't get emailed if you have no email address.
+	$row['email_address'] = trim($row['email_address']);
+	if ($row['email_address'] == '')
+		fatal_error($txt['no_reminder_email'] . '<br />' . $txt['send_email'] . ' <a href="mailto:' . $webmaster_email . '">webmaster</a> ' . $txt['to_ask_password'] . '.');
+
+	// If they have no secret question then they can only get emailed the item, or they are requesting the email, send them an email.
+	if ($_POST['reminder_type'] == 'email')
+	{
+		// Randomly generate a new password, with only alpha numeric characters that is a max length of 10 chars.
+		require_once($sourcedir . '/Subs-Members.php');
+		$password = generateValidationCode();
+
+		require_once($sourcedir . '/Subs-Post.php');
+		$replacements = array(
+			'REALNAME' => $row['real_name'],
+			'REMINDLINK' => $scripturl . '?action=reminder;sa=setpassword;u=' . $row['id_member'] . ';code=' . $password,
+			'IP' => $user_info['ip'],
+			'MEMBERNAME' => $row['member_name'],
+			'OPENID' => $row['openid_uri'],
+		);
+
+		$emaildata = loadEmailTemplate('forgot_' . $context['account_type'], $replacements, empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']);
+		$context['description'] = $txt['reminder_' . (!empty($row['openid_uri']) ? 'openid_' : '') . 'sent'];
+
+		// If they were using OpenID simply email them their OpenID identity.
+		$mail_result = sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], null, null, false, 0);
+		if (empty($row['openid_uri']))
+			// Set the password in the database.
+			updateMemberData($row['id_member'], array('validation_code' => substr(md5($password), 0, 10)));
+
+		// Set up the template.
+		$context['sub_template'] = 'sent';
+		$_POST['result_text'] = $mail_result ? '' : 'Failed to send confirmation email';
+		$_POST['result'] = $mail_result;
+	}
+}
