@@ -75,40 +75,18 @@ $indexes = array(
 			'userid' => 'userid'
 		),
 	),
-	'announcement' => array(
-		'name' => 'announcement',
-		'type' => 'index',
-		'columns' => array(
-			'announcement' => 'announcement'
-		),
-	),
-	'pm' => array(
-		'name' => 'pm',
-		'type' => 'index',
-		'columns' => array(
-			'pm' => 'pm'
-		),
-	),
-		'subscribe' => array(
-		'name' => 'subscribe',
-		'type' => 'index',
-		'columns' => array(
-			'subscribe' => 'subscribe'
-		),
-	),
-			'updated' => array(
-		'name' => 'updated',
-		'type' => 'timestamp',
-		'columns' => array(
-			'updated' => 'updated'
-		),
-	),
 );
 	
 $installed = $smcFunc['db_create_table']('{db_prefix}tapatalk_users', $columns, $indexes, array(), 'update', 'ignore');
 
 //Creating columns....
 $push_columns = array(
+	'pushid' => array(
+		'name' => 'pushid',
+		'type' => 'int',
+		'auto' => 1,
+		'null' => false,
+	),
 	'userid' => array(
 		'name' => 'userid',
 		'type' => 'int',
@@ -170,60 +148,11 @@ $push_columns = array(
 
 //Creating indexes...
 $push_indexes = array(
-	'userid' => array(
-		'name' => 'userid',
+	'pushid' => array(
+		'name' => 'pushid',
 		'type' => 'index',
 		'columns' => array(
-			'userid' => 'userid'
-		),
-	),
-	'type' => array(
-		'name' => 'type',
-		'type' => 'index',
-		'columns' => array(
-			'type' => 'type'
-		),
-	),
-	'id' => array(
-		'name' => 'id',
-		'type' => 'index',
-		'columns' => array(
-			'id' => 'id'
-		),
-	),
-		'subid' => array(
-		'name' => 'subid',
-		'type' => 'index',
-		'columns' => array(
-			'subid' => 'subid'
-		),
-	),
-			'title' => array(
-		'name' => 'title',
-		'type' => 'index',
-		'columns' => array(
-			'title' => 'title'
-		),
-	),
-				'author' => array(
-		'name' => 'author',
-		'type' => 'index',
-		'columns' => array(
-			'author' => 'author'
-		),
-	),
-				'dateline' => array(
-		'name' => 'dateline',
-		'type' => 'index',
-		'columns' => array(
-			'dateline' => 'dateline'
-		),
-	),
-					'status' => array(
-		'name' => 'status',
-		'type' => 'index',
-		'columns' => array(
-			'status' => 'status'
+			'pushid' => 'pushid'
 		),
 	),
 );
@@ -246,6 +175,23 @@ $smcFunc['db_query']('', '
 		'db_error_skip' => true,
 	)
 );
+
+$history_tapatalk_user_index = array('userid', 'announcement', 'pm', 'subscribe', 'updated');
+$history_tapatalk_push_index = array('userid', 'type', 'id', 'subid', 'title', 'author', 'dateline', 'status');
+foreach($history_tapatalk_user_index as $index_name)
+    $smcFunc['db_query']('', 'ALTER TABLE {db_prefix}tapatalk_users DROP INDEX `'.$index_name.'`',array('db_error_skip' => true,));
+foreach($history_tapatalk_push_index as $index_name)
+    $smcFunc['db_query']('', 'ALTER TABLE {db_prefix}tapatalk_push DROP INDEX `'.$index_name.'`',array('db_error_skip' => true,));
+
+$smcFunc['db_query']('', '
+	ALTER TABLE {db_prefix}tapatalk_push
+	ADD `pushid` INT NOT NULL AUTO_INCREMENT FIRST ,
+ADD PRIMARY KEY ( `pushid` ) ',
+	array(
+		'db_error_skip' => true,
+	)
+);
+
  if($direct_install)
 	echo 'Done....';
  
