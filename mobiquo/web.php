@@ -3,14 +3,18 @@ if (function_exists('set_magic_quotes_runtime'))
 @set_magic_quotes_runtime(0);
 ini_set('max_execution_time', '120');
 error_reporting(0);
-
+ob_start();
 define('CWD1', (($getcwd = getcwd()) ? $getcwd : '.'));
-
 
 require('config/config.php');
 $mobiquo_config = get_mobiquo_config();
+
 $current_plugin_version = $mobiquo_config['version'];
 print_screen($current_plugin_version);
+
+$show_screen =  ob_get_contents();
+ob_end_clean();
+echo $show_screen;
 exit;
 
 
