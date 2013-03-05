@@ -13,6 +13,8 @@
         var tapatalk_ipad_url = "'.(isset($modSettings['tp_ipad_url']) ? $modSettings['tp_ipad_url'] : 'http://itunes.apple.com/us/app/tapatalk-hd-for-ipad/id481579541?mt=8').'";
         var tapatalk_kindle_msg = "'.(isset($modSettings['tp_kindle_msg']) ? $modSettings['tp_kindle_msg'] : 'This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk.').'";
         var tapatalk_kindle_url = "'.(isset($modSettings['tp_kindle_url']) ? $modSettings['tp_kindle_url'] : 'http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkpro.activity').'";
+        var tapatalk_kindle_hd_msg = "'.(isset($modSettings['tp_kindle_hd_msg']) ? $modSettings['tp_kindle_hd_msg'] : 'This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk.').'";
+        var tapatalk_kindle_hd_url = "'.(isset($modSettings['tp_kindle_hd_url']) ? $modSettings['tp_kindle_hd_url'] : 'http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkHD').'";
         var tapatalk_android_msg = "'.(isset($modSettings['tp_android_msg']) ? $modSettings['tp_android_msg'] : 'This forum has an app for Android. Click OK to learn more about Tapatalk.').'";
         var tapatalk_android_url = "'.(isset($modSettings['tp_android_url']) ? $modSettings['tp_android_url'] : 'market://details?id=com.quoord.tapatalkpro.activity').'";
         var tapatalk_chrome_enable = '.(isset($modSettings['tp_tapatalkNotifierForChromeEnabled']) && $modSettings['tp_tapatalkNotifierForChromeEnabled'] ? 'true' : 'false').';
@@ -103,6 +105,8 @@ $txt['tp_android_msg'] = 'Android Product Message';
 $txt['tp_android_url'] = 'Android Product URL';
 $txt['tp_kf_msg'] = 'Kindle Fire Product Message';
 $txt['tp_kf_url'] = 'Kindle Fire Product URL';
+$txt['tp_kf_hd_msg'] = 'Kindle Fire HD Product Message';
+$txt['tp_kf_hd_url'] = 'Kindle Fire HD Product URL';
 $txt['tp_allow_usergroup'] = 'Usergroup allowed on Tapatalk';
 $txt['tp_general_settings'] = 'General';
 $txt['tp_board_settings'] = 'Boards';
@@ -157,6 +161,8 @@ $helptxt['tp_android_msg'] = 'Customize this message if you are Tapatalk Rebrand
 $helptxt['tp_android_url'] = 'Change this URL if you are Tapatalk Rebranding Customer and has obtained your App URL from Google Play. Default: market://details?id=com.quoord.tapatalkpro.activity';
 $helptxt['tp_kf_msg'] = 'Customize this message if you are Tapatalk Rebranding Customer and has published your App to Amazon App Store. Default: "This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk."';
 $helptxt['tp_kf_url'] = 'Change this URL if you are Tapatalk Rebranding Customer and has obtained your App URL from Amazon App Store. Default: http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkpro.activity';
+$helptxt['tp_kf_hd_msg'] = 'Customize this message if you are Tapatalk Rebranding Customer and has published your App to Amazon App Store. Default: "This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk."';
+$helptxt['tp_kf_hd_url'] = 'Change this URL if you are Tapatalk Rebranding Customer and has obtained your App URL from Amazon App Store. Default: http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkHD';
 $helptxt['tp_allow_usergroup'] = 'Allow usergroups to login via Tapatalk, leave this option empty means that all usergroups users can login via Tapatalk. Different usergroups should be departed by comma, for example, "3,11,6" which means only users who belongs to 3,6 and 11 usergroups can login via Tapatalk.';
 $helptxt['tp_hide_boards'] = 'Hide forums you don\'t want them to be listed in Tapatalk app.';
 $helptxt['tp_dsa_boards'] = 'Prevent Tapatalk users to create new topic in the selected sub-forums. This feature is useful if certain forums requires additional topic fields or permission that Tapatalk does not support.';
