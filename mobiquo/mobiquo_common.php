@@ -271,20 +271,21 @@ function parse_quote($str)
     
     $quote_level = 0;
     $message = '';
-        
+    $supported_quote_level = 5;
+
     foreach($blocks as $block)
     {
         if (preg_match('/<blockquote.*?>/i', $block)) {
-            if ($quote_level == 0) $message .= '[quote]';
+            if ($quote_level <= $supported_quote_level - 1) $message .= '[quote]';
             $quote_level++;
         } else if (preg_match('/<\/blockquote>/i', $block)) {
-            if ($quote_level <= 1) $message .= '[/quote]';
-            if ($quote_level >= 1) {
+            if ($quote_level <= $supported_quote_level) $message .= '[/quote]';
+            if ($quote_level >= $supported_quote_level) {
                 $quote_level--;
                 $message .= "\n";
             }
         } else {
-            if ($quote_level <= 1) $message .= $block;
+            if ($quote_level <= $supported_quote_level) $message .= $block;
         }
     }
     
