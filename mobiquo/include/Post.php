@@ -786,9 +786,9 @@ function Post()
 				// Remove any nested quotes, if necessary.
 				if (!empty($modSettings['removeNestedQuotes']))
 					$form_message = preg_replace(array('~\n?\[quote.*?\].+?\[/quote\]\n?~is', '~^\n~', '~\[/quote\]~'), '', $form_message);
-	
+
 				// Add a quote string on the front and end.
-				$message_content .= '[quote author=' . $mname . ' link=topic=' . $topic . '.msg' . (int) $_REQUEST['quote'] . '#msg' . (int) $_REQUEST['quote'] . ' date=' . $mdate . ']' . "\n" . rtrim($form_message) . "\n[/quote]\n\n";
+				$message_content .= '[quote author=' . $mname . ' link=topic=' . $topic . '.msg' . (int) $value . '#msg' . (int) $value . ' date=' . $mdate . ']' . "\n" . rtrim($form_message) . "\n[/quote]\n\n";
 			}
 			$form_message = $message_content;
 		}
