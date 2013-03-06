@@ -8,7 +8,7 @@ register_shutdown_function('xmlrpc_shutdown');
 function mobiquo_exit($str = '')
 {
     global $request_name, $context, $topic, $board;
-    
+
     switch ($request_name) {
         case    'authorize_user': if (preg_match('/^action=login2;sa=check;member=/', $str)) return;
         case'update_push_status': if (preg_match('/^action=login2;sa=check;member=/', $str)) return;
@@ -41,7 +41,7 @@ function xmlrpc_shutdown()
     if (function_exists('error_get_last'))
     {
         $error = error_get_last();
-    
+
         if(!empty($error)){
             switch($error['type']){
                 case E_ERROR:
@@ -59,7 +59,7 @@ function xmlrpc_shutdown()
 function process_page($start_num, $end)
 {
     global $start, $limit;
-    
+
     $start = intval($start_num);
     $end = intval($end);
     $start = empty($start) ? 0 : max($start, 0);
@@ -68,28 +68,28 @@ function process_page($start_num, $end)
         $end = $start + 49;
     }
     $limit = $end - $start + 1;
-    
+
     return array($start, $limit);
 }
 
 function to_utf8($str)
 {
     global $context;
-    
+
     if (!empty($context) && !$context['utf8'])
     {
         $str = mobiquo_encode($str);
     }
-    
+
     return $str;
 }
 
 function utf8_to_local()
 {
     global $context, $request_name;
-    
+
     if (!empty($context) && $context['utf8']) return;
-    
+
     switch ($request_name) {
         case 'login_mod':
         case 'login':
@@ -190,30 +190,30 @@ function cutstr($string, $length, $dot = ' ...') {
     }
 
     $strcut = substr($string, 0, $n);
-    
+
     return $strcut.$dot;
 }
 
 function get_error($err_str)
 {
     global $context;
-    
+
     @ob_clean();
-    
+
     if(!headers_sent())
     {
         header('200 OK');
         header('Mobiquo_is_login:'.($context['user']['is_logged'] ? 'true' : 'false'));
         header('Content-Type: text/xml');
     }
-    
+
     $response = new xmlrpcresp(
         new xmlrpcval(array(
             'result'        => new xmlrpcval(false, 'boolean'),
             'result_text'   => new xmlrpcval(basic_clean($err_str), 'base64'),
         ),'struct')
     );
-    
+
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".$response->serialize('UTF-8');
     exit;
 }
@@ -234,6 +234,7 @@ function log_it($log_data)
 
 function post_html_clean($str)
 {
+    error_log(print_r($str, true), 3, 'my.log');
     $search = array(
         '/<a [^>]*?href="(?!javascript)([^"]*?)"[^>]*?>([^<]*?)<\/a>/si',
         '/<img .*?src="(.*?)".*?\/?>/si',
@@ -249,16 +250,15 @@ function post_html_clean($str)
         ' ',
         '[quote]$1[/quote]',
     );
-    
+
     $str = preg_replace('/\n|\r/si', '', $str);
     $str = parse_quote($str);
     $str = preg_replace('/<i class="pstatus".*?>.*?<\/i>(<br\s*\/>){0,2}/', '', $str);
     $str = preg_replace('/<script.*?>.*?<\/script>/', '', $str);
     $str = preg_replace($search, $replace, $str);
-    
     // remove link on img
     $str = preg_replace('/\[url=.*?\](\[img\].*?\[\/img\])\[\/url\]/', '$1', $str);
-    
+
     $str = basic_clean($str);
     $str = parse_bbcode($str);
     $str = preg_replace('/\[quote\](.*?)\[\/quote\]([<br \/>]*|[<br>]*|[<\/br>]*|[\n]*)(.*?)/i','[quote]$1[/quote]$4', $str);
@@ -268,7 +268,7 @@ function post_html_clean($str)
 function parse_quote($str)
 {
     $blocks = preg_split('/(<blockquote.*?>|<\/blockquote>)/i', $str, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-    
+
     $quote_level = 0;
     $message = '';
     $supported_quote_level = 5;
@@ -288,7 +288,7 @@ function parse_quote($str)
             if ($quote_level <= $supported_quote_level) $message .= $block;
         }
     }
-    
+
     return $message;
 }
 
@@ -300,7 +300,7 @@ function parse_bbcode($str)
         '#\[(i)\](.*?)\[/i\]#si',
         '#\[color=(\#[\da-fA-F]{3}|\#[\da-fA-F]{6}|[A-Za-z]{1,20}|rgb\(\d{1,3}, ?\d{1,3}, ?\d{1,3}\))\](.*?)\[/color\]#si',
     );
-    
+
     if (isset($GLOBALS['return_html']) && $GLOBALS['return_html']) {
         $str = htmlspecialchars($str);
         $replace = array(
@@ -313,7 +313,7 @@ function parse_bbcode($str)
     } else {
         $replace = '$2';
     }
-    
+
     return preg_replace($search, $replace, $str);
 }
 
@@ -326,7 +326,7 @@ function basic_clean($str, $cut = 0)
     $str = to_utf8($str);
     $str = html_entity_decode($str, ENT_QUOTES, 'UTF-8');
     if (function_exists('censorText')) censorText($str);
-    
+
     if ($cut > 0)
     {
         $str = preg_replace('/\[url=.*?\].*?\[\/url\]\s*\[quote\].*?\[\/quote\]/si', '', $str);
@@ -354,7 +354,7 @@ function basic_clean($str, $cut = 0)
                     {
                         $str = $temp_post;
                     }
-                }    
+                }
             }
         }
     }
@@ -364,7 +364,7 @@ function basic_clean($str, $cut = 0)
 function get_topic_info($fid, $tid)
 {
     global $smcFunc, $user_info, $modSettings, $scripturl, $settings;
-    
+
     static $mobi_permission;
     if(!$tid) return array();
 
@@ -372,7 +372,7 @@ function get_topic_info($fid, $tid)
 
     foreach ($perms_action_array as $perm)
         if (!isset($mobi_permission[$fid][$perm])) $mobi_permission[$fid][$perm] = allowedTo($perm, $fid);
-    
+
     $request = $smcFunc['db_query']('substring', '
         SELECT
             t.id_topic, t.num_replies, t.locked, t.num_views, t.is_sticky, t.id_poll, t.id_previous_board,
@@ -407,9 +407,9 @@ function get_topic_info($fid, $tid)
     );
     $topic = $smcFunc['db_fetch_assoc']($request);
     $smcFunc['db_free_result']($request);
-    
+
     if(empty($topic)) return array();
-    
+
     // Check for notifications on this topic
     $request = $smcFunc['db_query']('', '
         SELECT sent, id_topic
@@ -431,8 +431,8 @@ function get_topic_info($fid, $tid)
     $topic['can_remove']      = $mobi_permission[$fid]['remove_any'] || ($started && $mobi_permission[$fid]['remove_own']);
     $topic['can_approve']     = $mobi_permission[$fid]['approve_posts'];
     $topic['can_mark_notify'] = $mobi_permission[$fid]['mark_notify'] && !$user_info['is_guest'];
-    
-    
+
+
     $topic['is_sticky'] = !empty($modSettings['enableStickyTopics']) && !empty($topic['is_sticky']);
     $topic['is_locked'] = !empty($topic['locked']);
     $topic['is_approved'] = !empty($topic['approved']);
@@ -440,7 +440,7 @@ function get_topic_info($fid, $tid)
     $topic['last_poster_timestamp'] = $topic['last_poster_time'];
     $topic['last_poster_time'] = timeformat($topic['last_poster_time']);
     $topic['first_poster_time'] = timeformat($topic['first_poster_time']);
-    
+
     if (!empty($settings['message_index_preview']))
     {
         // Limit them to 100 characters - do this FIRST because it's a lot of wasted censoring otherwise.
@@ -450,18 +450,18 @@ function get_topic_info($fid, $tid)
         $topic['first_body'] = preg_replace('/###img###/si', '[img]', $topic['first_body']);
         if ($smcFunc['strlen']($topic['first_body']) > 100)
             $topic['first_body'] = $smcFunc['substr']($topic['first_body'], 0, 100);
-        
+
         $topic['last_body'] = preg_replace('/\[quote.*?\].*\[\/quote\]/si', '', $topic['last_body']);
         $topic['last_body'] = preg_replace('/\[img.*?\].*?\[\/img\]/si', '###img###', $topic['last_body']);
         $topic['last_body'] = strip_tags(strtr(mobiquo_parse_bbc($topic['last_body'], false, $topic['id_last_msg']), array('<br />' => ' ')));
         $topic['last_body'] = preg_replace('/###img###/si', '[img]', $topic['last_body']);
         if ($smcFunc['strlen']($topic['last_body']) > 100)
             $topic['last_body'] = $smcFunc['substr']($topic['last_body'], 0, 100);
-        
+
         // Censor the subject and message preview.
         censorText($topic['first_subject']);
         censorText($topic['first_body']);
-        
+
         // Don't censor them twice!
         if ($topic['id_first_msg'] == $topic['id_last_msg'])
         {
@@ -479,29 +479,29 @@ function get_topic_info($fid, $tid)
         $topic['first_body'] = '';
         $topic['last_body'] = '';
         censorText($topic['first_subject']);
-        
+
         if ($topic['id_first_msg'] == $topic['id_last_msg'])
             $topic['last_subject'] = $topic['first_subject'];
         else
             censorText($topic['last_subject']);
     }
-    
+
     if (!empty($settings['show_user_images']))
     {
         $topic['first_poster_avatar'] = $topic['avatar_first'] == '' ? ($topic['id_attach_first'] > 0 ? (empty($topic['attachment_type_first']) ? $scripturl . '?action=dlattach;attach=' . $topic['id_attach_first'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $topic['filename_first']) : '') : (stristr($topic['avatar_first'], 'http://') ? $topic['avatar_first'] : $modSettings['avatar_url'] . '/' . $topic['avatar_first']);
         $topic['last_poster_avatar'] = $topic['avatar_last'] == '' ? ($topic['id_attach_last'] > 0 ? (empty($topic['attachment_type_last']) ? $scripturl . '?action=dlattach;attach=' . $topic['id_attach_last'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $topic['filename_last']) : '') : (stristr($topic['avatar_last'], 'http://') ? $topic['avatar_last'] : $modSettings['avatar_url'] . '/' . $topic['avatar_last']);
     }
-    
+
     $topic['num_views'] = intval($topic['num_views']);
     $topic['num_replies'] = intval($topic['num_replies']);
-    
+
     return $topic;
 }
 
 function mobiquo_parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = array())
 {
     global $user_info, $modSettings, $context;
-    
+
     $message = preg_replace('/\[(\/?)(code|php|html)\]/si', '[$1quote]', $message);
     $message = process_list_tag($message);
     $message = preg_replace('/\[(youtube|yt)\](.*?)\[\/\1\]/sie', "video_bbcode_format('$1', '$2')", $message);
@@ -513,7 +513,7 @@ function mobiquo_parse_bbc($message, $smileys = true, $cache_id = '', $parse_tag
     $message = parse_bbc($message, $smileys, $cache_id, $parse_tags);
     $user_info['time_format'] = '%Y%m%dT%H:%M:%S+00:00';
     $modSettings['todayMod'] = 0;
-    
+
     return $message;
 }
 
@@ -533,7 +533,7 @@ function video_bbcode_format($type, $url)
                 $message = '';
             }
             break;
-        
+
         default: $message = '';
     }
     return $message;
@@ -542,29 +542,29 @@ function video_bbcode_format($type, $url)
 function mobi_parse_requrest()
 {
     global $request_name, $request_params, $params_num, $server_data;
-    
+
     $ver = phpversion();
     if ($ver[0] >= 5) {
         $data = file_get_contents('php://input');
     } else {
         $data = isset($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : '';
     }
-    
+
     $server_data = $data;
-    
+
     if (count($_SERVER) == 0)
     {
         $r = new xmlrpcresp('', 15, 'XML-RPC: '.__METHOD__.': cannot parse request headers as $_SERVER is not populated');
         echo $r->serialize('UTF-8');
         exit;
     }
-    
+
     if(isset($_SERVER['HTTP_CONTENT_ENCODING'])) {
         $content_encoding = str_replace('x-', '', $_SERVER['HTTP_CONTENT_ENCODING']);
     } else {
         $content_encoding = '';
     }
-    
+
     if($content_encoding != '' && strlen($data)) {
         if($content_encoding == 'deflate' || $content_encoding == 'gzip') {
             // if decoding works, use it. else assume data wasn't gzencoded
@@ -581,7 +581,7 @@ function mobi_parse_requrest()
             }
         }
     }
-    
+
     $parsers = php_xmlrpc_decode_xml($data);
     $request_name = $parsers->methodname;
     $request_params = php_xmlrpc_decode(new xmlrpcval($parsers->params, 'array'));
@@ -591,16 +591,16 @@ function mobi_parse_requrest()
 function mobiquo_encode($str, $mode = '')
 {
     if (empty($str)) return $str;
-    
+
     static $charset, $charset_89, $charset_AF, $charset_8F, $charset_chr, $charset_html, $support_mb, $charset_entity;
-    
+
     if (!isset($charset))
     {
         global $context;
         $charset = $context['character_set'];
-        
+
         include_once('include/charset.php');
-        
+
         if (preg_match('/iso-?8859-?1/i', $charset))
         {
             $charset = 'Windows-1252';
@@ -623,8 +623,8 @@ function mobiquo_encode($str, $mode = '')
             $support_mb = function_exists('mb_convert_encoding') && @mb_convert_encoding('test', $charset, 'UTF-8');
         }
     }
-    
-    
+
+
     if (preg_match('/utf-?8/i', $charset))
     {
         $str = html_entity_decode($str, ENT_QUOTES, 'UTF-8');
@@ -644,7 +644,7 @@ function mobiquo_encode($str, $mode = '')
                 $str = str_replace(array(chr(129), chr(141), chr(143), chr(144), chr(157)),
                                    array('&#129;', '&#141;', '&#143;', '&#144;', '&#157;'), $str);
             }
-            
+
             $str = str_replace($charset_chr, $charset_html[$charset], $str);
             $str = @html_entity_decode($str, ENT_QUOTES, 'UTF-8');
             if($charset == 'ISO-8859-1') {
@@ -684,7 +684,7 @@ function mobiquo_encode($str, $mode = '')
         {
             $str = @htmlentities($str, ENT_NOQUOTES | ENT_IGNORE, 'UTF-8');
             $str = @html_entity_decode($str, ENT_QUOTES, $charset);
-            
+
             if($charset == 'ISO-8859-1') {
                 $str = utf8_decode($str);
             }
@@ -697,13 +697,13 @@ function mobiquo_encode($str, $mode = '')
             }
         }
     }
-    
+
     // html entity convert
     if ($mode == 'to_local')
     {
         $str = str_replace(array_keys($charset_entity), array_values($charset_entity), $str);
     }
-    
+
     return remove_unknown_char($str);
 }
 
@@ -714,14 +714,14 @@ function remove_unknown_char($str)
         if (in_array($i, array(10, 13))) continue;
         $str = str_replace(chr($i), '', $str);
     }
-    
+
     return $str;
 }
 
 function process_list_tag($str)
 {
     $contents = preg_split('#(\[list\s+type=[^\]]*?\]|\[/?list\])#siU', $str, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-    
+
     $result = '';
     $status = 'out';
     foreach($contents as $content)
@@ -758,7 +758,7 @@ function process_list_tag($str)
             }
         }
     }
-    
+
     return $result;
 }
 
@@ -789,14 +789,14 @@ function tp_get_forum_icon($id, $type = 'forum', $lock = false, $new = false)
 {
     if (!in_array($type, array('link', 'category', 'forum')))
         $type = 'forum';
-   
+
     $icon_name = $type;
     if ($type != 'link')
     {
         if ($lock) $icon_name .= '_lock';
         if ($new) $icon_name .= '_new';
     }
-   
+
     $icon_map = array(
         'category_lock_new' => array('category_lock', 'category_new', 'lock_new', 'category', 'lock', 'new'),
         'category_lock'     => array('category', 'lock'),
@@ -811,29 +811,29 @@ function tp_get_forum_icon($id, $type = 'forum', $lock = false, $new = false)
         'new'               => array(),
         'link'              => array(),
     );
-   
+
     $final = empty($icon_map[$icon_name]);
-   
+
     if ($url = tp_get_forum_icon_by_name($id, $icon_name, $final))
         return $url;
-   
+
     foreach ($icon_map[$icon_name] as $sub_name)
     {
         $final = empty($icon_map[$sub_name]);
         if ($url = tp_get_forum_icon_by_name($id, $sub_name, $final))
             return $url;
     }
-   
+
     return '';
 }
 
 function tp_get_forum_icon_by_name($id, $name, $final)
 {
 	global $boarddir, $boardurl;
-	
+
     $tapatalk_forum_icon_dir = $boarddir.'/mobiquo/forum_icons/';
     $tapatalk_forum_icon_url = $boardurl.'/mobiquo/forum_icons/';
-   
+
     $filename_array = array(
         $name.'_'.$id.'.png',
         $name.'_'.$id.'.jpg',
@@ -841,7 +841,7 @@ function tp_get_forum_icon_by_name($id, $name, $final)
         $name.'.png',
         $name.'.jpg',
     );
-   
+
     foreach ($filename_array as $filename)
     {
         if (file_exists($tapatalk_forum_icon_dir.$filename))
@@ -849,21 +849,21 @@ function tp_get_forum_icon_by_name($id, $name, $final)
             return $tapatalk_forum_icon_url.$filename;
         }
     }
-   
+
     if ($final) {
         if (file_exists($tapatalk_forum_icon_dir.'default.png'))
             return $tapatalk_forum_icon_url.'default.png';
         else if (file_exists($tapatalk_forum_icon_dir.'default.jpg'))
             return $tapatalk_forum_icon_url.'default.jpg';
     }
-   
+
     return '';
 }
 
 function update_push()
 {
 	global $smcFunc, $user_info, $db_prefix;
-	
+
 	if ($user_info['id'] && mobi_table_exist('tapatalk_users'))
 	{
 		$request = $smcFunc['db_insert']('ignore',
@@ -876,7 +876,7 @@ function update_push()
 		{
 			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}tapatalk_users
-				SET updated = '.time().' 
+				SET updated = '.time().'
 				WHERE userid = {int:user_id}',
 				array(
 					'user_id' => $user_info['id'],
