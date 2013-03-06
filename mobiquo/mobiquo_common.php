@@ -262,6 +262,7 @@ function post_html_clean($str)
     $str = basic_clean($str);
     $str = parse_bbcode($str);
 
+    $str = preg_replace('/\[quote\](.*?)\[\/quote\]([<br \/>]+|[<br>]+|[<\/br>]+)(.*?)/','[quote]$1[/quote]$4', $str);
     return $str;
 }
 
