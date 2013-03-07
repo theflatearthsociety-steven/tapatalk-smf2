@@ -62,7 +62,7 @@ function Notify()
     {
         $smcFunc['db_query']('', '
         			DELETE FROM {db_prefix}log_notify
-        			WHERE id_member = {int:current_member}',
+        			WHERE id_member = {int:current_member} AND id_board = 0',
     			array(
     				'current_member' => $user_info['id'],
     			)
@@ -147,7 +147,7 @@ function BoardNotify()
     {
         $smcFunc['db_query']('', '
             	DELETE FROM {db_prefix}log_notify
-            	WHERE id_member = {int:current_member}',
+            	WHERE id_member = {int:current_member} AND id_topic = 0',
         	array(
         		'current_member' => $user_info['id'],
         	)
