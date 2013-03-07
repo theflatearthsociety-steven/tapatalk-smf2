@@ -234,7 +234,31 @@ function log_it($log_data)
 
 function post_html_clean($str)
 {
-    error_log(print_r($str, true), 3, 'my.log');
+    global $modSettings;
+
+    // custom content replacement.
+    if(isset($modSettings['tp_custom_content_replacement']) && !empty($modSettings['tp_custom_content_replacement']))
+    {
+        $custom_replacement = $modSettings['tp_custom_content_replacement'];
+        if(!empty($custom_replacement))
+        {
+            $replace_arr = explode("\n", $custom_replacement);
+            foreach ($replace_arr as $replace)
+            {
+                preg_match('/^\s*(\'|")((\#|\/|\!).+\3[ismexuADUX]*?)\1\s*,\s*(\'|")(.*?)\4\s*$/', $replace,$matches);
+                if(count($matches) == 6)
+                {
+                    $temp_post = $str;
+                    $str = @preg_replace($matches[2], $matches[5], $str);
+                    if(empty($str))
+                    {
+                        $str = $temp_post;
+                    }
+                }
+            }
+        }
+    }
+
     $search = array(
         '/<a [^>]*?href="(?!javascript)([^"]*?)"[^>]*?>([^<]*?)<\/a>/si',
         '/<img .*?src="(.*?)".*?\/?>/si',
@@ -256,6 +280,8 @@ function post_html_clean($str)
     $str = preg_replace('/<i class="pstatus".*?>.*?<\/i>(<br\s*\/>){0,2}/', '', $str);
     $str = preg_replace('/<script.*?>.*?<\/script>/', '', $str);
     $str = preg_replace($search, $replace, $str);
+    $str = preg_replace('/\[url(.*?)\](\S*).*?\[\/url\]/', '[url$1]$2[/url]', $str);
+
     // remove link on img
     $str = preg_replace('/\[url=.*?\](\[img\].*?\[\/img\])\[\/url\]/', '$1', $str);
 
@@ -336,28 +362,7 @@ function basic_clean($str, $cut = 0)
         $str = trim($str);
         $str = cutstr($str, $cut);
     }
-    // custom content replacement.
-    if(isset($modSettings['tp_custom_content_replacement']) && !empty($modSettings['tp_custom_content_replacement']))
-    {
-        $custom_replacement = $modSettings['tp_custom_content_replacement'];
-        if(!empty($custom_replacement))
-        {
-            $replace_arr = explode("\n", $custom_replacement);
-            foreach ($replace_arr as $replace)
-            {
-                preg_match('/^\s*(\'|")((\#|\/|\!).+\3[ismexuADUX]*?)\1\s*,\s*(\'|")(.*?)\4\s*$/', $replace,$matches);
-                if(count($matches) == 6)
-                {
-                    $temp_post = $str;
-                    $str = @preg_replace($matches[2], $matches[5], $str);
-                    if(empty($str))
-                    {
-                        $str = $temp_post;
-                    }
-                }
-            }
-        }
-    }
+
     return trim($str);
 }
 

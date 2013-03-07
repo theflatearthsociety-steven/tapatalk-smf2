@@ -737,9 +737,9 @@ function Post()
 		// Posting a quoted reply?
 		if (!empty($topic) && !empty($_REQUEST['quote']))
 		{
-			$_REQUEST['quote'] = explode("-", $_REQUEST['quote']);
+			$pids = array_filter(array_unique(array_map('intval', explode('-', $_REQUEST['quote']))));
 			$message_content = '';
-			foreach($_REQUEST['quote'] as $value)
+			foreach($pids as $value)
 			{
 				// Make sure they _can_ quote this post, and if so get it.
 				$request = $smcFunc['db_query']('', '

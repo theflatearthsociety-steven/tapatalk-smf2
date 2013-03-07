@@ -155,6 +155,20 @@ $push_indexes = array(
 			'pushid' => 'pushid'
 		),
 	),
+	'userid' => array(
+		'name' => 'userid',
+		'type' => 'index',
+		'columns' => array(
+			'userid' => 'userid'
+		),
+	),
+	'dateline' => array(
+		'name' => 'dateline',
+		'type' => 'index',
+		'columns' => array(
+			'dateline' => 'dateline'
+		),
+	),
 );
 	
 $installed = $smcFunc['db_create_table']('{db_prefix}tapatalk_push', $push_columns, $push_indexes, array(), 'update', 'ignore');
@@ -177,7 +191,7 @@ $smcFunc['db_query']('', '
 );
 
 $history_tapatalk_user_index = array('userid', 'announcement', 'pm', 'subscribe', 'updated');
-$history_tapatalk_push_index = array('userid', 'type', 'id', 'subid', 'title', 'author', 'dateline', 'status');
+$history_tapatalk_push_index = array('type', 'id', 'subid', 'title', 'author', 'status');
 foreach($history_tapatalk_user_index as $index_name)
     $smcFunc['db_query']('', 'ALTER TABLE {db_prefix}tapatalk_users DROP INDEX `'.$index_name.'`',array('db_error_skip' => true,));
 foreach($history_tapatalk_push_index as $index_name)
