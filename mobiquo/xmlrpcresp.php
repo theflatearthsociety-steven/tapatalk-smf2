@@ -160,6 +160,8 @@ function get_topic_func()
 
     $topic_list = array();
     foreach($context['topics'] as $topic) {
+        if(!isset($topic['id']) || empty($topic['id']))
+            continue;
         $avatar = '';
         if (!empty($topic['first_post']['member']['id'])) {
             $profile = $user_profile[$topic['first_post']['member']['id']];
