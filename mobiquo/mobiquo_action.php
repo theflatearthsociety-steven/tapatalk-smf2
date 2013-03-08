@@ -774,25 +774,25 @@ function action_get_new_topic()
 
 function action_register()
 {
-    global $sourcedir, $context;
+    global $sourcedir, $context, $modSettings;
 
     checkSession();
 
     foreach ($_POST as $key => $value)
         if (!is_array($_POST[$key]))
             $_POST[$key] = htmltrim__recursive(str_replace(array("\n", "\r"), '', $_POST[$key]));
-
+    $register_mode = empty($modSettings['registration_method']) ? 'nothing' : ($_POST['emailActivate'] ? ($modSettings['registration_method'] == 1 ? 'activation' : 'approval') : 'nothing');
     $regOptions = array(
-        'interface' => 'admin',
+        'interface' => $register_mode == 'approval' ? 'guest' : 'admin',
         'username' => $_POST['user'],
         'email' => $_POST['email'],
         'password' => $_POST['password'],
         'password_check' => $_POST['password'],
         'check_reserved_name' => true,
-        'check_password_strength' => false,
+        'check_password_strength' => true,
         'check_email_ban' => false,
         'send_welcome_email' => isset($_POST['emailPassword']) || empty($_POST['password']),
-        'require' => $_POST['emailActivate']? (empty($modSettings['registration_method']) ? 'nothing' : ($modSettings['registration_method'] == 1 ? 'activation' : 'approval')) : 'nothing',
+        'require' => $register_mode,
         'memberGroup' => empty($_POST['group']) || !allowedTo('manage_membergroups') ? 0 : (int) $_POST['group'],
     );
     define('mobi_register',1);
