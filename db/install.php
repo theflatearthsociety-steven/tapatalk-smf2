@@ -150,7 +150,7 @@ $push_columns = array(
 $push_indexes = array(
 	'pushid' => array(
 		'name' => 'pushid',
-		'type' => 'index',
+		'type' => 'primary',
 		'columns' => array(
 			'pushid' => 'pushid'
 		),
