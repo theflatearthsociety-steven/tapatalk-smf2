@@ -792,7 +792,7 @@ function action_register()
         'check_password_strength' => false,
         'check_email_ban' => false,
         'send_welcome_email' => isset($_POST['emailPassword']) || empty($_POST['password']),
-        'require' => $_POST['emailActivate']? 'activation' : 'nothing',
+        'require' => $_POST['emailActivate']? (empty($modSettings['registration_method']) ? 'nothing' : ($modSettings['registration_method'] == 1 ? 'activation' : 'approval')) : 'nothing',
         'memberGroup' => empty($_POST['group']) || !allowedTo('manage_membergroups') ? 0 : (int) $_POST['group'],
     );
     define('mobi_register',1);
