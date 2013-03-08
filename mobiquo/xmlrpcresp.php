@@ -1535,10 +1535,14 @@ function get_alert_func()
 
 function register_func()
 {
-    global $context;
+    global $context, $modSettings, $txt;
     
-    if($_POST['emailActivate'])
-        $result_text = 'An confirmation email has been sent, please check the email to activate your account!';
+    $status = empty($modSettings['registration_method']) ? 'nothing' : ($_POST['emailActivate'] ? (($modSettings['registration_method'] == 1 ? 'activation' : 'approval') : 'nothing');
+    if($status == 'activation')
+        $result_text = isset($txt['activate_after_registration'])? $txt['activate_after_registration'] : 'Thank you for registering. You will receive an email soon with a link to activate your account.  If you don\'t receive an email after some time, check your spam folder.';
+    else if($status == 'approval'){
+        $result_text = isset($txt['approval_after_registration'])? $txt['approval_after_registration'] : 'Thank you for registering. The admin must approve your registration before you may begin to use your account, you will receive an email shortly advising you of the admins decision.';
+    }
     $result = new xmlrpcval(array(
             'result'        => new xmlrpcval(isset($context['registration_done']), 'boolean'),
             'result_text'   => new xmlrpcval($result_text, 'base64')),
