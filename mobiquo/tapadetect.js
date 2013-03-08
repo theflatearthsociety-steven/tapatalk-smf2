@@ -4,25 +4,31 @@ function detectTapatalk()
         tapatalk_alert_message = tapatalk_iphone_msg;
         tapatalk_alert_url = tapatalk_iphone_url;
     }
-    else if(navigator.userAgent.match(/iPad/i)) {
+    else if (navigator.userAgent.match(/iPad/i)) {
         tapatalk_alert_message = tapatalk_ipad_msg;
         tapatalk_alert_url = tapatalk_ipad_url;
     }
-    else if(navigator.userAgent.match(/Silk/)) {
+    else if (navigator.userAgent.match(/Silk/)) {
         if (navigator.userAgent.match(/Android 2/i)) {
             tapatalk_alert_message = tapatalk_kindle_msg;
             tapatalk_alert_url = tapatalk_kindle_url;
         }
-        else if(navigator.userAgent.match(/Android 4/i)) {
+        else if (navigator.userAgent.match(/Android 4/i)) {
             tapatalk_alert_message = tapatalk_kindle_hd_msg;
             tapatalk_alert_url = tapatalk_kindle_hd_url;
         }
     }
-    else if(navigator.userAgent.match(/Android/i)) {
-        tapatalk_alert_message = tapatalk_android_msg;
-        tapatalk_alert_url = tapatalk_android_url;
+    else if (navigator.userAgent.match(/Android/i)) {
+        if(navigator.userAgent.match(/mobile/i)) {
+            tapatalk_alert_message = tapatalk_android_msg;
+            tapatalk_alert_url = tapatalk_android_url;
+        }
+        else {
+            tapatalk_alert_message = tapatalk_android_hd_msg;
+            tapatalk_alert_url = tapatalk_android_hd_url;
+        }
     }
-    else if(navigator.userAgent.match(/BlackBerry/i)) {
+    else if (navigator.userAgent.match(/BlackBerry/i)) {
         tapatalk_alert_message = "This forum has an app for BlackBerry! Click OK to learn more about Tapatalk.";
         tapatalk_alert_url = "http://appworld.blackberry.com/webstore/content/46654?lang=en";
     }
