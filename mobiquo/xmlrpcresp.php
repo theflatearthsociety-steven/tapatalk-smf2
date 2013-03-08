@@ -1537,7 +1537,7 @@ function register_func()
 {
     global $context, $modSettings, $txt;
     
-    $status = empty($modSettings['registration_method']) ? 'nothing' : ($_POST['emailActivate'] ? (($modSettings['registration_method'] == 1 ? 'activation' : 'approval') : 'nothing');
+    $status = empty($modSettings['registration_method']) ? 'nothing' : ($_POST['emailActivate'] ? ($modSettings['registration_method'] == 1 ? 'activation' : 'approval') : 'nothing');
     if($status == 'activation')
         $result_text = isset($txt['activate_after_registration'])? $txt['activate_after_registration'] : 'Thank you for registering. You will receive an email soon with a link to activate your account.  If you don\'t receive an email after some time, check your spam folder.';
     else if($status == 'approval'){
