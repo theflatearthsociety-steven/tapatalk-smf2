@@ -96,7 +96,7 @@ $txt['tapatalktitle'] = 'Tapatalk Settings';
 $txt['tp_pushEnabled'] = 'Enable Tapatalk Push Notification';
 $txt['tapatalkEnabled'] = 'Enable tapatalk';
 $txt['tp_guestOkayEnabled'] = 'Enable forum view for guest by tapatalk';
-$txt['tp_tapatalkNotifierForChromeEnabled'] = 'Enable Tapatalk Notifier in Chrome';
+$txt['tp_tapatalkRegisterEnabled'] = 'In-app Registration';
 $txt['tp_ipad_msg'] = 'iPad Product Message';
 $txt['tp_ipad_url'] = 'iPad Product URL';
 $txt['tp_iphone_msg'] = 'iPhone Product Message';
@@ -150,7 +150,7 @@ Thank you! :)';]]></add>
 $helptxt['tapatalkEnabled'] = 'Enable tapatalk for your forum.';
 $helptxt['tp_pushEnabled'] = 'Allows user to receive mobile Push Notification from your forum.';
 $helptxt['tp_guestOkayEnabled'] = 'Allow non-registered users to access your forum via Tapatalk.';
-$helptxt['tp_tapatalkNotifierForChromeEnabled'] = 'User of your forum using Google Chrome web browser will be notified with the availability of \'Tapatalk Notifier for Chrome\'. Tapatalk Notifier for Chrome is a web browser extension that notify your members with a small alert when he received a new Private Message from your forum. This is a one time alert and is a great tool to keep your users engaged with your forum.';
+$helptxt['tp_tapatalkRegisterEnabled'] = 'Allows Tapatalk users to create new account, change password and update email address in-app.';
 $helptxt['tp_register_page_url'] = 'Registration URL relative to your forum root path';
 $helptxt['tp_push_key'] = 'Optional. To improve the quality of Push Notification from your forum, please fill-in copy and paste the Push Notification Key from Tapatalk Forum Owner Area to here.';
 $helptxt['tp_ipad_msg'] = 'Customize this message if you are Tapatalk Rebranding Customer and has published your App to Apple App Store. Default: "This forum has an app for iPad! Click OK to learn more about Tapatalk."';

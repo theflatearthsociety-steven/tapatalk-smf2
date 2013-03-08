@@ -1139,7 +1139,8 @@ function action_m_rename_topic()
 
     if (empty($topic))
         fatal_lang_error('no_access', false);
-
+    
+    $_POST['custom_subject'] = mobiquo_encode($_POST['custom_subject']);
     $request = $smcFunc['db_query']('', '
         SELECT id_member_started, id_first_msg, approved
         FROM {db_prefix}topics

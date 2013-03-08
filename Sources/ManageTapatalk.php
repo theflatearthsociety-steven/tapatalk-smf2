@@ -65,7 +65,7 @@ function ManageTapatalkGeneral($return_config = false)
             array('check', 'tapatalkEnabled'),
             array('check', 'tp_pushEnabled'),
             array('check', 'tp_guestOkayEnabled'),
-            array('check', 'tp_tapatalkNotifierForChromeEnabled'),
+            array('check', 'tp_tapatalkRegisterEnabled'),
             array('text',  'tp_register_page_url', 'value'=> isset($modSettings['tp_register_page_url'])? $modSettings['tp_register_page_url']: 'index.php?action=register', 'size' => '42'),
             array('text',  'tp_push_key', 'size' => '42'),
             array('text',  'tp_allow_usergroup', 'size' => '42'),

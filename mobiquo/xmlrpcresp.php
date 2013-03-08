@@ -12,6 +12,7 @@ function get_config_func()
         'push'       => new xmlrpcval(isset($modSettings['tp_pushEnabled'])&& $modSettings['tp_pushEnabled']? true: false,'string'),
         'reg_url'       => new xmlrpcval($modSettings['tp_register_page_url'],'string'),
         'result_text'=> new xmlrpcval($maintenance == 1 ? $mmessage : ($modSettings['tapatalkEnabled']? '' : 'Sorry, taptalk is disabled by this forum administrator') , 'base64'),
+        'inappreg' => new xmlrpcval(isset($modSettings['tp_tapatalkRegisterEnabled'])&& $modSettings['tp_tapatalkRegisterEnabled']? true: false,'string'),
     );
     if(allowedTo('search_posts'))
         $config_list['guest_search'] = new xmlrpcval('1', 'string');
@@ -255,7 +256,6 @@ function get_thread_func()
         {
             $avatar = $message['member']['avatar']['href'];
         }
-
         $msg_ids[] = $message['id'];
         $xmlrpc_post = array(
             'topic_id'          => new xmlrpcval($context['current_topic'], 'string'),
