@@ -1535,9 +1535,10 @@ function get_alert_func()
 
 function register_func()
 {
-    global $context;
+    global $context, $modSettings;
     
-    if($_POST['emailActivate'])
+    $status = $_POST['emailActivate']? (empty($modSettings['registration_method']) ? 'nothing' : ($modSettings['registration_method'] == 1 ? 'activation' : 'approval')) : 'nothing',
+    if($status == 'activation')
         $result_text = 'An confirmation email has been sent, please check the email to activate your account!';
     $result = new xmlrpcval(array(
             'result'        => new xmlrpcval(isset($context['registration_done']), 'boolean'),
