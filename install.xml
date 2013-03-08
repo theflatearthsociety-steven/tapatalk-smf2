@@ -17,6 +17,8 @@
         var tapatalk_kindle_hd_url = "'.(isset($modSettings['tp_kindle_hd_url']) ? $modSettings['tp_kindle_hd_url'] : 'http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkHD').'";
         var tapatalk_android_msg = "'.(isset($modSettings['tp_android_msg']) ? $modSettings['tp_android_msg'] : 'This forum has an app for Android. Click OK to learn more about Tapatalk.').'";
         var tapatalk_android_url = "'.(isset($modSettings['tp_android_url']) ? $modSettings['tp_android_url'] : 'market://details?id=com.quoord.tapatalkpro.activity').'";
+        var tapatalk_android_hd_msg = "'.(isset($modSettings['tp_android_hd_msg']) ? $modSettings['tp_android_hd_msg'] : 'This forum has an app for Android. Click OK to learn more about Tapatalk.').'";
+        var tapatalk_android_hd_url = "'.(isset($modSettings['tp_android_hd_url']) ? $modSettings['tp_android_hd_url'] : 'market://details?id=com.quoord.tapatalkHD').'";
         var tapatalkdir = "mobiquo";
     </script>';
 	$context['html_headers'] .= '<script type="text/javascript" language="JavaScript" src="' . $boardurl . '/mobiquo/'.$jsfile_name.'"></script>';]]></add>
@@ -102,6 +104,8 @@ $txt['tp_iphone_msg'] = 'iPhone Product Message';
 $txt['tp_iphone_url'] = 'iPhone Product URL';
 $txt['tp_android_msg'] = 'Android Product Message';
 $txt['tp_android_url'] = 'Android Product URL';
+$txt['tp_android_hd_msg'] = 'Android  (Tablet) Product Message';
+$txt['tp_android_hd_url'] = 'Android  (Tablet) Product URL';
 $txt['tp_kf_msg'] = 'Kindle Fire Product Message';
 $txt['tp_kf_url'] = 'Kindle Fire Product URL';
 $txt['tp_kf_hd_msg'] = 'Kindle Fire HD Product Message';
@@ -158,6 +162,8 @@ $helptxt['tp_iphone_msg'] = 'Customize this message if you are Tapatalk Rebrandi
 $helptxt['tp_iphone_url'] = 'Change this URL if you are Tapatalk Rebranding Customer and has obtained your App URL from Apple App Store. Default: http://itunes.apple.com/us/app/tapatalk-forum-app/id307880732?mt=8';
 $helptxt['tp_android_msg'] = 'Customize this message if you are Tapatalk Rebranding Customer and has published your App to Google Play. Default: "This forum has an app for Android. Click OK to learn more about Tapatalk."';
 $helptxt['tp_android_url'] = 'Change this URL if you are Tapatalk Rebranding Customer and has obtained your App URL from Google Play. Default: market://details?id=com.quoord.tapatalkpro.activity';
+$helptxt['tp_android_hd_msg'] = 'Customize this message if you are Tapatalk Rebranding Customer and has published your App to Google Play. Default: "This forum has an app for Android. Click OK to learn more about Tapatalk."';
+$helptxt['tp_android_hd_url'] = 'Change this URL if you are Tapatalk Rebranding Customer and has obtained your App URL from Google Play. Default: market://details?id=com.quoord.tapatalkHD';
 $helptxt['tp_kf_msg'] = 'Customize this message if you are Tapatalk Rebranding Customer and has published your App to Amazon App Store. Default: "This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk."';
 $helptxt['tp_kf_url'] = 'Change this URL if you are Tapatalk Rebranding Customer and has obtained your App URL from Amazon App Store. Default: http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkpro.activity';
 $helptxt['tp_kf_hd_msg'] = 'Customize this message if you are Tapatalk Rebranding Customer and has published your App to Amazon App Store. Default: "This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk."';
