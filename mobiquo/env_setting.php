@@ -154,7 +154,8 @@ switch ($request_name) {
             $_GET['action'] = 'post2';
             $_GET['start'] = 0;
             $_GET['board'] = intval($request_params[0]);
-
+            if(empty($_GET['board']))
+                get_error('board id should be spcified!');
             $_POST['icon'] = 'xx';
             $_POST['subject'] = $request_params[1];
             $_POST['message'] = $request_params[2];
