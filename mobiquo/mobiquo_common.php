@@ -240,6 +240,7 @@ function post_html_clean($str)
     if(isset($modSettings['tp_custom_content_replacement']) && !empty($modSettings['tp_custom_content_replacement']))
     {
         $custom_replacement = $modSettings['tp_custom_content_replacement'];
+        $custom_replacement = preg_replace('/"/', '&quot;', $custom_replacement);
         if(!empty($custom_replacement))
         {
             $replace_arr = explode("\n", $custom_replacement);

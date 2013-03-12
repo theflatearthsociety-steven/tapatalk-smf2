@@ -1556,7 +1556,7 @@ function update_password_func()
 
         $result = new xmlrpcval(array(
             'result'        => new xmlrpcval(1, 'boolean'),
-            'result_text'   => new xmlrpcval('aaa', 'base64')),
+            'result_text'   => new xmlrpcval('', 'base64')),
         'struct');
     return new xmlrpcresp($result);
 }
