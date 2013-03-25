@@ -345,15 +345,23 @@ function parse_bbcode($str)
 }
 
 
-function basic_clean($str, $cut = 0)
+function basic_clean($str, $cut = 0, $is_shortcontent = 0)
 {
     global $modSettings;
+
+    if($is_shortcontent)
+    {
+        $str = preg_replace('/\[color=.*\](.*)\[\/color\]/U', '$1', $str);
+        $str = preg_replace('/\[color=.*\](.*)/U', '$1', $str);
+        $str = preg_replace('/Code: \[Select\]/', 'Code: ', $str);
+        $str = preg_replace('/\[[u|i|b]\](.*)\[\/[u|i|b]\]/U', '$1', $str);
+        $str = preg_replace('/-{3}/', '', $str);
+    }
     $str = preg_replace('/<a.*?>Quote from:.*?<\/a>/', ' ', $str);
     $str = strip_tags($str);
     $str = to_utf8($str);
     $str = html_entity_decode($str, ENT_QUOTES, 'UTF-8');
     if (function_exists('censorText')) censorText($str);
-
     if ($cut > 0)
     {
         $str = preg_replace('/\[url=.*?\].*?\[\/url\]\s*\[quote\].*?\[\/quote\]/si', '', $str);

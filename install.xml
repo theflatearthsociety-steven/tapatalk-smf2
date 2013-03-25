@@ -176,6 +176,13 @@ $helptxt['tp_custom_content_replacement'] = 'Ability to match and replace thread
         </operation>
         </file>
 
+        <file name="$themedir/languages/Help.english.php">
+        <operation>
+            <search position="after"><![CDATA[?>]]></search>
+            <add><![CDATA[$txt['on_tapatalk'] = 'On Tapatalk';]]></add>
+        </operation>
+        </file>
+
         <file name="$sourcedir/ModerationCenter.php">
         <operation>
             <search position="before"><![CDATA[			'time_started' => timeformat($row['time_started']),
@@ -189,17 +196,10 @@ $helptxt['tp_custom_content_replacement'] = 'Ability to match and replace thread
             <add><![CDATA[global $context, $settings, $options, $scripturl, $txt, $boardurl;]]></add>
         </operation>
         <operation>
-            <search position="replace"><![CDATA[			echo '
-								<span class="contact_info floatright">
-									', $context['can_send_pm'] ? '<a href="' . $member['online']['href'] . '" title="' . $member['online']['label'] . '">' : '', $settings['use_image_buttons'] ? '<img src="' . $member['online']['image_href'] . '" alt="' . $member['online']['text'] . '" align="bottom" />' : $member['online']['text'], $context['can_send_pm'] ? '</a>' : '', '
-									', isset($context['disabled_fields']['icq']) ? '' : $member['icq']['link'] , ' ', isset($context['disabled_fields']['msn']) ? '' : $member['msn']['link'], ' ', isset($context['disabled_fields']['yim']) ? '' : $member['yim']['link'], ' ', isset($context['disabled_fields']['aim']) ? '' : $member['aim']['link'], '
-								</span>';]]></search>
-            <add><![CDATA[			echo '
-								<span class="contact_info floatright">'.((strpos($member['query']['USER_AGENT'], 'Tapatalk') !== false)? '<a title="On Tapatalk" href="http://tapatalk.com">
+            <search position="replace"><![CDATA[<span class="contact_info floatright">]]></search>
+            <add><![CDATA[<span class="contact_info floatright">'.((strpos($member['query']['USER_AGENT'], 'Tapatalk') !== false)? '<a title='.$txt['on_tapatalk'].' href="http://tapatalk.com">
 <img align="bottom" alt="Online" src="'.$boardurl.'/mobiquo/forum_icons/tapatalk-online.png">
-</a>' : ''), $context['can_send_pm'] ? '<a href="' . $member['online']['href'] . '" title="' . $member['online']['label'] . '">' : '', $settings['use_image_buttons'] ? '<img src="' . $member['online']['image_href'] . '" alt="' . $member['online']['text'] . '" align="bottom" />' : $member['online']['text'], $context['can_send_pm'] ? '</a>' : '', '
-									', isset($context['disabled_fields']['icq']) ? '' : $member['icq']['link'] , ' ', isset($context['disabled_fields']['msn']) ? '' : $member['msn']['link'], ' ', isset($context['disabled_fields']['yim']) ? '' : $member['yim']['link'], ' ', isset($context['disabled_fields']['aim']) ? '' : $member['aim']['link'], '
-								</span>';]]></add>
+</a>' : '').']]></add>
         </operation>
         </file>
         <file name="$themedir/Admin.template.php">
