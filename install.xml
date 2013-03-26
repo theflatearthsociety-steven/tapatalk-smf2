@@ -5,23 +5,7 @@
     <file name="$sourcedir/Load.php">
         <operation>
             <search position="after"><![CDATA[	$context['menu_separator'] = !empty($settings['use_image_buttons']) ? ' ' : ' | ';]]></search>
-            <add><![CDATA[	$jsfile_name = "tapadetect.js";//(isset($modSettings['tp_tapatalkNotifierForChromeEnabled']) && $modSettings['tp_tapatalkNotifierForChromeEnabled'] && isset($context['browser']['is_chrome']) && $context['browser']['is_chrome'] ) ? "tapatalkdetect.js" :"tapatalkdetect-nochrome.js";
-    $context['html_headers'] .= '<script type="text/javascript">
-        var tapatalk_iphone_msg = "'.(isset($modSettings['tp_iphone_msg']) ? $modSettings['tp_iphone_msg'] : 'This forum has an app for iPhone and iPod Touch! Click OK to learn more about Tapatalk.') .'";
-        var tapatalk_iphone_url = "'.(isset($modSettings['tp_iphone_url']) ? $modSettings['tp_iphone_url'] : 'http://itunes.apple.com/us/app/tapatalk-forum-app/id307880732?mt=8').'";
-        var tapatalk_ipad_msg = "'.(isset($modSettings['tp_ipad_msg']) ? $modSettings['tp_ipad_msg'] : 'This forum has an app for iPad! Click OK to learn more about Tapatalk.').'";
-        var tapatalk_ipad_url = "'.(isset($modSettings['tp_ipad_url']) ? $modSettings['tp_ipad_url'] : 'http://itunes.apple.com/us/app/tapatalk-hd-for-ipad/id481579541?mt=8').'";
-        var tapatalk_kindle_msg = "'.(isset($modSettings['tp_kindle_msg']) ? $modSettings['tp_kindle_msg'] : 'This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk.').'";
-        var tapatalk_kindle_url = "'.(isset($modSettings['tp_kindle_url']) ? $modSettings['tp_kindle_url'] : 'http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkpro.activity').'";
-        var tapatalk_kindle_hd_msg = "'.(isset($modSettings['tp_kindle_hd_msg']) ? $modSettings['tp_kindle_hd_msg'] : 'This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk.').'";
-        var tapatalk_kindle_hd_url = "'.(isset($modSettings['tp_kindle_hd_url']) ? $modSettings['tp_kindle_hd_url'] : 'http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkHD').'";
-        var tapatalk_android_msg = "'.(isset($modSettings['tp_android_msg']) ? $modSettings['tp_android_msg'] : 'This forum has an app for Android. Click OK to learn more about Tapatalk.').'";
-        var tapatalk_android_url = "'.(isset($modSettings['tp_android_url']) ? $modSettings['tp_android_url'] : 'market://details?id=com.quoord.tapatalkpro.activity').'";
-        var tapatalk_android_hd_msg = "'.(isset($modSettings['tp_android_hd_msg']) ? $modSettings['tp_android_hd_msg'] : 'This forum has an app for Android. Click OK to learn more about Tapatalk.').'";
-        var tapatalk_android_hd_url = "'.(isset($modSettings['tp_android_hd_url']) ? $modSettings['tp_android_hd_url'] : 'market://details?id=com.quoord.tapatalkHD').'";
-        var tapatalkdir = "mobiquo";
-    </script>';
-	$context['html_headers'] .= '<script type="text/javascript" language="JavaScript" src="' . $boardurl . '/mobiquo/'.$jsfile_name.'"></script>';]]></add>
+            <add><![CDATA[	include('mobiquo/smartbanner.php');]]></add>
         </operation>
     </file>
         <file name="$sourcedir/Post.php">
@@ -125,6 +109,10 @@ $txt['tp_select_boards'] = 'Select Boards to HIDE on Tapatalk';
 $txt['tp_disable_newtopic'] = 'Disable New Topic For Boards';
 $txt['tp_register_page_url'] = 'Register page url';
 $txt['tp_push_key'] = 'Push Notification Key';
+$txt['tp_byo_app_id'] = 'BYO App ID';
+$txt['tp_byo_app_name'] = 'BYO App Name';
+$txt['tp_byo_app_desc'] = 'BYO App Description';
+$txt['tp_byo_app_icon_url'] = 'BYO App Icon URL';
 $txt['tp_custom_content_replacement'] = 'Thread Content Replacement(Advanced)';
 $txt['taptalk_descp'] = '<strong>Tapatalk for SMF Plugin</strong></br><br>
 For SMF 2.0 RC5/Final, <a href = "http://www.tapatalk.com">http://www.tapatalk.com</a></br>
@@ -172,11 +160,16 @@ $helptxt['tp_allow_usergroup'] = 'Allow usergroups to login via Tapatalk, leave 
 $helptxt['tp_hide_boards'] = 'Hide forums you don\'t want them to be listed in Tapatalk app.';
 $helptxt['tp_dsa_boards'] = 'Prevent Tapatalk users to create new topic in the selected sub-forums. This feature is useful if certain forums requires additional topic fields or permission that Tapatalk does not support.';
 $helptxt['tp_custom_content_replacement'] = 'Ability to match and replace thread content using PHP preg_replace function(http://www.php.net/manual/en/function.preg-replace.php). E.g. "\'pattern\', \'replacement\'" . You can define more than one replace rule on each line.';
-//Tapatalk ends]]></add>
+$helptxt['tp_byo_app_id'] = 'Enter your product ID in Apple App Store, to be used on iPhone device';
+$helptxt['tp_byo_app_name'] = 'Please limit this name to within 20 characters';
+$helptxt['tp_byo_app_desc'] = 'A short description of the product, ideally within five words. Less is better for small screen';
+$helptxt['tp_byo_app_icon_url'] = 'Icon URL to be loaded and displayed on Smart App Banner';
+//Tapatalk ends
+]]></add>
         </operation>
         </file>
 
-        <file name="$themedir/languages/Help.english.php">
+        <file name="$themedir/languages/Who.english.php">
         <operation>
             <search position="after"><![CDATA[?>]]></search>
             <add><![CDATA[$txt['on_tapatalk'] = 'On Tapatalk';]]></add>
@@ -208,6 +201,12 @@ $helptxt['tp_custom_content_replacement'] = 'Ability to match and replace thread
 							<textarea rows="', ($config_var['size'] ? $config_var['size'] : 4), '" cols="30" ', $javascript, $disabled, ' name="', $config_var['name'], '" id="', $config_var['name'], '">', $config_var['value'], '</textarea>';]]></search>
             <add><![CDATA[					echo '
 							<textarea rows="', ($config_var['size'] ? $config_var['size'] : 4), '" cols="',($config_var['cols'] ? $config_var['cols'] : 30),'" ', $javascript, $disabled, ' name="', $config_var['name'], '" id="', $config_var['name'], '">', $config_var['value'], '</textarea>';]]></add>
+        </operation>
+        </file>
+        <file name="$themedir/index.template.php">
+        <operation>
+            <search position="before"><![CDATA[	echo !empty($settings['forum_width']) ? ']]></search>
+            <add><![CDATA[	echo $context['tapatalk_body_hook'];]]></add>
         </operation>
         </file>
         <file name="$sourcedir/Subs-Members.php">
