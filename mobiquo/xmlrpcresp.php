@@ -358,6 +358,17 @@ function get_thread_func()
     $context['num_allowed_attachments'] = empty($modSettings['attachmentNumPerPostLimit']) ? 50 : $modSettings['attachmentNumPerPostLimit'];
     $context['can_post_attachment'] = !empty($modSettings['attachmentEnable']) && $modSettings['attachmentEnable'] == 1 && (allowedTo('post_attachment') || ($modSettings['postmod_active'] && allowedTo('post_unapproved_attachments'))) && $context['num_allowed_attachments'] > 0;
 
+    //generate breadcrumbs
+    $breadcrumbs = array();
+    $breadcrumbs[] = array('id' => 'c'.$board_info['cat']['id'], 'name' => $board_info['cat']['name'], 'sub_only' => 1);
+    foreach($board_info['parent_boards'] as $pbid => $cont)
+        $board_info['parent_boards'][$pbid]['id'] = $pbid;
+    $parent_boards = array_reverse($board_info['parent_boards']);
+    if(!empty($parent_boards) && is_array($parent_boards))
+        foreach($parent_boards as $bd_content)
+            $breadcrumbs[] = array('id' => $bd_content['id'], 'name' => $bd_content['name'], 'sub_only' => 0);
+    $breadcrumbs[] = array('id' => $board_info['id'], 'name' => $board_info['name'], 'sub_only' => 0);
+
     $response = array(
                 'total_post_num' => new xmlrpcval($context['total_visible_posts'], 'int'),
                 'forum_id'       => new xmlrpcval($context['current_board'], 'string'),
@@ -399,6 +410,20 @@ function get_thread_func()
 //                'can_mark_unread'       => new xmlrpcval($context['can_mark_unread'] ? true : false, 'boolean'),
 //                'can_remove_post'       => new xmlrpcval($context['can_remove_post'] ? true : false, 'boolean'),
     );
+    if(!empty($breadcrumbs))
+    {
+        $breadcrumblist = array();
+        foreach($breadcrumbs as $node)
+        {
+            $breadcrumblist[] = new xmlrpcval(array(
+                'forum_id'      => new xmlrpcval($node['id'], 'string'),
+                'forum_name'    => new xmlrpcval($node['name'], 'base64'),
+                'sub_only'      => new xmlrpcval($node['sub_only'], 'boolean'),
+            ), 'struct');
+        }
+        if(!empty($breadcrumblist))
+            $response['breadcrumb'] = new xmlrpcval($breadcrumblist, 'array');
+    }
     if (isset($first_msg_thank_count) && !empty($modSettings['thankYouPostFirstPostOnly']))
     {
        $response['thank_count'] = new xmlrpcval($first_msg_thank_count, 'int');
