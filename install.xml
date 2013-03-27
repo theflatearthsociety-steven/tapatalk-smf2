@@ -113,6 +113,8 @@ $txt['tp_byo_app_id'] = 'BYO App ID';
 $txt['tp_byo_app_name'] = 'BYO App Name';
 $txt['tp_byo_app_desc'] = 'BYO App Description';
 $txt['tp_byo_app_icon_url'] = 'BYO App Icon URL';
+$txt['tp_ol_icon_path'] = 'Mobile Online Icon Path';
+$txt['tp_ol_icon_link'] = 'Mobile Online Icon Link';
 $txt['tp_custom_content_replacement'] = 'Thread Content Replacement(Advanced)';
 $txt['taptalk_descp'] = '<strong>Tapatalk for SMF Plugin</strong></br><br>
 For SMF 2.0 RC5/Final, <a href = "http://www.tapatalk.com">http://www.tapatalk.com</a></br>
@@ -164,6 +166,8 @@ $helptxt['tp_byo_app_id'] = 'Enter your product ID in Apple App Store, to be use
 $helptxt['tp_byo_app_name'] = 'Please limit this name to within 20 characters';
 $helptxt['tp_byo_app_desc'] = 'A short description of the product, ideally within five words. Less is better for small screen';
 $helptxt['tp_byo_app_icon_url'] = 'Icon URL to be loaded and displayed on Smart App Banner';
+$helptxt['tp_ol_icon_path'] = 'Mobile Online Icon appears on Who\'s Online page to indicate member using Tapatalk app';
+$helptxt['tp_ol_icon_link'] = 'Target URL when icon is clicked';
 //Tapatalk ends
 ]]></add>
         </operation>
@@ -186,12 +190,12 @@ $helptxt['tp_byo_app_icon_url'] = 'Icon URL to be loaded and displayed on Smart 
         <file name="$themedir/Who.template.php">
         <operation>
             <search position="replace"><![CDATA[global $context, $settings, $options, $scripturl, $txt;]]></search>
-            <add><![CDATA[global $context, $settings, $options, $scripturl, $txt, $boardurl;]]></add>
+            <add><![CDATA[global $context, $settings, $options, $scripturl, $txt, $boardurl, $modSettings;]]></add>
         </operation>
         <operation>
             <search position="replace"><![CDATA[<span class="contact_info floatright">]]></search>
-            <add><![CDATA[<span class="contact_info floatright">'.((strpos($member['query']['USER_AGENT'], 'Tapatalk') !== false)? '<a title='.$txt['on_tapatalk'].' href="http://tapatalk.com">
-<img align="bottom" alt="Online" src="'.$boardurl.'/mobiquo/forum_icons/tapatalk-online.png">
+            <add><![CDATA[<span class="contact_info floatright">'.((strpos($member['query']['USER_AGENT'], 'Tapatalk') !== false || strpos($member['query']['USER_AGENT'], 'BYO') !== false )? '<a title="'.$txt['on_tapatalk'].'" href="' . (isset($modSettings['tp_ol_icon_link']) && strpos($member['query']['USER_AGENT'], 'BYO') !== false ? $modSettings['tp_ol_icon_link'] : 'http://tapatalk.com') . '">
+<img align="bottom" alt="Online" src="'.$boardurl. (isset($modSettings['tp_ol_icon_path']) && strpos($member['query']['USER_AGENT'], 'BYO') !== false ? $modSettings['tp_ol_icon_path'] : '/mobiquo/forum_icons/tapatalk-online.png') .'">
 </a>' : '').']]></add>
         </operation>
         </file>
@@ -205,8 +209,9 @@ $helptxt['tp_byo_app_icon_url'] = 'Icon URL to be loaded and displayed on Smart 
         </file>
         <file name="$themedir/index.template.php">
         <operation>
-            <search position="before"><![CDATA[	echo !empty($settings['forum_width']) ? ']]></search>
-            <add><![CDATA[	echo $context['tapatalk_body_hook'];]]></add>
+            <search position="replace"><![CDATA[	echo !empty($settings['forum_width']) ? ']]></search>
+            <add><![CDATA[	echo $context['tapatalk_body_hook'];
+	echo !empty($settings['forum_width']) ? ']]></add>
         </operation>
         </file>
         <file name="$sourcedir/Subs-Members.php">
