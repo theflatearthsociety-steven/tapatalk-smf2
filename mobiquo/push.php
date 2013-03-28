@@ -45,6 +45,14 @@ else
     $output .="Current server IP: ".$ip."<br>";
     $output .="Tapatalk user table existence:".$table_exist."<br>";
     $output .="Push Notification Option status:".$option_status."<br>";
+    if(isset($modSettings['push_slug']))
+    {
+        $push_slug = unserialize(base64_decode($modSettings['push_slug']));
+        if(!empty($push_slug) && is_array($push_slug))
+            $output .= 'Push Slug Status : ' . ($push_slug['stick'] == 1 ? 'Stick' : 'Free') . '<br />';
+        if(isset($_GET['slug']))
+            $output .= 'Push Slug Value: ' . $modSettings['push_slug'] . "<br /><br />";
+    }
     $output .="<br>
 <a href=\"http://tapatalk.com/api.php\" target=\"_blank\">Tapatalk API for Universal Forum Access</a> | <a href=\"http://tapatalk.com/build.php\" target=\"_blank\">Build Your Own</a><br>
 For more details, please visit <a href=\"http://tapatalk.com\" target=\"_blank\">http://tapatalk.com</a>";
