@@ -49,6 +49,10 @@ $context['html_headers'] .= '
 <script src="'.$tapatalk_dir_url.'/smartbanner/jquery.smartbanner.js" type="text/javascript"></script>
 <!-- Tapatalk Detect head end-->
 ';
+
+if (!isset($context['tapatalk_body_hook']))
+    $context['tapatalk_body_hook'] = '';
+
 $context['tapatalk_body_hook'] .= '
 <!-- Tapatalk Detect body start -->
 <script type="text/javascript">tapatalkDetect()</script>
