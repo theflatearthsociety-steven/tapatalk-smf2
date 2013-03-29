@@ -483,6 +483,7 @@ function get_online_users_func()
                 $from = 'tapatalk';
         }
         $user_list[] = new xmlrpcval(array(
+            'user_id'       => new xmlrpcval($user['id'], 'string'),
             'user_name'     => new xmlrpcval($user['username'], 'base64'),
             'display_name'  => new xmlrpcval(basic_clean($user['name']), 'base64'),
             'display_text'  => new xmlrpcval(basic_clean($user['action']), 'base64'),
