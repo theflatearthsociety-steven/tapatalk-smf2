@@ -368,11 +368,10 @@ function get_thread_func()
         foreach($parent_boards as $bd_content)
             $breadcrumbs[] = array('id' => $bd_content['id'], 'name' => $bd_content['name'], 'sub_only' => 0);
     $breadcrumbs[] = array('id' => $board_info['id'], 'name' => $board_info['name'], 'sub_only' => 0);
-
     $response = array(
                 'total_post_num' => new xmlrpcval($context['total_visible_posts'], 'int'),
                 'forum_id'       => new xmlrpcval($context['current_board'], 'string'),
-                'forum_name'     => new xmlrpcval(basic_clean($context['forum_name']), 'base64'),
+                'forum_name'     => new xmlrpcval(basic_clean($board_info['name']), 'base64'),
                 'topic_id'       => new xmlrpcval($context['current_topic'], 'string'),
                 'topic_title'    => new xmlrpcval(basic_clean($context['subject']), 'base64'),
                 'can_subscribe'  => new xmlrpcval($context['can_mark_notify'], 'boolean'),
@@ -417,7 +416,7 @@ function get_thread_func()
         {
             $breadcrumblist[] = new xmlrpcval(array(
                 'forum_id'      => new xmlrpcval($node['id'], 'string'),
-                'forum_name'    => new xmlrpcval($node['name'], 'base64'),
+                'forum_name'    => new xmlrpcval(basic_clean($node['name']), 'base64'),
                 'sub_only'      => new xmlrpcval($node['sub_only'], 'boolean'),
             ), 'struct');
         }
