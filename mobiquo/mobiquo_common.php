@@ -281,7 +281,7 @@ function post_html_clean($str)
     $str = preg_replace('/<i class="pstatus".*?>.*?<\/i>(<br\s*\/>){0,2}/', '', $str);
     $str = preg_replace('/<script.*?>.*?<\/script>/', '', $str);
     $str = preg_replace($search, $replace, $str);
-    $str = preg_replace('/\[url(.*?)\](\S*).*?\[\/url\]/', '[url$1]$2[/url]', $str);
+    $str = preg_replace('/\[url(.*?)\](\s*)(.*?)\[\/url\]/', '[url$1]$3[/url]', $str);
 
     // remove link on img
     $str = preg_replace('/\[url=.*?\](\[img\].*?\[\/img\])\[\/url\]/', '$1', $str);
