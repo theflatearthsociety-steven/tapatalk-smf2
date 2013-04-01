@@ -356,6 +356,8 @@ function basic_clean($str, $cut = 0, $is_shortcontent = 0)
         $str = preg_replace('/Code: \[Select\]/', 'Code: ', $str);
         $str = preg_replace('/\[[u|i|b]\](.*)\[\/[u|i|b]\]/U', '$1', $str);
         $str = preg_replace('/-{3}/', '', $str);
+        $str = preg_replace('/\[quote.*\](.*?)\[\/quote\]/', '[quote]', $str);
+
     }
     $str = preg_replace('/<a.*?>Quote from:.*?<\/a>/', ' ', $str);
     $str = strip_tags($str);
