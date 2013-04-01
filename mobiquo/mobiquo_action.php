@@ -1508,8 +1508,7 @@ function action_get_message()
     while ($row = $smcFunc['db_fetch_assoc']($request))
     {
         $context['pm']['recipients'][] = new xmlrpcval(array(
-            'username' => new xmlrpcval(basic_clean($row['member_name']), 'base64'),
-            'display_name' => new xmlrpcval(basic_clean($row['real_name']), 'base64'),
+            'username' => new xmlrpcval(basic_clean($row['real_name']), 'base64'),
         ), 'struct');
 
         if ($no_member)
