@@ -1242,6 +1242,7 @@ function search_topic_func()
                 'forum_id'          => new xmlrpcval($topic['board']['id']),
                 'forum_name'        => new xmlrpcval(basic_clean($topic['board']['name']), 'base64'),
                 'topic_id'          => new xmlrpcval($topic['id']),
+                'post_id'           => new xmlrpcval($topic['matches'][0]['id']),
                 'topic_title'       => new xmlrpcval(basic_clean($topic['matches'][0]['subject']), 'base64'),
            'post_author_name'       => new xmlrpcval(basic_clean($topic['matches'][0]['member']['name']), 'base64'),
                 'short_content'     => new xmlrpcval(basic_clean($topic['matches'][0]['body'], 0, 1), 'base64'),
@@ -1267,7 +1268,7 @@ function search_topic_func()
         }
     
         $result = new xmlrpcval(array(
-            'total_topic_num' => new xmlrpcval($context['num_results'], 'int'),
+            'total_topic_num' => new xmlrpcval($context['num_results'] == 0 && !empty($topic_list) ? count($topic_list) : $context['num_results'], 'int'),
             'search_id'       => new xmlrpcval($context['params'], 'string'),
             'topics'          => new xmlrpcval($topic_list, 'array')
         ), 'struct');
@@ -1317,7 +1318,7 @@ function search_post_func()
             $post_list[] = $xmlrpc_post;
         }
         $result = new xmlrpcval(array(
-            'total_post_num' => new xmlrpcval($context['num_results'], 'int'),
+            'total_post_num' => new xmlrpcval($context['num_results'] == 0 && !empty($post_list) ? count($post_list) : $context['num_results'], 'int'),
             'search_id'       => new xmlrpcval($context['params'], 'string'),
             'posts'          => new xmlrpcval($post_list, 'array')
         ), 'struct');

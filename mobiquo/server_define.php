@@ -118,14 +118,14 @@ $server_param = array(
         'function'  => 'get_new_topic_func',
         'signature' => array(array($xmlrpcArray),
                              array($xmlrpcStruct, $xmlrpcInt, $xmlrpcInt)),
-        'docstring' => 'no need parameters for get_forum',
+        'docstring' => 'no need parameters for get_new_topic',
     ),
     
     'get_latest_topic' => array(
         'function'  => 'get_latest_topic_func',
         'signature' => array(array($xmlrpcArray),
                              array($xmlrpcStruct, $xmlrpcInt, $xmlrpcInt)),
-        'docstring' => 'no need parameters for get_forum',
+        'docstring' => 'no need parameters for get_latest_topic',
     ),
 
     'get_subscribed_topic' => array(
