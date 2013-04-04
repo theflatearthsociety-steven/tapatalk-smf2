@@ -1,5 +1,7 @@
 function detectTapatalk()
 {
+    var tapatalk_alert_message = '';
+    var tapatalk_alert_url = '';
     if (navigator.userAgent.match(/iPhone|iPod/i)) {
         tapatalk_alert_message = tapatalk_iphone_msg;
         tapatalk_alert_url = tapatalk_iphone_url;
