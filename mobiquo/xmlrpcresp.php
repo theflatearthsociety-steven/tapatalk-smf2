@@ -1603,7 +1603,7 @@ function forget_password_func()
         'verified'      => new xmlrpcval(isset($_POST['verified'])? $_POST['verified'] : false, 'boolean'));
 
     if(isset($_POST['result_text']) && !empty($_POST['result_text']))
-        $result['result_text'] = new xmlrpcval($_POST['result_text'], 'base64'),
+        $result['result_text'] = new xmlrpcval($_POST['result_text'], 'base64');
 
     return new xmlrpcresp(new xmlrpcval($result, 'struct'));
 }
