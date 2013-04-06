@@ -118,7 +118,7 @@ function login_func()
         'icon_url'      => new xmlrpcval($avatar, 'string'),
         'post_count'    => new xmlrpcval($profile['posts'], 'int'),
         'user_id'       => new xmlrpcval($user_info['id'], 'string'),
-        'username'      => new xmlrpcval($profile['real_name'], 'base64'),
+        'username'      => new xmlrpcval(basic_clean($profile['real_name']), 'base64'),
         'email'         => new xmlrpcval($profile['email_address'], 'base64'),
         'usergroup_id'  => new xmlrpcval($usergroup_id, 'array'),
         'max_attachment'=> new xmlrpcval($modSettings['attachmentNumPerPostLimit'], 'int'),

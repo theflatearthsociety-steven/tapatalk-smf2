@@ -910,6 +910,7 @@ function action_get_participated_topic()
 
     if ($search_user)
     {
+        $search_user = $smcFunc['htmlspecialchars']($search_user);
         $memberResult = loadMemberData($search_user, true, 'profile');
         if (!is_array($memberResult))
             fatal_lang_error('not_a_user', false);
@@ -1659,7 +1660,7 @@ function before_action_create_message()
             WHERE member_name = {string:current_member} or
                   real_name = {string:current_member}',
             array(
-                'current_member' => $name,
+                'current_member' => $smcFunc['htmlspecialchars']($name),
             )
         );
         list ($id_member) = $smcFunc['db_fetch_row']($request);
