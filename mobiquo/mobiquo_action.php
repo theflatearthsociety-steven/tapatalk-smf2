@@ -2120,7 +2120,7 @@ function before_action_forget_password()
 }
 function action_forget_password()
 {
-    global $smcFunc, $context, $sourcedir;
+    global $smcFunc, $context, $sourcedir, $scripturl;
 
     checkSession();
     $where = '';
@@ -2147,6 +2147,8 @@ function action_forget_password()
 		))
 	);
 	$row = $smcFunc['db_fetch_assoc']($request);
+	if(empty($row))
+		fatal_lang_error('username_no_exist', true);
 	if(isset($_POST['verified']) && $_POST['verified'] && $row['email_address'] == $_POST['email'])
 	{
 	    $_POST['reminder_type'] = 'no-reminder';

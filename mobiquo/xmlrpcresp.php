@@ -1598,10 +1598,12 @@ function update_email_func()
 
 function forget_password_func()
 {
-    $result = new xmlrpcval(array(
+    $result = array(
         'result'        => new xmlrpcval(isset($_POST['result']) ? $_POST['result'] : 1, 'boolean'),
-        'result_text'   => new xmlrpcval($_POST['result_text'], 'base64'),
-        'verified'      => new xmlrpcval(isset($_POST['verified'])? $_POST['verified'] : false, 'boolean'),),
-    'struct');
-    return new xmlrpcresp($result);
+        'verified'      => new xmlrpcval(isset($_POST['verified'])? $_POST['verified'] : false, 'boolean'));
+
+    if(isset($_POST['result_text']) && !empty($_POST['result_text']))
+        $result['result_text'] = new xmlrpcval($_POST['result_text'], 'base64'),
+
+    return new xmlrpcresp(new xmlrpcval($result, 'struct'));
 }
