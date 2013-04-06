@@ -2210,3 +2210,12 @@ function action_forget_password()
 		$_POST['result'] = $mail_result;
 	}
 }
+
+function after_action_create_message()
+{
+    global $context;
+    
+    if (!empty($context['send_log']['failed']))
+        foreach($context['send_log']['failed'] as $error_text)
+            get_error($error_text);
+}
