@@ -2167,11 +2167,12 @@ function action_forget_password()
 	// If the user isn't activated/approved, give them some feedback on what to do next.
 	if ($row['is_activated'] != 1)
 	{
+		loadLanguage('Profile');
 		// Awaiting approval...
 		if (trim($row['validation_code']) == '')
-			fatal_error($txt['registration_not_approved'] . ' <a href="' . $scripturl . '?action=activate;user=' . $_POST['user'] . '">' . $txt['here'] . '</a>.', false);
+			fatal_error(mobi_lang('registration_not_approved'), false);
 		else
-			fatal_error($txt['registration_not_activated'] . ' <a href="' . $scripturl . '?action=activate;user=' . $_POST['user'] . '">' . $txt['here'] . '</a>.', false);
+			fatal_error(mobi_lang('registration_not_activated'), false);
 	}
 
 	// You can't get emailed if you have no email address.

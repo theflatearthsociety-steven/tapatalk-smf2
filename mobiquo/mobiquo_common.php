@@ -1037,3 +1037,12 @@ function getContentFromRemoteServer($url, $holdTime = 0, &$error_msg, $method = 
     }
     return $response;
 }
+
+function mobi_lang($err_type)
+{
+    global $boarddir, $mobiquo_dir, $txt, $tptxt;
+
+    include_once $boarddir.'/'.$mobiquo_dir.'/config/Tapatalk.language.php';
+    
+    return isset($tptxt[$err_type])? $tptxt[$err_type] : $txt[$err_type];
+}

@@ -7,6 +7,7 @@ if (function_exists('set_magic_quotes_runtime'))
     @set_magic_quotes_runtime(0);
 
 error_reporting(0);
+$mobiquo_dir = 'mobiquo';
 if($_SERVER['REQUEST_METHOD'] == 'GET')
 {
     include 'web.php';
