@@ -116,6 +116,7 @@ $txt['tp_byo_app_desc'] = 'BYO App Description';
 $txt['tp_byo_app_icon_url'] = 'BYO App Icon URL';
 $txt['tp_ol_icon_path'] = 'Mobile Online Icon Path';
 $txt['tp_ol_icon_link'] = 'Mobile Online Icon Link';
+$txt['tp_ol_icon_desc'] = 'Mobile Online Icon Title';
 $txt['tp_custom_content_replacement'] = 'Thread Content Replacement(Advanced)';
 $txt['taptalk_descp'] = '<strong>Tapatalk for SMF Plugin</strong></br><br>
 For SMF 2.0 RC5/Final, <a href = "http://www.tapatalk.com">http://www.tapatalk.com</a></br>
@@ -169,6 +170,7 @@ $helptxt['tp_byo_app_desc'] = 'A short description of the product, ideally withi
 $helptxt['tp_byo_app_icon_url'] = 'Icon URL to be loaded and displayed on Smart App Banner';
 $helptxt['tp_ol_icon_path'] = 'Mobile Online Icon appears on Who\'s Online page to indicate member using Tapatalk app';
 $helptxt['tp_ol_icon_link'] = 'Target URL when icon is clicked';
+$helptxt['tp_ol_icon_desc'] = 'Mobile Online Icon Title appears on Who\'s Online page to indicate member using Tapatalk app';
 //Tapatalk ends
 ]]></add>
         </operation>
@@ -195,7 +197,7 @@ $helptxt['tp_ol_icon_link'] = 'Target URL when icon is clicked';
         </operation>
         <operation>
             <search position="replace"><![CDATA[<span class="contact_info floatright">]]></search>
-            <add><![CDATA[<span class="contact_info floatright">'.((strpos($member['query']['USER_AGENT'], 'Tapatalk') !== false || strpos($member['query']['USER_AGENT'], 'BYO') !== false )? '<a title="'.$txt['on_tapatalk'].'" href="' . (isset($modSettings['tp_ol_icon_link']) && strpos($member['query']['USER_AGENT'], 'BYO') !== false ? $modSettings['tp_ol_icon_link'] : 'http://tapatalk.com') . '">
+            <add><![CDATA[<span class="contact_info floatright">'.((strpos($member['query']['USER_AGENT'], 'Tapatalk') !== false || strpos($member['query']['USER_AGENT'], 'BYO') !== false )? '<a title="'.(isset($modSettings['tp_ol_icon_desc']) && strpos($member['query']['USER_AGENT'], 'BYO') !== false ? $modSettings['tp_ol_icon_desc'] : $txt['on_tapatalk']).'" href="' . (isset($modSettings['tp_ol_icon_link']) && strpos($member['query']['USER_AGENT'], 'BYO') !== false ? $modSettings['tp_ol_icon_link'] : 'http://tapatalk.com') . '">
 <img align="bottom" alt="Online" src="'.$boardurl. (isset($modSettings['tp_ol_icon_path']) && strpos($member['query']['USER_AGENT'], 'BYO') !== false ? $modSettings['tp_ol_icon_path'] : '/mobiquo/forum_icons/tapatalk-online.png') .'">
 </a>' : '').']]></add>
         </operation>

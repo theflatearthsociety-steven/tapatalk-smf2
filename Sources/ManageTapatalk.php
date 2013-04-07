@@ -255,7 +255,7 @@ function ManageTapatalkRebranding($return_config = false)
             array('text', 'tp_kf_hd_url', 'value'=> isset($modSettings['tp_kf_hd_url'])? $modSettings['tp_kf_hd_url'] : 'http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkHD' ,  'size' => '80'),
             array('text', 'tp_ol_icon_path', 'value'=> isset($modSettings['tp_ol_icon_path'])? $modSettings['tp_ol_icon_path'] : '/mobiquo/forum_icons/tapatalk-online.png' ,  'size' => '80'),
             array('text', 'tp_ol_icon_link', 'value'=> isset($modSettings['tp_ol_icon_link'])? $modSettings['tp_ol_icon_link'] : "http://tapatalk.com" ,  'size' => '80'),
-
+            array('text', 'tp_ol_icon_desc', 'value'=> isset($modSettings['tp_ol_icon_desc'])? $modSettings['tp_ol_icon_desc'] : "On Tapatalk" ,  'size' => '80'),
     );
 
     if ($return_config)
