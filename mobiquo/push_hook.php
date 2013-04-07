@@ -206,7 +206,7 @@ function tt_do_post_request($data)
 {
     global $boardurl, $modSettings;
 
-    $push_url = 'http://localhost/tapatalk/push.php';
+    $push_url = 'http://push.tapatalk.com/push.php';
 
     if(!function_exists('updateSettings'))
         require_once($sourcedir . '/Subs.php');
