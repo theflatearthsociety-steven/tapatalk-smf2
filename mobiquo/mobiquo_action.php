@@ -2059,7 +2059,6 @@ function before_action_update_password()
             get_error('Forum is not configured well, please contact administrator to set up push key for the forum!');
 
         $email_response = getEmailFromScription($_POST['token'], $_POST['code'], $modSettings['tp_push_key']);
-        $email_response = array('result' => true, 'email' => 'euhowzy@gmail.com');
         if(empty($email_response))
             get_error('Failed to connect to tapatalk server, please try again later.');
         if( !$email_response['result']|| (!isset($email_response['email']) || empty($email_response['email'])))
