@@ -712,6 +712,10 @@ switch ($request_name) {
         $_GET['action'] = 'movetopic2';
         $_GET['topic'] = $request_params[0];
         $_POST['toboard'] = $request_params[1];
+        $_POST['postRedirect'] = 1;
+        $_POST['reason'] = 'This topic has been moved to [BOARD].
+
+[TOPIC LINK]';
         break;
     case 'm_merge_topic':
         $_GET['action'] = 'mergetopics';
