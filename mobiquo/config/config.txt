@@ -27,6 +27,7 @@ searchid = 1
 alert = 1
 advanced_search = 1
 push_type = quote,tag,sub,pm
+ban_delete_type = none
 user_id = 1
 /* For mod conflict situation.
 If your forum installed some mod which changed code in file like 'Load.php' and called function defined in the mod, tapatalk may not work.
