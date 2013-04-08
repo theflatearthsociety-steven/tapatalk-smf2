@@ -2171,7 +2171,16 @@ function MessagePost2()
 			)
 		);
 	}
-
+	//Tapatalk pm push - start
+	global $boarddir;
+	if (function_exists('tapatalk_push_pm'))
+		tapatalk_push_pm();
+	else if(file_exists($boarddir . '/mobiquo/push_hook.php'))
+	{
+		include($boarddir . '/mobiquo/push_hook.php');
+		tapatalk_push_pm();
+	}
+	//Tapatalk pm push - end
 	// If one or more of the recipient were invalid, go back to the post screen with the failed usernames.
 	if (!empty($context['send_log']['failed']))
 		return messagePostError($post_errors, $namesNotFound, array(
@@ -2182,15 +2191,6 @@ function MessagePost2()
 	if (!empty($context['send_log']) && empty($context['send_log']['failed']))
 	{
 		$context['current_label_redirect'] = $context['current_label_redirect'] . ';done=sent';
-		global $boarddir;
-		$_POST['recipient_to'] = isset($recipientList['to']) && !empty($recipientList['to']) ? $recipientList['to'] : $_POST['recipient_to'];
-		if (function_exists('tapatalk_push_pm'))
-			tapatalk_push_pm();
-		else if(file_exists($boarddir . '/mobiquo/push_hook.php'))
-		{
-			include($boarddir . '/mobiquo/push_hook.php');
-			tapatalk_push_pm();
-		}
     }
 
 	// Go back to the where they sent from, if possible...

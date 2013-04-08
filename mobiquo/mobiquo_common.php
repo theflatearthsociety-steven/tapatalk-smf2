@@ -358,6 +358,7 @@ function basic_clean($str, $cut = 0, $is_shortcontent = 0)
         $str = preg_replace('/-{3}/', '', $str);
         $str = preg_replace('/\[quote.*\](.*?)\[\/quote\]/', '[quote]', $str);
         $str = preg_replace('/&nbsp;/', ' ', $str);
+        $str = preg_replace('/&n*b*s*p*$/','...',$str);
     }
     $str = preg_replace('/<a.*?>Quote from:.*?<\/a>/', ' ', $str);
     $str = strip_tags($str);
