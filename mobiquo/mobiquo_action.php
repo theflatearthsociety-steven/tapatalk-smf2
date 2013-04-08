@@ -1651,6 +1651,9 @@ function before_action_create_message()
 {
     global $txt, $smcFunc;
 
+    if(empty($_POST['subject'])) get_error('Subject cannot be empty!'); 
+    if(empty($_POST['message'])) get_error('Message content cannot be empty!'); 
+
     // Figure out how many messages there are.
     foreach ($_POST['recipient_to'] as $index => $name)
     {
@@ -1699,6 +1702,9 @@ function before_action_reply_topic()
 function before_action_reply_post()
 {
 	global $smcFunc, $topic, $board, $context, $language, $txt;
+
+	if(empty($_POST['message']))
+		fatal_lang_error('error_no_message');
 
 	$request = $smcFunc['db_query']('', '
 		SELECT t.locked, t.is_sticky, t.id_poll, t.approved, t.id_first_msg, t.id_last_msg, t.id_member_started, t.id_board, m.subject
@@ -2219,4 +2225,12 @@ function after_action_create_message()
     if (!empty($context['send_log']['failed']))
         foreach($context['send_log']['failed'] as $error_text)
             get_error($error_text);
+}
+
+function before_action_new_topic()
+{
+    if(empty($_POST['message']))
+        fatal_lang_error('error_no_message');
+    if(empty($_POST['subject']))
+        fatal_lang_error('error_no_subject');
 }
