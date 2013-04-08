@@ -2013,7 +2013,7 @@ function before_action_m_ban_user()
     $request = $smcFunc['db_query']('', '
         SELECT id_member, email_address
         FROM {db_prefix}members
-        WHERE member_name = {string:current_member}',
+        WHERE member_name = {string:current_member} OR real_name = {string:current_member}',
         array(
             'current_member' => $_POST['ban_name'],
         )
