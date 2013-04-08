@@ -357,13 +357,15 @@ function basic_clean($str, $cut = 0, $is_shortcontent = 0)
         $str = preg_replace('/\[[u|i|b]\](.*)\[\/[u|i|b]\]/U', '$1', $str);
         $str = preg_replace('/-{3}/', '', $str);
         $str = preg_replace('/\[quote.*\](.*?)\[\/quote\]/', '[quote]', $str);
-
+        $str = preg_replace('/&nbsp;/', ' ', $str);
     }
     $str = preg_replace('/<a.*?>Quote from:.*?<\/a>/', ' ', $str);
     $str = strip_tags($str);
     $str = to_utf8($str);
     $str = html_entity_decode($str, ENT_QUOTES, 'UTF-8');
     if (function_exists('censorText')) censorText($str);
+    if($is_shortcontent)
+        $str = preg_replace('/[\r\n]*/', '', $str);
     if ($cut > 0)
     {
         $str = preg_replace('/\[url=.*?\].*?\[\/url\]\s*\[quote\].*?\[\/quote\]/si', '', $str);
