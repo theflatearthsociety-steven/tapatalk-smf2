@@ -49,6 +49,8 @@ var native_ios_banner = false;
 if (app_ios_id != '-1' && navigator.userAgent.match(/Safari/i) != null &&
     (navigator.userAgent.match(/CriOS/i) == null && window.Number(navigator.userAgent.substr(navigator.userAgent.indexOf('OS ') + 3, 3).replace('_', '.')) >= 6))
 {
+    app_location_url = "tapatalk://";   // hard code for tapatalk 1 issue
+    
     if (navigator.userAgent.match(/iPad/i) != null)
     {
         document.write('<meta name="apple-itunes-app" content="app-id='+app_ios_hd_id+',app-argument="'+app_location_url+'">');
@@ -80,10 +82,12 @@ function tapatalkDetect()
     if (navigator.userAgent.match(/iPhone|iPod/i)) {
         app_banner_message = app_banner_message.replace(/\[os_platform\]/gi, 'iPhone');
         app_install_url = app_ios_url;
+        app_location_url = "tapatalk://";   // hard code for tapatalk 1 issue
     }
     else if (navigator.userAgent.match(/iPad/i)) {
         app_banner_message = app_banner_message.replace(/\[os_platform\]/gi, 'iPad');
         app_install_url = app_ios_hd_url;
+        app_location_url = "tapatalk://";   // hard code for tapatalk 1 issue
     }
     else if (navigator.userAgent.match(/Silk/)) {
         if (navigator.userAgent.match(/Android 2/i)) {

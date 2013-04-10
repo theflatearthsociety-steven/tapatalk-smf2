@@ -480,7 +480,7 @@ function get_online_users_func()
             if(strpos($userAgent,'Tapatalk') !== false)
                 $from = 'tapatalk';
             if(strpos($userAgent,'BYO') !== false)
-                $from = isset($modSettings['tp_ol_icon_desc']) ?  $modSettings['tp_ol_icon_desc'] : 'On Tapatalk';
+                $from = isset($modSettings['tp_ol_icon_desc']) ?  $modSettings['tp_ol_icon_desc'] : 'byo';
         }
         $user_list[] = new xmlrpcval(array(
             'user_id'       => new xmlrpcval($user['id'], 'string'),

@@ -241,9 +241,9 @@ function ManageTapatalkRebranding($return_config = false)
             array('text', 'tp_app_banner_msg', 'value'=> isset($modSettings['tp_app_banner_msg'])? $modSettings['tp_app_banner_msg'] : ''),
             array('text', 'tp_android_url', 'value'=> isset($modSettings['tp_android_url'])? $modSettings['tp_android_url'] : '' ,  'size' => '80'),
             array('text', 'tp_kf_url', 'value'=> isset($modSettings['tp_kf_url'])? $modSettings['tp_kf_url'] : '' ,  'size' => '80'),
-            array('text', 'tp_ol_icon_path', 'value'=> isset($modSettings['tp_ol_icon_path'])? $modSettings['tp_ol_icon_path'] : '/mobiquo/forum_icons/tapatalk-online.png' ,  'size' => '80'),
-            array('text', 'tp_ol_icon_link', 'value'=> isset($modSettings['tp_ol_icon_link'])? $modSettings['tp_ol_icon_link'] : "http://tapatalk.com" ,  'size' => '80'),
-            array('text', 'tp_ol_icon_desc', 'value'=> isset($modSettings['tp_ol_icon_desc'])? $modSettings['tp_ol_icon_desc'] : "On Tapatalk" ,  'size' => '80'),
+//            array('hide', 'tp_ol_icon_path', 'value'=> isset($modSettings['tp_ol_icon_path'])? $modSettings['tp_ol_icon_path'] : '/mobiquo/forum_icons/byo-online.png' ,  'size' => '80'),
+//            array('hide', 'tp_ol_icon_link', 'value'=> isset($modSettings['tp_ol_icon_link'])? $modSettings['tp_ol_icon_link'] : "http://tapatalk.com" ,  'size' => '80'),
+//            array('hide', 'tp_ol_icon_desc', 'value'=> isset($modSettings['tp_ol_icon_desc'])? $modSettings['tp_ol_icon_desc'] : "On App Of This Forum" ,  'size' => '80'),
     );
 
     if ($return_config)
