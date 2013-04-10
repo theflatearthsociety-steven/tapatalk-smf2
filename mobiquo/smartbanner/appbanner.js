@@ -101,8 +101,8 @@ function tapatalkDetect()
         app_banner_message = app_banner_message.replace(/\[os_platform\]/gi, 'BlackBerry');
         app_install_url = "http://appworld.blackberry.com/webstore/content/46654?lang=en";
     }
-//    else
-//        return
+    else
+        return
     
     if (app_install_url == '-1') return
     
