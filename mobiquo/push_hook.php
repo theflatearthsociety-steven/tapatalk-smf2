@@ -234,7 +234,7 @@ function tt_do_post_request($data)
 
         //Send push
         $push_resp = getPushContentFromRemoteServer($push_url, 0, $error, 'POST', $data);
-
+        if(trim($push_resp) === 'Invalid push notification key') $push_resp = 1;
         if(!is_numeric($push_resp))
         {
             //Sending push failed, try to update push_slug to db
