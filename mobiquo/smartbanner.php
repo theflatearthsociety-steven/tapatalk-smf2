@@ -15,7 +15,7 @@ $context['html_headers'] .= '
 <link   href="'.$tapatalk_dir_url.'/smartbanner/appbanner.css" rel="stylesheet" type="text/css" media="screen">
 <script type="text/javascript">
     var is_mobile_skin      = 0;
-    var app_ios_id          = '.intval($app_ios_id).';
+    var app_ios_id          = "'.intval($app_ios_id).'";
     var app_forum_name      = "'.addslashes($app_forum_name).'";
     var app_android_url     = "'.addslashes($app_android_url).'";
     var app_kindle_url      = "'.addslashes($app_kindle_url).'";

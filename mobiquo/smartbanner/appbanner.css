@@ -329,6 +329,7 @@ a.mobile_banner_install:visited{color: #FFFFFF}
 a.mobile_banner_install:hover  {color: #FFFFFF}
 a.mobile_banner_install:active {color: #FFFFFF}
 
+/* for ipb/smf compatibility */
 h3.mobile_banner_heading
 {
     color: #4C4C4C;
