@@ -156,7 +156,8 @@ $helptxt['tp_ol_icon_desc'] = 'Mobile Online Icon Title appears on Who\'s Online
         <file name="$themedir/languages/Who.english.php">
         <operation>
             <search position="after"><![CDATA[?>]]></search>
-            <add><![CDATA[$txt['on_tapatalk'] = 'On Tapatalk';]]></add>
+            <add><![CDATA[$txt['on_tapatalk'] = 'On Tapatalk';
+$txt['on_byo'] = 'On App Of This Forum';]]></add>
         </operation>
         </file>
 
@@ -174,7 +175,7 @@ $helptxt['tp_ol_icon_desc'] = 'Mobile Online Icon Title appears on Who\'s Online
         </operation>
         <operation>
             <search position="replace"><![CDATA[<span class="contact_info floatright">]]></search>
-            <add><![CDATA[<span class="contact_info floatright">'.((strpos($member['query']['USER_AGENT'], 'Tapatalk') !== false || strpos($member['query']['USER_AGENT'], 'BYO') !== false )? '<a title="'.(isset($modSettings['tp_ol_icon_desc']) && strpos($member['query']['USER_AGENT'], 'BYO') !== false ? $modSettings['tp_ol_icon_desc'] : $txt['on_tapatalk']).'" href="' . (isset($modSettings['tp_ol_icon_link']) && strpos($member['query']['USER_AGENT'], 'BYO') !== false ? $modSettings['tp_ol_icon_link'] : 'http://tapatalk.com') . '">
+            <add><![CDATA[<span class="contact_info floatright">'.((strpos($member['query']['USER_AGENT'], 'Tapatalk') !== false || strpos($member['query']['USER_AGENT'], 'BYO') !== false )? '<a title="'.(strpos($member['query']['USER_AGENT'], 'BYO') !== false ? $txt['on_byo'] : $txt['on_tapatalk']).'" href="' . (isset($modSettings['tp_ol_icon_link']) && strpos($member['query']['USER_AGENT'], 'BYO') !== false ? $modSettings['tp_ol_icon_link'] : 'http://tapatalk.com') . '">
 <img align="bottom" alt="Online" src="'.$boardurl. (strpos($member['query']['USER_AGENT'], 'BYO') !== false ? '/mobiquo/forum_icons/byo-online.png' : '/mobiquo/forum_icons/tapatalk-online.png') .'">
 </a>' : '').']]></add>
         </operation>
