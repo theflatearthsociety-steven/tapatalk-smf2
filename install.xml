@@ -74,24 +74,13 @@ $txt['tp_rebranding_settings'] = 'Rebranding Settings';]]></add>
         <file name="$themedir/languages/ManageSettings.english.php">
         <operation>
             <search position="after"><![CDATA[?>]]></search>
-            <add><![CDATA[//Tapatalk
+            <add><![CDATA[
+//Tapatalk
 $txt['tapatalktitle'] = 'Tapatalk Settings';
 $txt['tp_pushEnabled'] = 'Enable Tapatalk Push Notification';
 $txt['tapatalkEnabled'] = 'Enable tapatalk';
 $txt['tp_guestOkayEnabled'] = 'Enable forum view for guest by tapatalk';
 $txt['tp_tapatalkRegisterEnabled'] = 'In-app Registration';
-$txt['tp_ipad_msg'] = 'iPad Product Message';
-$txt['tp_ipad_url'] = 'iPad Product URL';
-$txt['tp_iphone_msg'] = 'iPhone Product Message';
-$txt['tp_iphone_url'] = 'iPhone Product URL';
-$txt['tp_android_msg'] = 'Android Product Message';
-$txt['tp_android_url'] = 'Android Product URL';
-$txt['tp_android_hd_msg'] = 'Android  (Tablet) Product Message';
-$txt['tp_android_hd_url'] = 'Android  (Tablet) Product URL';
-$txt['tp_kf_msg'] = 'Kindle Fire Product Message';
-$txt['tp_kf_url'] = 'Kindle Fire Product URL';
-$txt['tp_kf_hd_msg'] = 'Kindle Fire HD Product Message';
-$txt['tp_kf_hd_url'] = 'Kindle Fire HD Product URL';
 $txt['tp_allow_usergroup'] = 'Usergroup allowed on Tapatalk';
 $txt['tp_general_settings'] = 'General';
 $txt['tp_board_settings'] = 'Boards';
@@ -107,13 +96,15 @@ $txt['tp_select_boards'] = 'Select Boards to HIDE on Tapatalk';
 $txt['tp_disable_newtopic'] = 'Disable New Topic For Boards';
 $txt['tp_register_page_url'] = 'Register page url';
 $txt['tp_push_key'] = 'Push Notification Key';
-$txt['tp_byo_app_id'] = 'BYO App ID';
-$txt['tp_byo_app_name'] = 'BYO App Name';
-$txt['tp_byo_app_desc'] = 'BYO App Description';
-$txt['tp_byo_app_icon_url'] = 'BYO App Icon URL';
+//Tapatalk BYO
+$txt['tp_app_banner_msg'] = 'BYO App Banner Message';
+$txt['tp_app_ios_id'] = 'BYO iOS App ID';
+$txt['tp_android_url'] = 'Android Product URL';
+$txt['tp_kf_url'] = 'Kindle Fire Product URL';
 $txt['tp_ol_icon_path'] = 'Mobile Online Icon Path';
 $txt['tp_ol_icon_link'] = 'Mobile Online Icon Link';
 $txt['tp_ol_icon_desc'] = 'Mobile Online Icon Title';
+
 $txt['tp_custom_content_replacement'] = 'Thread Content Replacement(Advanced)';
 $txt['taptalk_descp'] = '<strong>Tapatalk for SMF Plugin</strong></br><br>
 For SMF 2.0 RC5/Final, <a href = "http://www.tapatalk.com">http://www.tapatalk.com</a></br>
@@ -131,7 +122,8 @@ Please manually change permission of all files under mobiquo/ folder (including 
 </br>
 For more information please visit tapatalk.com</br>
 <br>
-Thank you! :)';]]></add>
+Thank you! :)';
+]]></add>
         </operation>
         </file>
 
@@ -145,26 +137,14 @@ $helptxt['tp_guestOkayEnabled'] = 'Allow non-registered users to access your for
 $helptxt['tp_tapatalkRegisterEnabled'] = 'Allows Tapatalk users to create new account, change password and update email address in-app.';
 $helptxt['tp_register_page_url'] = 'Registration URL relative to your forum root path';
 $helptxt['tp_push_key'] = 'Optional. To improve the quality of Push Notification from your forum, please fill-in copy and paste the Push Notification Key from Tapatalk Forum Owner Area to here.';
-$helptxt['tp_ipad_msg'] = 'Customize this message if you are Tapatalk Rebranding Customer and has published your App to Apple App Store. Default: "This forum has an app for iPad! Click OK to learn more about Tapatalk."';
-$helptxt['tp_ipad_url'] = 'Change this URL if you are Tapatalk Rebranding Customer and has obtained your App URL from Apple App Store. Default: http://itunes.apple.com/us/app/tapatalk-hd-for-ipad/id481579541?mt=8';
-$helptxt['tp_iphone_msg'] = 'Customize this message if you are Tapatalk Rebranding Customer and has published your App to Apple App Store. Default: "This forum has an app for iPhone and iPod Touch! Click OK to learn more about Tapatalk."';
-$helptxt['tp_iphone_url'] = 'Change this URL if you are Tapatalk Rebranding Customer and has obtained your App URL from Apple App Store. Default: http://itunes.apple.com/us/app/tapatalk-forum-app/id307880732?mt=8';
-$helptxt['tp_android_msg'] = 'Customize this message if you are Tapatalk Rebranding Customer and has published your App to Google Play. Default: "This forum has an app for Android. Click OK to learn more about Tapatalk."';
-$helptxt['tp_android_url'] = 'Change this URL if you are Tapatalk Rebranding Customer and has obtained your App URL from Google Play. Default: market://details?id=com.quoord.tapatalkpro.activity';
-$helptxt['tp_android_hd_msg'] = 'Customize this message if you are Tapatalk Rebranding Customer and has published your App to Google Play. Default: "This forum has an app for Android. Click OK to learn more about Tapatalk."';
-$helptxt['tp_android_hd_url'] = 'Change this URL if you are Tapatalk Rebranding Customer and has obtained your App URL from Google Play. Default: market://details?id=com.quoord.tapatalkHD';
-$helptxt['tp_kf_msg'] = 'Customize this message if you are Tapatalk Rebranding Customer and has published your App to Amazon App Store. Default: "This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk."';
-$helptxt['tp_kf_url'] = 'Change this URL if you are Tapatalk Rebranding Customer and has obtained your App URL from Amazon App Store. Default: http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkpro.activity';
-$helptxt['tp_kf_hd_msg'] = 'Customize this message if you are Tapatalk Rebranding Customer and has published your App to Amazon App Store. Default: "This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk."';
-$helptxt['tp_kf_hd_url'] = 'Change this URL if you are Tapatalk Rebranding Customer and has obtained your App URL from Amazon App Store. Default: http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkHD';
 $helptxt['tp_allow_usergroup'] = 'Allow usergroups to login via Tapatalk, leave this option empty means that all usergroups users can login via Tapatalk. Different usergroups should be departed by comma, for example, "3,11,6" which means only users who belongs to 3,6 and 11 usergroups can login via Tapatalk.';
 $helptxt['tp_hide_boards'] = 'Hide forums you don\'t want them to be listed in Tapatalk app.';
 $helptxt['tp_dsa_boards'] = 'Prevent Tapatalk users to create new topic in the selected sub-forums. This feature is useful if certain forums requires additional topic fields or permission that Tapatalk does not support.';
 $helptxt['tp_custom_content_replacement'] = 'Ability to match and replace thread content using PHP preg_replace function(http://www.php.net/manual/en/function.preg-replace.php). E.g. "\'pattern\', \'replacement\'" . You can define more than one replace rule on each line.';
-$helptxt['tp_byo_app_id'] = 'Enter your product ID in Apple App Store, to be used on iPhone device';
-$helptxt['tp_byo_app_name'] = 'Please limit this name to within 20 characters';
-$helptxt['tp_byo_app_desc'] = 'A short description of the product, ideally within five words. Less is better for small screen';
-$helptxt['tp_byo_app_icon_url'] = 'Icon URL to be loaded and displayed on Smart App Banner';
+$helptxt['tp_app_banner_msg'] = 'E.g. "Follow {your_forum_name} with {app_name} for [os_platform]". Do not change the [os_platform] tag as it is displayed dynamically based on user\'s device platform.';
+$helptxt['tp_app_ios_id'] = 'Enter your product ID in Apple App Store, to be used on iPhone device';
+$helptxt['tp_android_url'] = 'Enter your BYO App URL from Google Play, to be used on Android device';
+$helptxt['tp_kf_url'] = 'Enter your BYO App URL from Amazon App Store, to be used on Kindle Fire device';
 $helptxt['tp_ol_icon_path'] = 'Mobile Online Icon appears on Who\'s Online page to indicate member using Tapatalk app';
 $helptxt['tp_ol_icon_link'] = 'Target URL when icon is clicked';
 $helptxt['tp_ol_icon_desc'] = 'Mobile Online Icon Title appears on Who\'s Online page to indicate member using Tapatalk app';

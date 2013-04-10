@@ -1,52 +1,28 @@
 <?php
 
-$byo_ios_app_id = isset($modSettings['tp_byo_app_id']) ? $modSettings['tp_byo_app_id'] : '';;
-$byo_app_name = isset($modSettings['tp_byo_app_name']) ? $modSettings['tp_byo_app_name'] : 'Tapatalk Forum App';;
-$byo_app_desc = isset($modSettings['tp_byo_app_desc']) ? $modSettings['tp_byo_app_desc'] : 'App for this forum';;
-$byo_app_icon_url = isset($modSettings['tp_byo_app_icon_url']) ? $modSettings['tp_byo_app_icon_url'] : '';;
+$app_ios_id = isset($modSettings['tp_app_ios_id']) ? $modSettings['tp_app_ios_id'] : '';;
+$app_kindle_url = isset($modSettings['tp_kindle_url']) ? $modSettings['tp_kindle_url'] : '';
+$app_android_url = isset($modSettings['tp_android_url']) ? $modSettings['tp_android_url'] : '';
 
-$app_ios_msg = isset($modSettings['tp_iphone_msg']) ? $modSettings['tp_iphone_msg'] : 'This forum has an app for iPhone and iPod Touch! Click OK to learn more about Tapatalk.';
-$app_ios_url = isset($modSettings['tp_iphone_url']) ? $modSettings['tp_iphone_url'] : 'http://itunes.apple.com/us/app/tapatalk-forum-app/id307880732?mt=8';
-$app_ios_hd_msg = isset($modSettings['tp_ipad_msg']) ? $modSettings['tp_ipad_msg'] : 'This forum has an app for iPad! Click OK to learn more about Tapatalk.';
-$app_ios_hd_url = isset($modSettings['tp_ipad_url']) ? $modSettings['tp_ipad_url'] : 'http://itunes.apple.com/us/app/tapatalk-hd-for-ipad/id481579541?mt=8';
-$app_kindle_msg = isset($modSettings['tp_kindle_msg']) ? $modSettings['tp_kindle_msg'] : 'This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk.';
-$app_kindle_url = isset($modSettings['tp_kindle_url']) ? $modSettings['tp_kindle_url'] : 'http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkpro.activity';
-$app_kindle_hd_msg = isset($modSettings['tp_kindle_hd_msg']) ? $modSettings['tp_kindle_hd_msg'] : 'This forum has an app for Kindle Fire! Click OK to learn more about Tapatalk.';
-$app_kindle_hd_url = isset($modSettings['tp_kindle_hd_url']) ? $modSettings['tp_kindle_hd_url'] : 'http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkHD';
-$app_android_msg = isset($modSettings['tp_android_msg']) ? $modSettings['tp_android_msg'] : 'This forum has an app for Android. Click OK to learn more about Tapatalk.';
-$app_android_url = isset($modSettings['tp_android_url']) ? $modSettings['tp_android_url'] : 'market://details?id=com.quoord.tapatalkpro.activity';
-$app_android_hd_msg = isset($modSettings['tp_android_hd_msg']) ? $modSettings['tp_android_hd_msg'] : 'This forum has an app for Android. Click OK to learn more about Tapatalk.';
-$app_android_hd_url = isset($modSettings['tp_android_hd_url']) ? $modSettings['tp_android_hd_url'] : 'market://details?id=com.quoord.tapatalkpro.activity';
+$app_forum_name = !empty($GLOBALS['mbname'])? $GLOBALS['mbname'] : '';;
+$app_banner_message = isset($modSettings['tp_app_banner_msg']) ? $modSettings['tp_app_banner_msg'] : '';
 
 $app_location_url = get_scheme_url();
-$tapatalk_dir_name = "mobiquo";
 $tapatalk_dir_url = $boardurl. '/mobiquo';
 
 $context['html_headers'] .= '
 <!-- Tapatalk Detect head start -->
-<link   href="'.$tapatalk_dir_url.'/smartbanner/jquery.smartbanner.css" rel="stylesheet" type="text/css" media="screen">
+<link   href="'.$tapatalk_dir_url.'/smartbanner/appbanner.css" rel="stylesheet" type="text/css" media="screen">
 <script type="text/javascript">
-    var byo_ios_app_id      = "'.intval($byo_ios_app_id).'";
-    var byo_app_name        = "'.addslashes($byo_app_name).'";
-    var byo_app_desc        = "'.addslashes($byo_app_desc).'";
-    var byo_app_icon_url    = "'.addslashes($byo_app_icon_url).'";
-    var app_ios_msg         = "'.addslashes($app_ios_msg).'";
-    var app_ios_url         = "'.addslashes($app_ios_url).'";
-    var app_ios_hd_msg      = "'.addslashes($app_ios_hd_msg).'";
-    var app_ios_hd_url      = "'.addslashes($app_ios_hd_url).'";
-    var app_android_msg     = "'.addslashes($app_android_msg).'";
+    var is_mobile_skin      = 0;
+    var app_ios_id          = '.intval($app_ios_id).';
+    var app_forum_name      = "'.addslashes($app_forum_name).'";
     var app_android_url     = "'.addslashes($app_android_url).'";
-    var app_android_hd_msg  = "'.addslashes($app_android_hd_msg).'";
-    var app_android_hd_url  = "'.addslashes($app_android_hd_url).'";
-    var app_kindle_msg      = "'.addslashes($app_kindle_msg).'";
     var app_kindle_url      = "'.addslashes($app_kindle_url).'";
-    var app_kindle_hd_msg   = "'.addslashes($app_kindle_hd_msg).'";
-    var app_kindle_hd_url   = "'.addslashes($app_kindle_hd_url).'";
-    var tapatalk_dir_name   = "'.addslashes($tapatalk_dir_name).'";
-    var tapatalk_dir_url    = "'.addslashes($tapatalk_dir_url).'";
     var app_location_url    = "'.addslashes($app_location_url).'";
+    var app_banner_message  = "'.addslashes($app_banner_message).'";
 </script>
-<script src="'.$tapatalk_dir_url.'/smartbanner/jquery.smartbanner.js" type="text/javascript"></script>
+<script src="'.$tapatalk_dir_url.'/smartbanner/appbanner.js" type="text/javascript"></script>
 <!-- Tapatalk Detect head end-->
 ';
 

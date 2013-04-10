@@ -146,12 +146,13 @@ function tapatalk_push_quote_tag($post_id, $newtopic = false, $pushed_user_ids =
 }
 function tapatalk_push_pm()
 {
-    global $user_info, $smcFunc, $boardurl, $modSettings;
-
+    global $user_info, $smcFunc, $boardurl, $modSettings, $context;
 
     if(!isset($modSettings['tp_pushEnabled']) || !$modSettings['tp_pushEnabled'] || (!function_exists('curl_init') && !ini_get('allow_url_fopen')))
         return;
-    if (isset($_POST['recipient_to']) && is_array($_POST['recipient_to']) && !empty($_POST['recipient_to']) && isset($_POST['subject']))
+    $sent_recipients = !empty($context['send_log']) && !empty($context['send_log']['sent']) ? array_keys($context['send_log']['sent']) : array();
+
+    if (isset($sent_recipients) && !empty($sent_recipients) && isset($_POST['subject']))
     {
         $timestr = time();
         $id_pm_req = $smcFunc['db_query']('', '
@@ -159,11 +160,12 @@ function tapatalk_push_pm()
             FROM {db_prefix}personal_messages p
             WHERE p.msgtime > {int:msgtime_l} AND p.msgtime < {int:msgtime_h} AND p.id_member_from = {int:send_userid} ',
             array(
-                'msgtime_l' => $timestr-2,
-                'msgtime_h' => $timestr+2,
+                'msgtime_l' => $timestr-10,
+                'msgtime_h' => $timestr+10,
                 'send_userid' => $user_info['id'],
             ));
         $id_pm = $smcFunc['db_fetch_assoc']($id_pm_req);
+
         if($id_pm_req)
             $smcFunc['db_free_result']($id_pm_req);
 
@@ -174,7 +176,7 @@ function tapatalk_push_pm()
                 FROM {db_prefix}tapatalk_users tu
                 WHERE tu.userid IN ({array_int:recipient_to}) AND tu.pm = 1',
                 array(
-                    'recipient_to' => $_POST['recipient_to'],//$recipientList['to'],
+                    'recipient_to' => $sent_recipients,//$recipientList['to'],
                 )
             );
             while($row = $smcFunc['db_fetch_assoc']($request))
