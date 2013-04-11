@@ -190,9 +190,15 @@ $txt['on_byo'] = 'On App Of This Forum';]]></add>
         </file>
         <file name="$themedir/index.template.php">
         <operation>
-            <search position="replace"><![CDATA[	echo !empty($settings['forum_width']) ? ']]></search>
-            <add><![CDATA[	echo $context['tapatalk_body_hook'];
-	echo !empty($settings['forum_width']) ? ']]></add>
+            <search position="replace"><![CDATA[function template_body_above()
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings;]]></search>
+            <add><![CDATA[
+function template_body_above()
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+	
+		echo $context['tapatalk_body_hook'];]]></add>
         </operation>
         </file>
         <file name="$sourcedir/Subs-Members.php">
