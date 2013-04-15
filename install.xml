@@ -5,7 +5,7 @@
     <file name="$sourcedir/Load.php">
         <operation>
             <search position="after"><![CDATA[	$context['menu_separator'] = !empty($settings['use_image_buttons']) ? ' ' : ' | ';]]></search>
-            <add><![CDATA[	include('mobiquo/smartbanner.php');]]></add>
+            <add><![CDATA[	include($boarddir.'/mobiquo/smartbanner.php');]]></add>
         </operation>
     </file>
         <file name="$sourcedir/Post.php">
