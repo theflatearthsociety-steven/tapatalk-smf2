@@ -171,7 +171,6 @@ function get_topic_func()
                 $avatar = $profile['avatar'] == '' ? ($profile['id_attach'] > 0 ? (empty($profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) : '') : (stristr($profile['avatar'], 'http://') ? $profile['avatar'] : $modSettings['avatar_url'] . '/' . $profile['avatar']);
             }
         }
-
         $xmlrpc_topic = new xmlrpcval(array(
             'forum_id'          => new xmlrpcval($board_info['id'], 'string'),
             'forum_name'        => new xmlrpcval(basic_clean($board_info['name']), 'base64'),
@@ -231,7 +230,7 @@ function get_thread_func()
     $rpc_post_list = array();
     $post_place = 0;
     $msg_ids = array();
-    $support_post_thanks = isset($modSettings['integrate_pre_include']) && strpos($modSettings['integrate_pre_include'],'$sourcedir/Subs-ThankYou.php');
+    $support_post_thanks = isset($modSettings['integrate_pre_include']) && strpos($modSettings['integrate_pre_include'],'$sourcedir/Subs-ThankYou.php') && file_exists('$sourcedir/Subs-ThankYou.php');
 
     while ($message = get_post_detail()) {
         $attachments = array();
@@ -258,6 +257,7 @@ function get_thread_func()
             $avatar = $message['member']['avatar']['href'];
         }
         $msg_ids[] = $message['id'];
+
         $xmlrpc_post = array(
             'topic_id'          => new xmlrpcval($context['current_topic'], 'string'),
             'post_id'           => new xmlrpcval($message['id']),
