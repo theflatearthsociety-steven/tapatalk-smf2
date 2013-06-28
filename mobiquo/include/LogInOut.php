@@ -143,8 +143,11 @@ function Login2()
 	// Hmm... maybe 'admin' will login with no password. Uhh... NO!
 	if ((!isset($_POST['passwrd']) || $_POST['passwrd'] == '') && (!isset($_REQUEST['hash_passwrd']) || strlen($_REQUEST['hash_passwrd']) != 40))
 	{
-		$context['login_errors'] = array($txt['no_password']);
-		return;
+		if(!isset($_POST['tid_sign_in']) && !$_POST['tid_sign_in'])
+		{
+			$context['login_errors'] = array($txt['no_password']);
+			return;
+		}
 	}
 
 	// No funky symbols either.
@@ -157,9 +160,12 @@ function Login2()
 	// Are we using any sort of integration to validate the login?
 	if (in_array('retry', call_integration_hook('integrate_validate_login', array($_REQUEST['user'], isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40 ? $_REQUEST['hash_passwrd'] : null, $modSettings['cookieTime'])), true))
 	{
-		$context['login_errors'] = array($txt['login_hash_error']);
-		$context['disable_login_hashing'] = true;
-		return;
+		if(!isset($_POST['tid_sign_in']) && !$_POST['tid_sign_in'])
+		{
+			$context['login_errors'] = array($txt['login_hash_error']);
+			$context['disable_login_hashing'] = true;
+			return;
+		}
 	}
 
 	// Load the data up!
@@ -202,7 +208,7 @@ function Login2()
 	$smcFunc['db_free_result']($request);
 
 	// Figure out the password using SMF's encryption - if what they typed is right.
-	if (isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40)
+	if (isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40 && (!isset($_POST['tid_sign_in']) && !$_POST['tid_sign_in']) )
 	{
 		// Needs upgrading?
 		if (strlen($user_settings['passwd']) != 40)
@@ -235,9 +241,11 @@ function Login2()
 			}
 		}
 	}
-	else
+	else if((!isset($_POST['tid_sign_in']) && !$_POST['tid_sign_in']))
 		$sha_passwd = sha1(strtolower($user_settings['member_name']) . un_htmlspecialchars($_REQUEST['passwrd']));
 
+    if((!isset($_POST['tid_sign_in']) && !$_POST['tid_sign_in']))
+    {
 	// Bad password!  Thought you could fool the database?!
 	if ($user_settings['passwd'] != $sha_passwd)
 	{
@@ -352,7 +360,7 @@ function Login2()
 		// If we got here then we can reset the flood counter.
 		updateMemberData($user_settings['id_member'], array('passwd_flood' => ''));
 	}
-
+    }
 	// Correct password, but they've got no salt; fix it!
 	if ($user_settings['password_salt'] == '')
 	{

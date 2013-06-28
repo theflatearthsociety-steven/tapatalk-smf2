@@ -1567,6 +1567,22 @@ function register_func()
     return new xmlrpcresp($result);
 }
 
+function sign_in_func()
+{
+    global $context, $modSettings, $txt;
+    
+    
+    if($_POST['action'] == 'login2') return login_func();
+    if($_POST['action'] == 'register') return register_func();
+    error_log(print_r("sign_in_func", true), 3, 'my.log');
+    error_log(print_r($_POST['action'], true), 3, 'my.log');
+    $result = new xmlrpcval(array(
+            'result'        => new xmlrpcval(isset($context['registration_done']), 'boolean'),
+            'result_text'   => new xmlrpcval($result_text, 'base64')),
+        'struct');
+    return new xmlrpcresp($result);
+}
+
 function update_password_func()
 {
     global $context;

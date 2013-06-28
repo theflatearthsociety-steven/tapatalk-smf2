@@ -1049,3 +1049,51 @@ function mobi_lang($err_type)
     
     return isset($tptxt[$err_type])? $tptxt[$err_type] : $txt[$err_type];
 }
+
+function get_user_by_name_or_email($name, $is_email = false)
+{
+    global $smcFunc;
+
+    if(empty($name)) return array();
+        
+    if(!$is_email)
+    {
+       $request = $smcFunc['db_query']('', '
+           SELECT passwd, member_name, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt,
+           openid_uri, passwd_flood, id_post_group
+           FROM {db_prefix}members
+           WHERE ' . ($smcFunc['db_case_sensitive'] ? 'LOWER(member_name) = LOWER({string:user_name})' : 'member_name = {string:user_name}') . '
+           LIMIT 1',
+           array(
+           'user_name' => $smcFunc['db_case_sensitive'] ? strtolower($name) : $name,
+           )
+       );
+    }
+    else
+    {
+        $request = $smcFunc['db_query']('', '
+            SELECT passwd, member_name, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt, openid_uri,
+            passwd_flood
+            FROM {db_prefix}members
+            WHERE email_address = {string:user_name}
+            LIMIT 1',
+            array(
+            'user_name' => $name,
+            )
+        );
+    }
+    $user = $smcFunc['db_fetch_assoc']($request);
+    $smcFunc['db_free_result']($request);
+    return $user;
+}
+
+function error_status($status = 0, $result_text = '')
+{
+    $result = new xmlrpcval(array(
+        'result'        => new xmlrpcval(false, 'boolean'),
+        'status'        => new xmlrpcval($status, 'string'),
+        'result_text'   => new xmlrpcval($result_text, 'base64'),
+    ), 'struct');
+
+    return new xmlrpcresp($result);
+}

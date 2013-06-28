@@ -782,6 +782,7 @@ function action_register()
         if (!is_array($_POST[$key]))
             $_POST[$key] = htmltrim__recursive(str_replace(array("\n", "\r"), '', $_POST[$key]));
     $register_mode = empty($modSettings['registration_method']) ? 'nothing' : ($_POST['emailActivate'] ? ($modSettings['registration_method'] == 1 ? 'activation' : 'approval') : 'nothing');
+    if($_POST['emailActivate'] && $_POST['tid_sign_in']) $register_mode = 'nothing';
     $regOptions = array(
         'interface' => $register_mode == 'approval' ? 'guest' : 'admin',
         'username' => $_POST['user'],
@@ -808,6 +809,12 @@ function action_register()
             'link' => '<a href="' . $scripturl . '?action=profile;u=' . $memberID . '">' . $_POST['user'] . '</a>',
         );
         $context['registration_done'] = sprintf($txt['admin_register_done'], $context['new_member']['link']);
+    }
+    if($context['registration_done'] && isset($_POST['tid_sign_in']) && $_POST['tid_sign_in'])
+    {
+        require_once('include/LogInOut.php');
+        Login2();
+        $_POST['action'] = 'login2';
     }
 }
 
@@ -1694,6 +1701,105 @@ function before_action_register()
     }
 }
 
+function before_action_sign_in()
+{
+    global $modSettings, $request_name;
+    
+    $_REQUEST['username'] = $_GET['username'] = $_POST['username'] = mobiquo_encode($_POST['username']);
+    
+    if(!isset($modSettings['tp_push_key']) || empty($modSettings['tp_push_key']))
+        fatal_lang_error('Forum is not configured well, please contact administrator to set up push key for the forum!');
+
+    $email_response = getEmailFromScription($_POST['token'], $_POST['code'], $modSettings['tp_push_key']);
+
+    if(empty($email_response))
+        fatal_lang_error('Failed to connect to tapatalk server, please try again later.');
+    if( (!isset($_POST['email']) || empty($_POST['email'])) && (!isset($email_response['email']) || empty($email_response['email'])))
+        fatal_lang_error('You need to input an email or re-login tapatalk id to use default email of tapatalk id.');
+
+    $response_verified = $email_response['result'] && isset($email_response['email']) && !empty($email_response['email']);
+    if(!$response_verified)
+        return fatal_lang_error(isset($email_response['result_text'])? $email_response['result_text'] : 'Tapatalk ID session expired, please re-login Tapatalk ID and try again, if the problem persist please tell us.');
+
+    if(!empty($_POST['email']))
+    {
+        if($email_response['email'] == $_POST['email'])
+        {
+            $user = get_user_by_name_or_email($_POST['email'] , true);
+            if(isset($user['id_member']) && !empty($user['id_member']))
+            {
+                //prepare login parameter
+                $_REQUEST['action'] = $_GET['action'] = $_POST['action'] = 'login2';
+                $_POST['tid_sign_in'] = true;
+                $_REQUEST['user'] = $_GET['user'] = $_POST['user'] = $_POST['username'];
+                $_REQUEST['passwrd'] = $_GET['passwrd'] = $_POST['passwrd'] = $_POST['password'];
+                $_REQUEST['cookielength'] = $_GET['cookielength'] = $_POST['cookielength'] = -1;
+                $request_name = 'login';
+                before_action_login();
+            }
+            else
+            {
+                if(!empty($_POST['username']))
+                {
+                    //prepare reg parameter
+                    $_REQUEST['action'] = $_GET['action'] = $_POST['action'] = '';
+                    $_POST['tid_sign_in'] = true;
+                    $_POST['emailActivate'] = true;
+                    $_REQUEST['user'] = $_GET['user'] = $_POST['user'] = $_POST['username'];
+                    $request_name = 'login';
+                }
+                else
+                {
+                    return error_status(2);
+                }
+            }
+        }
+        else
+        {
+            return error_status(3);
+        }
+    }
+    else if(!empty($_POST['username']))
+    {
+        $user = get_user_by_name_or_email($_POST['username']);
+
+        if(isset($user['id_member']) && !empty($user['id_member']) && $user['email_address'] == $email_response['email'])
+        {
+            //prepare login parameter
+            $_REQUEST['action'] = $_GET['action'] = $_POST['action'] = 'login2';
+            $_POST['tid_sign_in'] = true;
+            $_REQUEST['user'] = $_GET['user'] = $_POST['user'] = $_POST['username'];
+            $_REQUEST['passwrd'] = $_GET['passwrd'] = $_POST['passwrd'] = $_POST['password'];
+            $_REQUEST['cookielength'] = $_GET['cookielength'] = $_POST['cookielength'] = -1;
+            $request_name = 'login';
+            before_action_login();
+        }
+        else
+        {
+            return error_status(3);
+        }
+    }
+    else
+    {
+        $user = get_user_by_name_or_email($email_response['email']);
+        if(isset($user['id_member']) && !empty($user['id_member']))
+        {
+            //prepare login parameter
+            $_REQUEST['action'] = $_GET['action'] = $_POST['action'] = 'login2';
+            $_POST['tid_sign_in'] = true;
+            $_REQUEST['user'] = $_GET['user'] = $_POST['user'] = $_POST['username'];
+            $_REQUEST['passwrd'] = $_GET['passwrd'] = $_POST['passwrd'] = $_POST['password'];
+            $_REQUEST['cookielength'] = $_GET['cookielength'] = $_POST['cookielength'] = -1;
+            $request_name = 'login';
+            before_action_login();
+        }
+        else
+        {
+            return error_status(2);
+        }
+    }
+}
+
 function before_action_reply_topic()
 {
     check_topic_notify();
@@ -1795,6 +1901,7 @@ function before_action_login_mod()
     $_POST['admin_hash_pass'] = sha1(sha1(($smcFunc['db_case_sensitive'] ? $_REQUEST['user'] : strtolower($_REQUEST['user'])).$_REQUEST['password']) . $sc);
     $_REQUEST['admin_hash_pass'] = $_POST['admin_hash_pass'];
 }
+
 function before_action_search()
 {
     global $smcFunc, $search_filter, $context;

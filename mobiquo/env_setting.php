@@ -63,6 +63,14 @@ switch ($request_name) {
             get_error('Parameter Error');
         }
         break;
+    case 'sign_in':
+        $_POST['action'] = 'sign_in';
+        $_POST['token'] = $request_params[0];
+        $_POST['code'] = $request_params[1];
+        $_POST['email'] = $request_params[2];
+        $_POST['username'] = $request_params[3];
+        $_POST['password'] = $request_params[4];
+        break;
     case 'update_password':
         if ($params_num == 2 || $params_num == 3) {
             if($params_num == 2)

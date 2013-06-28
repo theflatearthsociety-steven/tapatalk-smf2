@@ -207,7 +207,6 @@ function tapatalk_push_pm()
 function tt_do_post_request($data)
 {
     global $boardurl, $modSettings;
-
     $push_url = 'http://push.tapatalk.com/push.php';
 
     if(!function_exists('updateSettings'))
@@ -292,7 +291,7 @@ function push_slug($push_v, $method = 'NEW')
     }
     $sizeof_queue = count($push_v_data['stick_time_queue']);
     
-    $period_queue = $sizeof_queue > 1 ? ($push_v_data['stick_time_queue'][$sizeof_queue - 1] - $push_v_data['stick_time_queue'][0]) : 0;
+    $period_queue = $sizeof_queue > 1 && isset($push_v_data['stick_time_queue'][$sizeof_queue - 1]) && isset($push_v_data['stick_time_queue'][0]) ? ($push_v_data['stick_time_queue'][$sizeof_queue - 1] - $push_v_data['stick_time_queue'][0]) : 0;
 
     $times_overflow = $sizeof_queue > $push_v_data['max_times'];
     $period_overflow = $period_queue > $push_v_data['max_times_in_period'];

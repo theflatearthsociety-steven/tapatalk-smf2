@@ -16,6 +16,14 @@ $server_param = array(
                              array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcBase64)),
         'docstring' => 'authorize need two parameters,the first is user name(Base64), second is password.',
     ),
+
+    'sign_in' => array(
+        'function'  => 'sign_in_func',
+        'signature' => array(array($xmlrpcStruct,$xmlrpcString, $xmlrpcString, $xmlrpcBase64, $xmlrpcBase64,$xmlrpcBase64),
+                             array($xmlrpcStruct,$xmlrpcString, $xmlrpcString, $xmlrpcBase64, $xmlrpcBase64),
+                             array($xmlrpcStruct,$xmlrpcString, $xmlrpcString, $xmlrpcBase64)),
+        'docstring' => 'login need three parameters,the first is user name(Base64), second and thrid is token and code(String).',
+    ),
     
     'register' => array(
         'function'  => 'register_func',
@@ -494,5 +502,11 @@ $server_param = array(
         'signature' => array(array($xmlrpcStruct, $xmlrpcInt, $xmlrpcInt),
                              array($xmlrpcStruct, $xmlrpcInt),
                              array($xmlrpcStruct)),
+    ),
+    
+    'prefetch_account' => array(
+        'function'  => 'prefetch_account_func',
+        'signature' => array(array($xmlrpcStruct, $xmlrpcBase64)),
+        'docstring' => 'forget_password need three parameters,the first is user name(Base64), second and thrid is validation token and code(String).',
     ),
 );
