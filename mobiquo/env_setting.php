@@ -339,6 +339,14 @@ switch ($request_name) {
             get_error('Parameter Error');
         }
         break;
+    case 'prefetch_account':
+        if ($params_num = 1) {
+            $_GET['action'] = 'profile';
+            $_GET['email'] = $request_params[0];
+        } else {
+            get_error('Parameter Error');
+        }
+        break;
     case 'get_user_reply_post':
         if ($params_num <= 2) {
             $_GET['action'] = 'profile';

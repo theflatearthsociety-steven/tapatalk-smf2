@@ -1624,3 +1624,18 @@ function forget_password_func()
 
     return new xmlrpcresp(new xmlrpcval($result, 'struct'));
 }
+
+function prefetch_account_func()
+{
+    global $context, $txt, $modSettings, $user_info, $smcFunc;
+    
+    $result = new xmlrpcval(array(
+        'result'        => new xmlrpcval(true, 'boolean'),
+        'user_id'         => new xmlrpcval($context['member']['id'], 'string'),
+        'login_name'        => new xmlrpcval(basic_clean($context['member']['username']), 'base64'),
+        'display_name'        => new xmlrpcval(basic_clean($context['member']['name']), 'base64'),
+        'avatar'                => new xmlrpcval($context['member']['avatar']['href'], 'string'),
+    ), 'struct');
+    
+    return new xmlrpcresp($result);
+}

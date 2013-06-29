@@ -197,7 +197,7 @@ function Login2()
 		// Let them try again, it didn't match anything...
 		if ($smcFunc['db_num_rows']($request) == 0)
 		{
-			$context['login_errors'] = array($txt['username_no_exist']);
+			error_status(2, $txt['username_no_exist']);
 			return;
 		}
 		unset($_REQUEST['hash_passwrd']);

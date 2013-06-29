@@ -1712,18 +1712,18 @@ function before_action_sign_in()
     $_REQUEST['username'] = $_GET['username'] = $_POST['username'] = mobiquo_encode($_POST['username']);
     
     if(!isset($modSettings['tp_push_key']) || empty($modSettings['tp_push_key']))
-        fatal_lang_error('Forum is not configured well, please contact administrator to set up push key for the forum!');
+        get_error('Forum is not configured well, please contact administrator to set up push key for the forum!');
 
     $email_response = getEmailFromScription($_POST['token'], $_POST['code'], $modSettings['tp_push_key']);
 
     if(empty($email_response))
-        fatal_lang_error('Failed to connect to tapatalk server, please try again later.');
+        get_error('Failed to connect to tapatalk server, please try again later.');
     if( (!isset($_POST['email']) || empty($_POST['email'])) && (!isset($email_response['email']) || empty($email_response['email'])))
-        fatal_lang_error('You need to input an email or re-login tapatalk id to use default email of tapatalk id.');
+        get_error('You need to input an email or re-login tapatalk id to use default email of tapatalk id.');
 
     $response_verified = $email_response['result'] && isset($email_response['email']) && !empty($email_response['email']);
     if(!$response_verified)
-        return fatal_lang_error(isset($email_response['result_text'])? $email_response['result_text'] : 'Tapatalk ID session expired, please re-login Tapatalk ID and try again, if the problem persist please tell us.');
+        return get_error(isset($email_response['result_text'])? $email_response['result_text'] : 'Tapatalk ID session expired, please re-login Tapatalk ID and try again, if the problem persist please tell us.');
 
     if(!empty($_POST['email']))
     {
@@ -2351,4 +2351,10 @@ function before_action_new_topic()
         fatal_lang_error('error_no_message');
     if(empty($_POST['subject']))
         fatal_lang_error('error_no_subject');
+}
+
+function before_action_prefetch_account()
+{
+    $user = get_user_by_name_or_email($_GET['email'] , true);
+    $_REQUEST['u'] = $_POST['u'] = $_GET['u'] = isset($user['id_member']) && !empty($user['id_member']) ? $user['id_member'] : 0;
 }
