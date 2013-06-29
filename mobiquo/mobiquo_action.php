@@ -999,6 +999,12 @@ function set_topic_and_board_by_message()
     $GLOBALS['board'] = $board_id;
 }
 
+function action_mark_pm_unread()
+{
+    global $context, $smcFunc, $user_info, $mark_result;
+
+    $mark_result =  1;
+}
 function action_get_inbox_stat()
 {
     global $context, $smcFunc, $modSettings, $user_info, $pm_last_checked_time, $subscribed_topic_last_checked_time;

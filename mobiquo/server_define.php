@@ -319,6 +319,12 @@ $server_param = array(
         'docstring' => 'no parameter',
     ),
 
+    'mark_pm_unread' => array(
+        'function' => 'mark_pm_unread_func',
+        'signature' => array(array($xmlrpcStruct, $xmlrpcString),
+                            ),
+    ),
+    
     'get_unread_topic' => array(
         'function'  => 'get_unread_topic_func',
         'signature' => array(array($xmlrpcStruct, $xmlrpcInt, $xmlrpcInt),

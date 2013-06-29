@@ -240,6 +240,13 @@ switch ($request_name) {
             get_error('Parameter Error');
         }
         break;
+    case 'mark_pm_unread':
+        if ($params_num == 1) {
+            $_POST['id_pm'] = intval($request_params[0]);
+        } else {
+            get_error('Parameter Error');
+        }
+        break;
     case 'get_latest_topic':
     case 'get_new_topic':
         if ($params_num == 2 or $params_num == 0) {

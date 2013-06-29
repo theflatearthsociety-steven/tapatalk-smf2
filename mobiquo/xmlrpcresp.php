@@ -1168,6 +1168,13 @@ function delete_message_func()
     return new xmlrpcresp(new xmlrpcval(array('result' => new xmlrpcval(true, 'boolean')), 'struct'));
 }
 
+function mark_pm_unread_func()
+{
+    global $mark_result;
+    
+    return new xmlrpcresp(new xmlrpcval(array('result' => new xmlrpcval($mark_result, 'boolean')), 'struct'));
+}
+
 function get_message_func()
 {
     global $context;
