@@ -1089,11 +1089,23 @@ function get_user_by_name_or_email($name, $is_email = false)
 
 function error_status($status = 0, $result_text = '')
 {
-    $result = new xmlrpcval(array(
-        'result'        => new xmlrpcval(false, 'boolean'),
-        'status'        => new xmlrpcval($status, 'string'),
-        'result_text'   => new xmlrpcval($result_text, 'base64'),
-    ), 'struct');
+    @ob_clean();
 
-    return new xmlrpcresp($result);
+    if(!headers_sent())
+    {
+        header('200 OK');
+        header('Mobiquo_is_login: false');
+        header('Content-Type: text/xml');
+    }
+
+    $response = new xmlrpcresp(
+        new xmlrpcval(array(
+            'result'        => new xmlrpcval(false, 'boolean'),
+            'status'        => new xmlrpcval($status, 'string'),
+            'result_text'   => new xmlrpcval($result_text, 'base64'),
+        ),'struct')
+    );
+
+    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".$response->serialize('UTF-8');
+    exit;
 }

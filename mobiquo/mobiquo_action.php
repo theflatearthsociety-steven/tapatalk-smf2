@@ -774,7 +774,7 @@ function action_get_new_topic()
 
 function action_register()
 {
-    global $sourcedir, $context, $modSettings;
+    global $sourcedir, $context, $modSettings, $request_name;
 
     checkSession();
 
@@ -796,6 +796,7 @@ function action_register()
         'require' => $register_mode,
         'memberGroup' => empty($_POST['group']) || !allowedTo('manage_membergroups') ? 0 : (int) $_POST['group'],
     );
+    
     define('mobi_register',1);
     require_once($sourcedir . '/Subs-Members.php');
     $memberID = registerMember($regOptions);
@@ -810,11 +811,14 @@ function action_register()
         );
         $context['registration_done'] = sprintf($txt['admin_register_done'], $context['new_member']['link']);
     }
-    if($context['registration_done'] && isset($_POST['tid_sign_in']) && $_POST['tid_sign_in'])
+    if(!empty($memberID) && isset($_POST['tid_sign_in']) && $_POST['tid_sign_in'])
     {
+        //simulate login
+        $request_name = 'login';
+        $_REQUEST['action'] = $_GET['action'] = $_POST['action'] = 'login2';
+        before_action_login();
         require_once('include/LogInOut.php');
         Login2();
-        $_POST['action'] = 'login2';
     }
 }
 
@@ -1743,10 +1747,13 @@ function before_action_sign_in()
                 {
                     //prepare reg parameter
                     $_REQUEST['action'] = $_GET['action'] = $_POST['action'] = '';
+                    $_REQUEST['passwrd'] = $_GET['passwrd'] = $_POST['passwrd'] = $_POST['password'];
+                    $_REQUEST['user'] = $_GET['user'] = $_POST['user'] = $_POST['username'];
+                    $_REQUEST['cookielength'] = $_GET['cookielength'] = $_POST['cookielength'] = -1;
                     $_POST['tid_sign_in'] = true;
                     $_POST['emailActivate'] = true;
                     $_REQUEST['user'] = $_GET['user'] = $_POST['user'] = $_POST['username'];
-                    $request_name = 'login';
+                    $request_name = 'register';
                 }
                 else
                 {
@@ -1798,6 +1805,10 @@ function before_action_sign_in()
             return error_status(2);
         }
     }
+}
+
+function action_sign_in()
+{
 }
 
 function before_action_reply_topic()
