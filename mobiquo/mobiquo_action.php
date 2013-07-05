@@ -774,10 +774,13 @@ function action_get_new_topic()
 
 function action_register()
 {
-    global $sourcedir, $context, $modSettings, $request_name;
+    global $sourcedir, $context, $modSettings, $request_name, $maintenance, $mmessage;
 
     checkSession();
-
+    
+    if(empty($_POST['password'])) get_error('password cannot be empty');
+    if(!($maintenance == 0 && $modSettings['tapatalkEnabled'])) get_error('Forum is in maintenance model or Tapatalk is disabled by forum administrator.');
+    
     foreach ($_POST as $key => $value)
         if (!is_array($_POST[$key]))
             $_POST[$key] = htmltrim__recursive(str_replace(array("\n", "\r"), '', $_POST[$key]));
@@ -1741,7 +1744,7 @@ function before_action_sign_in()
                 //prepare login parameter
                 $_REQUEST['action'] = $_GET['action'] = $_POST['action'] = 'login2';
                 $_POST['tid_sign_in'] = true;
-                $_REQUEST['user'] = $_GET['user'] = $_POST['user'] = $_POST['username'];
+                $_REQUEST['user'] = $_GET['user'] = $_POST['user'] = $user['member_name'];
                 $_REQUEST['passwrd'] = $_GET['passwrd'] = $_POST['passwrd'] = $_POST['password'];
                 $_REQUEST['cookielength'] = $_GET['cookielength'] = $_POST['cookielength'] = -1;
                 $request_name = 'login';
@@ -1751,6 +1754,9 @@ function before_action_sign_in()
             {
                 if(!empty($_POST['username']))
                 {
+                    $user2 = get_user_by_name_or_email($_POST['username']);
+                    if(isset($user2['id_member']) && !empty($user2['id_member'])) return error_status(1);
+
                     //prepare reg parameter
                     $_REQUEST['action'] = $_GET['action'] = $_POST['action'] = '';
                     $_REQUEST['passwrd'] = $_GET['passwrd'] = $_POST['passwrd'] = $_POST['password'];
@@ -1794,13 +1800,13 @@ function before_action_sign_in()
     }
     else
     {
-        $user = get_user_by_name_or_email($email_response['email']);
+        $user = get_user_by_name_or_email($email_response['email'], true);
         if(isset($user['id_member']) && !empty($user['id_member']))
         {
             //prepare login parameter
             $_REQUEST['action'] = $_GET['action'] = $_POST['action'] = 'login2';
             $_POST['tid_sign_in'] = true;
-            $_REQUEST['user'] = $_GET['user'] = $_POST['user'] = $_POST['username'];
+            $_REQUEST['user'] = $_GET['user'] = $_POST['user'] = $user['member_name'];
             $_REQUEST['passwrd'] = $_GET['passwrd'] = $_POST['passwrd'] = $_POST['password'];
             $_REQUEST['cookielength'] = $_GET['cookielength'] = $_POST['cookielength'] = -1;
             $request_name = 'login';

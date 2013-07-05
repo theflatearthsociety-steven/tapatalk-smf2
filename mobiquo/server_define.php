@@ -21,7 +21,8 @@ $server_param = array(
         'function'  => 'sign_in_func',
         'signature' => array(array($xmlrpcStruct,$xmlrpcString, $xmlrpcString, $xmlrpcBase64, $xmlrpcBase64,$xmlrpcBase64),
                              array($xmlrpcStruct,$xmlrpcString, $xmlrpcString, $xmlrpcBase64, $xmlrpcBase64),
-                             array($xmlrpcStruct,$xmlrpcString, $xmlrpcString, $xmlrpcBase64)),
+                             array($xmlrpcStruct,$xmlrpcString, $xmlrpcString, $xmlrpcBase64),
+                             array($xmlrpcStruct,$xmlrpcString, $xmlrpcString)),
         'docstring' => 'login need three parameters,the first is user name(Base64), second and thrid is token and code(String).',
     ),
     
