@@ -1,38 +1,37 @@
 <?php
 
-$app_ios_id = isset($modSettings['tp_app_ios_id']) ? $modSettings['tp_app_ios_id'] : '';;
 $app_kindle_url = isset($modSettings['tp_kindle_url']) ? $modSettings['tp_kindle_url'] : '';
 $app_android_url = isset($modSettings['tp_android_url']) ? $modSettings['tp_android_url'] : '';
+$app_ios_id = isset($modSettings['tp_app_ios_id']) ? $modSettings['tp_app_ios_id'] : '';;
 
-$app_forum_name = !empty($GLOBALS['mbname'])? $GLOBALS['mbname'] : '';;
 $app_banner_message = isset($modSettings['tp_app_banner_msg']) ? $modSettings['tp_app_banner_msg'] : '';
+$app_banner_message = preg_replace('/\r\n/','<br>',$app_banner_message);
 
+$is_mobile_skin = false;
 $app_location_url = get_scheme_url();
 $tapatalk_dir_url = $boardurl. '/mobiquo';
+$app_forum_name = !empty($GLOBALS['mbname'])? $GLOBALS['mbname'] : '';;
 
-$context['html_headers'] .= '
-<!-- Tapatalk Detect head start -->
-<link   href="'.$tapatalk_dir_url.'/smartbanner/appbanner.css" rel="stylesheet" type="text/css" media="screen">
-<script type="text/javascript">
-    var is_mobile_skin      = 0;
-    var app_ios_id          = "'.intval($app_ios_id).'";
-    var app_forum_name      = "'.addslashes($app_forum_name).'";
-    var app_android_url     = "'.addslashes($app_android_url).'";
-    var app_kindle_url      = "'.addslashes($app_kindle_url).'";
-    var app_location_url    = "'.addslashes($app_location_url).'";
-    var app_banner_message  = "'.addslashes($app_banner_message).'";
-</script>
-<script src="'.$tapatalk_dir_url.'/smartbanner/appbanner.js" type="text/javascript"></script>
-<!-- Tapatalk Detect head end-->
-';
+
+if (file_exists($tapatalk_dir_url . '/smartbanner/head.inc.php'))
+    include($tapatalk_dir_url . '/smartbanner/head.inc.php');
+    
+$context['html_headers'] .= $app_head_include;
 
 if (!isset($context['tapatalk_body_hook']))
     $context['tapatalk_body_hook'] = '';
 
 $context['tapatalk_body_hook'] .= '
 <!-- Tapatalk Detect body start -->
+<style type="text/css">
+.ui-mobile [data-role="page"], .ui-mobile [data-role="dialog"], .ui-page 
+{
+top:auto;
+}
+</style>
 <script type="text/javascript">tapatalkDetect()</script>
 <!-- Tapatalk Detect banner body end -->
+
 ';
 
 function get_scheme_url()
