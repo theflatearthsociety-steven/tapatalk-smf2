@@ -86,8 +86,8 @@ else
 {
     exit;
 }
-ob_end_clean();
 
+$url = '';
 if(isset($user[0]) && !empty($user[0]))
 {
     if(empty($url))
@@ -99,7 +99,9 @@ if(isset($user[0]) && !empty($user[0]))
         if(isset($GLOBALS['memberContext'][$memID]['avatar']['href']))
         {
             $url = $GLOBALS['memberContext'][$memID]['avatar']['href'];
+            header("Location: $url", 0, 303);
         }
     }
 }
-header("Location: $url", 0, 303);
+ob_end_clean();
+
