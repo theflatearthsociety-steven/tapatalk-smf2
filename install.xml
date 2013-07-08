@@ -190,7 +190,7 @@ $txt['on_byo'] = 'On App Of This Forum';]]></add>
         </file>
         <file name="$themedir/index.template.php">
         <operation>
-            <search position="after"><![CDATA[function template_body_above()
+            <search position="before"><![CDATA[function template_body_above()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;]]></search>
             <add><![CDATA[	echo $context['tapatalk_body_hook'];
