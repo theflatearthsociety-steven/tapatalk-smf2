@@ -12,9 +12,8 @@ $app_location_url = get_scheme_url();
 $tapatalk_dir_url = $boardurl. '/mobiquo';
 $app_forum_name = !empty($GLOBALS['mbname'])? $GLOBALS['mbname'] : '';;
 
-
-if (file_exists($tapatalk_dir_url . '/smartbanner/head.inc.php'))
-    include($tapatalk_dir_url . '/smartbanner/head.inc.php');
+if (file_exists($boarddir . '/mobiquo/smartbanner/head.inc.php'))
+    include($boarddir . '/mobiquo/smartbanner/head.inc.php');
     
 $context['html_headers'] .= $app_head_include;
 
