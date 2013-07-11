@@ -123,6 +123,7 @@ Please manually change permission of all files under mobiquo/ folder (including 
 For more information please visit tapatalk.com</br>
 <br>
 Thank you! :)';
+
 ]]></add>
         </operation>
         </file>
@@ -149,6 +150,7 @@ $helptxt['tp_ol_icon_path'] = 'Mobile Online Icon appears on Who\'s Online page 
 $helptxt['tp_ol_icon_link'] = 'Target URL when icon is clicked';
 $helptxt['tp_ol_icon_desc'] = 'Mobile Online Icon Title appears on Who\'s Online page to indicate member using Tapatalk app';
 //Tapatalk ends
+
 ]]></add>
         </operation>
         </file>
