@@ -1440,50 +1440,19 @@ function m_get_report_post_func()
 
 function update_push_status_func()
 {
-    global $user_info, $smcFunc;
+    global $user_info, $smcFunc, $boardurl, $modSettings, $request_params;
     
     $status = false;
     if ($user_info['id'])
     {
-        $update_params = array();
-        if (isset($_POST['settings']['all']))
-        {
-            $update_params[] = 'announcement='.($_POST['settings']['all'] ? 1 : 0);
-            $update_params[] = 'pm='.($_POST['settings']['all'] ? 1 : 0);
-            $update_params[] = 'subscribe='.($_POST['settings']['all'] ? 1 : 0);
-            $update_params[] = 'quote='.($_POST['settings']['all'] ? 1 : 0);
-            $update_params[] = 'tag='.($_POST['settings']['all'] ? 1 : 0);                        
-        }
-        else
-        {
-            if (isset($_POST['settings']['ann']))
-                $update_params[] = 'announcement='.($_POST['settings']['ann'] ? 1 : 0);
-            
-            if (isset($_POST['settings']['pm']))
-                $update_params[] = 'pm='.($_POST['settings']['pm'] ? 1 : 0);
-            
-            if (isset($_POST['settings']['sub']))
-                $update_params[] = 'subscribe='.($_POST['settings']['sub'] ? 1 : 0);
-                
-            if (isset($_POST['settings']['sub']))
-                $update_params[] = 'quote='.($_POST['settings']['quote'] ? 1 : 0);
-
-            if (isset($_POST['settings']['sub']))
-                $update_params[] = 'tag='.($_POST['settings']['tag'] ? 1 : 0);
-        }
-        if ($update_params)
-        {
-            $update_params_str = implode(', ', $update_params);
-            
-            $smcFunc['db_query']('', '
-                UPDATE {db_prefix}tapatalk_users
-                SET '.$update_params_str.'
-                WHERE userid = {int:userid}',
-                array(
-                    'userid' => $user_info['id'],
-                )
-            );
-        }
+        $data = array(
+            'url'  => $boardurl,
+            'key'  => isset($modSettings['tp_push_key']) && !empty($modSettings['tp_push_key']) ? $modSettings['tp_push_key'] : '',
+            'uid'  => $user_info['id'],
+            'data' => base64_encode(serialize($request_params[0])),
+        );
+        $url = 'https://directory.tapatalk.com/au_update_push_setting.php';
+        getContentFromRemoteServer($url, 0, $error_msg, 'POST', $data);
         $status = true;
     }
     $result = new xmlrpcval(array(

@@ -908,7 +908,7 @@ function update_push()
 function getEmailFromScription($token, $code, $key = '')
 {
     global $boardurl;
-    
+
     $verification_url = 'http://directory.tapatalk.com/au_reg_verify.php?token='.$token.'&'.'code='.$code.'&key='.$key.'&url='.$boardurl;
     $response = getContentFromRemoteServer($verification_url, 10, $error);
     if($response)
@@ -935,7 +935,7 @@ function getContentFromRemoteServer($url, $holdTime = 0, &$error_msg, $method = 
 {
     //Validate input.
     $vurl = parse_url($url);
-    if ($vurl['scheme'] != 'http')
+    if ($vurl['scheme'] != 'http' && $vurl['scheme'] != 'https')
     {
         $error_msg = 'Error: invalid url given: '.$url;
         return false;
@@ -953,7 +953,15 @@ function getContentFromRemoteServer($url, $holdTime = 0, &$error_msg, $method = 
 
     if(!empty($holdTime) && function_exists('file_get_contents') && $method == 'GET')
     {
-        $response = @file_get_contents($url);
+        $opts = array(
+            $vurl['scheme'] => array(
+                'method' => "GET",
+                'timeout' => $holdTime,
+            )
+        );
+
+        $context = stream_context_create($opts);
+        $response = file_get_contents($url,false,$context);
     }
     else if (@ini_get('allow_url_fopen'))
     {
@@ -965,7 +973,7 @@ function getContentFromRemoteServer($url, $holdTime = 0, &$error_msg, $method = 
 
             if($method == 'POST')
             {
-                $fp = @fsockopen($host, 80, $errno, $errstr, 5);
+                $fp = fsockopen($host, 80, $errno, $errstr, 5);
 
                 if(!$fp)
                 {
@@ -973,7 +981,7 @@ function getContentFromRemoteServer($url, $holdTime = 0, &$error_msg, $method = 
                     return false;
                 }
 
-                $data =  http_build_query($data);
+                $data = http_build_query($data, '', '&');
 
                 fputs($fp, "POST $path HTTP/1.1\r\n");
                 fputs($fp, "Host: $host\r\n");
@@ -993,10 +1001,12 @@ function getContentFromRemoteServer($url, $holdTime = 0, &$error_msg, $method = 
         {
             if($method == 'POST')
             {
-                $params = array('http' => array(
-                    'method' => 'POST',
-                    'content' => http_build_query($data, '', '&'),
-                ));
+                $params = array(
+                    $vurl['scheme'] => array(
+                        'method' => 'POST',
+                        'content' => http_build_query($data, '', '&'),
+                    )
+                );
                 $ctx = stream_context_create($params);
                 $old = ini_set('default_socket_timeout', $holdTime);
                 $fp = @fopen($url, 'rb', false, $ctx);
