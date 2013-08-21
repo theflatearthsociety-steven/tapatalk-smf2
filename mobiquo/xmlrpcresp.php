@@ -32,6 +32,15 @@ function get_config_func()
     if ($user_info['is_guest'] && allowedTo('who_view'))
         $config_list['guest_whosonline'] = new xmlrpcval('1', 'string');
 
+    action_get_board_stat();
+    
+    $stats = array(
+        'user' => new xmlrpcval($modSettings['totalMembers'], 'int'),
+        'topic' => new xmlrpcval($modSettings['totalTopics'], 'int'),
+        'post'   => new xmlrpcval($modSettings['totalMessages'], 'int')
+    );
+    $config_list['stats'] = new xmlrpcval($stats, 'struct');
+
     $response = new xmlrpcval($config_list, 'struct');
 
     return new xmlrpcresp($response);
