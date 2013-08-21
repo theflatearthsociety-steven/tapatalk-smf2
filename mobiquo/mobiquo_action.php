@@ -816,6 +816,21 @@ function action_register()
     }
     if(!empty($memberID) && isset($_POST['tid_sign_in']) && $_POST['tid_sign_in'])
     {
+        //update profile
+        if(isset($_POST['tid_profile']) && !empty($_POST['tid_profile']) && is_array($_POST['tid_profile']))
+        {
+            $profile_vars = array(
+                'avatar' => $_POST['tid_profile']['avatar_url'],
+                'birthdate' => $_POST['tid_profile']['birthday'],
+                'gender' => $_POST['tid_profile']['gender'] == 'male' ? 1 : 2,
+                'location' => $_POST['tid_profile']['location'],
+                'personal_text' => $_POST['tid_profile']['description'],
+                'signature' => $_POST['tid_profile']['signature'],
+                'website_url' => $_POST['tid_profile']['link'],
+            );
+            updateMemberData($memberID, $profile_vars);
+        }
+
         //simulate login
         $request_name = 'login';
         $_REQUEST['action'] = $_GET['action'] = $_POST['action'] = 'login2';
@@ -1721,7 +1736,7 @@ function before_action_sign_in()
     $_REQUEST['username'] = $_GET['username'] = $_POST['username'] = mobiquo_encode($_POST['username']);
     
     if(!isset($modSettings['tp_push_key']) || empty($modSettings['tp_push_key']))
-        get_error('Forum is not configured well, please contact administrator to set up push key for the forum!');
+        $modSettings['tp_push_key'] = '';
 
     $email_response = getEmailFromScription($_POST['token'], $_POST['code'], $modSettings['tp_push_key']);
 
@@ -1733,6 +1748,8 @@ function before_action_sign_in()
     $response_verified = $email_response['result'] && isset($email_response['email']) && !empty($email_response['email']);
     if(!$response_verified)
         return get_error(isset($email_response['result_text'])? $email_response['result_text'] : 'Tapatalk ID session expired, please re-login Tapatalk ID and try again, if the problem persist please tell us.');
+
+    $_POST['tid_profile'] = isset($email_response['profile']) && !empty($email_response['profile']) ? $email_response['profile'] : '';
 
     if(!empty($_POST['email']))
     {

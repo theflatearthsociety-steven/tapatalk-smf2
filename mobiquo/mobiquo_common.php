@@ -905,9 +905,11 @@ function update_push()
 	}
 }
 
-function getEmailFromScription($token, $code, $key)
+function getEmailFromScription($token, $code, $key = '')
 {
-    $verification_url = 'http://directory.tapatalk.com/au_reg_verify.php?token='.$token.'&'.'code='.$code.'&key='.$key;
+    global $boardurl;
+    
+    $verification_url = 'http://directory.tapatalk.com/au_reg_verify.php?token='.$token.'&'.'code='.$code.'&key='.$key.'&url='.$boardurl;
     $response = getContentFromRemoteServer($verification_url, 10, $error);
     if($response)
         $result = json_decode($response, true);
