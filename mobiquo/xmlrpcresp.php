@@ -1341,6 +1341,11 @@ function xmlresptrue()
     return new xmlrpcresp($result);
 }
 
+function report_post_func()
+{
+    return xmlresptrue();
+}
+
 function upload_attach_func()
 {
     global $attachIDs, $group_id;
