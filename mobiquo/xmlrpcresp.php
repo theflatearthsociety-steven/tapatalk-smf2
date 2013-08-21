@@ -97,7 +97,7 @@ function login_func()
             ), 'struct');
         }
     }
-    
+
     $response = new xmlrpcval(array(
         'result'        => new xmlrpcval($login_status, 'boolean'),
         'result_text'   => new xmlrpcval($result_text, 'base64'),
@@ -109,6 +109,7 @@ function login_func()
         'username'      => new xmlrpcval(basic_clean($profile['real_name']), 'base64'),
         'email'         => new xmlrpcval($profile['email_address'], 'base64'),
         'usergroup_id'  => new xmlrpcval($usergroup_id, 'array'),
+        'register'      => new xmlrpcval(isset($_POST['emailActivate']) && $_POST['emailActivate'], 'boolean'),
         'max_attachment'=> new xmlrpcval($modSettings['attachmentNumPerPostLimit'], 'int'),
         'max_png_size'  => new xmlrpcval($modSettings['attachmentSizeLimit']*1024, 'int'),
         'max_jpg_size'  => new xmlrpcval($modSettings['attachmentSizeLimit']*1024, 'int'),
