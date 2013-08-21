@@ -372,7 +372,7 @@ function get_thread_func()
                 'is_closed'      => new xmlrpcval($context['is_locked'], 'boolean'),
                 'position'       => new xmlrpcval($context['new_position'], 'int'),
                 'can_move'       => new xmlrpcval($context['can_move'], 'boolean'),
-
+                'can_report'     => new xmlrpcval(true, 'boolean'),
 //                'is_very_hot'           => new xmlrpcval($context['is_very_hot'] ? true : false, 'boolean'),
 //                'is_hot'                => new xmlrpcval($context['is_hot'] ? true : false, 'boolean'),
 //                'is_approved'           => new xmlrpcval($context['is_approved'] ? true : false, 'boolean'),
