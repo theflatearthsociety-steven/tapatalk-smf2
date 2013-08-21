@@ -4,8 +4,6 @@ function tapatalk_push_reply($post_id)
 {
     global $user_info, $context, $smcFunc, $boardurl, $modSettings;
 
-    if(!isset($modSettings['tp_pushEnabled']) || !$modSettings['tp_pushEnabled'])
-        return;
     //subscribe push
     $pushed_user_ids = array();
     if ($context['current_topic'] && $post_id && (function_exists('curl_init') || ini_get('allow_url_fopen')))
@@ -50,8 +48,6 @@ function tapatalk_push_quote_tag($post_id, $newtopic = false, $pushed_user_ids =
 {
     global $user_info, $context, $smcFunc, $boardurl, $modSettings, $topic;
     
-    if(!isset($modSettings['tp_pushEnabled']) || !$modSettings['tp_pushEnabled'])
-        return;
     if (($newtopic ? $topic : $context['current_topic']) && isset($_POST['message']) && $post_id && (function_exists('curl_init') || ini_get('allow_url_fopen')))
     {
         $message = $_POST['message'];
@@ -148,8 +144,6 @@ function tapatalk_push_pm()
 {
     global $user_info, $smcFunc, $boardurl, $modSettings, $context;
 
-    if(!isset($modSettings['tp_pushEnabled']) || !$modSettings['tp_pushEnabled'] || (!function_exists('curl_init') && !ini_get('allow_url_fopen')))
-        return;
     $sent_recipients = !empty($context['send_log']) && !empty($context['send_log']['sent']) ? array_keys($context['send_log']['sent']) : array();
 
     if (isset($sent_recipients) && !empty($sent_recipients) && isset($_POST['subject']))

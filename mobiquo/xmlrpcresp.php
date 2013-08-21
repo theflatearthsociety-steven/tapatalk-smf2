@@ -8,8 +8,8 @@ function get_config_func()
 
     $config_list = array(
         'is_open'    => new xmlrpcval( ($maintenance == 0 && $modSettings['tapatalkEnabled']) ? true : false, 'boolean'),
-        'guest_okay' => new xmlrpcval($modSettings['allow_guestAccess'] && $modSettings['tp_guestOkayEnabled']? true : false, 'boolean'),
-        'push'       => new xmlrpcval(isset($modSettings['tp_pushEnabled'])&& $modSettings['tp_pushEnabled']? '1': '0','string'),
+        'guest_okay' => new xmlrpcval($modSettings['allow_guestAccess']? true : false, 'boolean'),
+        'push'       => new xmlrpcval('1','string'),
         'reg_url'       => new xmlrpcval($modSettings['tp_register_page_url'],'string'),
         'result_text'=> new xmlrpcval($maintenance == 1 ? $mmessage : ($modSettings['tapatalkEnabled']? '' : 'Sorry, taptalk is disabled by this forum administrator') , 'base64'),
         'inappreg' => new xmlrpcval(($modSettings['registration_method'] != 3 && isset($modSettings['tp_tapatalkRegisterEnabled']) && $modSettings['tp_tapatalkRegisterEnabled'] )? '1': '0','string'),
@@ -85,31 +85,19 @@ function login_func()
     else
         $avatar = '';
     $push_status = array();
-    if($login_status && !empty($user_info['id']) && isset($modSettings['tp_pushEnabled'])&& $modSettings['tp_pushEnabled'])
+    if($login_status && !empty($user_info['id']))
     {
-        $request = $smcFunc['db_query']('', '
-            SELECT tu.*
-            FROM {db_prefix}tapatalk_users tu
-            WHERE tu.userid = {int:userid}',
-            array(
-                'userid' => $user_info['id'],
-            )
-        );
-        while($row = $smcFunc['db_fetch_assoc']($request))
+        $support_types = array('tag','quote','sub','pm');
+
+        foreach($support_types as $name)
         {
-            foreach($row as $name => $value)
-            {
-                $display_name = getStarndardNameByTableKey($name);
-                if($display_name)
-                {
-                    $push_status[] = new xmlrpcval(array(
-                        'name'  => new xmlrpcval($display_name, 'string'),
-                        'value' => new xmlrpcval((boolean)$value, 'boolean')
-                    ), 'struct');
-                }
-            }
+            $push_status[] = new xmlrpcval(array(
+                'name'  => new xmlrpcval($name, 'string'),
+                'value' => new xmlrpcval(true, 'boolean')
+            ), 'struct');
         }
     }
+    
     $response = new xmlrpcval(array(
         'result'        => new xmlrpcval($login_status, 'boolean'),
         'result_text'   => new xmlrpcval($result_text, 'base64'),

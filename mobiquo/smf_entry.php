@@ -173,8 +173,6 @@ function smf_main()
             get_error($txt['only_members_can_access']);
             //require_once($sourcedir . '/Subs-Auth.php');
             //return 'KickGuest';
-        } else {
-            $modSettings['tp_guestOkayEnabled'] = 0;
         }
     }
     

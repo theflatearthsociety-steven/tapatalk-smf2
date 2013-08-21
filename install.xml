@@ -77,9 +77,7 @@ $txt['tp_rebranding_settings'] = 'Rebranding Settings';]]></add>
             <add><![CDATA[
 //Tapatalk
 $txt['tapatalktitle'] = 'Tapatalk Settings';
-$txt['tp_pushEnabled'] = 'Enable Tapatalk Push Notification';
 $txt['tapatalkEnabled'] = 'Enable tapatalk';
-$txt['tp_guestOkayEnabled'] = 'Enable forum view for guest by tapatalk';
 $txt['tp_tapatalkRegisterEnabled'] = 'In-app Registration';
 $txt['tp_allow_usergroup'] = 'Usergroup allowed on Tapatalk';
 $txt['tp_general_settings'] = 'General';
@@ -95,7 +93,7 @@ $txt['tp_rebranding_settingsDesc'] = 'Settings for users who have built their ow
 $txt['tp_select_boards'] = 'Select Boards to HIDE on Tapatalk';
 $txt['tp_disable_newtopic'] = 'Disable New Topic For Boards';
 $txt['tp_register_page_url'] = 'Register page url';
-$txt['tp_push_key'] = 'Push Notification Key';
+$txt['tp_push_key'] = 'Tapatalk API Key';
 //Tapatalk BYO
 $txt['tp_app_banner_msg'] = 'BYO App Banner Message';
 $txt['tp_app_ios_id'] = 'BYO iOS App ID';
@@ -133,8 +131,6 @@ Thank you! :)';
             <search position="after"><![CDATA[?>]]></search>
             <add><![CDATA[//Tapatalk start
 $helptxt['tapatalkEnabled'] = 'Enable tapatalk for your forum.';
-$helptxt['tp_pushEnabled'] = 'Allows user to receive mobile Push Notification from your forum.';
-$helptxt['tp_guestOkayEnabled'] = 'Allow non-registered users to access your forum via Tapatalk.';
 $helptxt['tp_tapatalkRegisterEnabled'] = 'Allows Tapatalk users to create new account, change password and update email address in-app.';
 $helptxt['tp_register_page_url'] = 'Registration URL relative to your forum root path';
 $helptxt['tp_push_key'] = 'Optional. To improve the quality of Push Notification from your forum, please fill-in copy and paste the Push Notification Key from Tapatalk Forum Owner Area to here.';

@@ -39,12 +39,10 @@ else
     $forum_url =  get_forum_path();
 
     $table_exist = mobi_table_exist('tapatalk_users') ?'Yes' : 'No';
-    $option_status = isset( $modSettings['tp_pushEnabled'] ) ? ($modSettings['tp_pushEnabled'] ? 'On' : 'Off') : 'Unset';
 
     $output .="<br>Current forum url: ".$forum_url."<br>";
     $output .="Current server IP: ".$ip."<br>";
     $output .="Tapatalk user table existence:".$table_exist."<br>";
-    $output .="Push Notification Option status:".$option_status."<br>";
     if(isset($modSettings['push_slug']))
     {
         $push_slug = unserialize(base64_decode($modSettings['push_slug']));
