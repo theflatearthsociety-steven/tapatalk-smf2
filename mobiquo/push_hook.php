@@ -1,5 +1,5 @@
 <?php
-error_reporting(-1);
+error_reporting(0);
 function tapatalk_push_reply($post_id)
 {
     global $user_info, $context, $smcFunc, $boardurl, $modSettings;
@@ -12,7 +12,7 @@ function tapatalk_push_reply($post_id)
             SELECT ts.id_member
             FROM {db_prefix}log_notify ts
             LEFT JOIN {db_prefix}tapatalk_users tu ON (ts.id_member=tu.userid)
-            WHERE ts.id_topic = {int:topic_id} AND tu.subscribe=1',
+            WHERE ts.id_topic = {int:topic_id}',
             array(
                 'topic_id' => $context['current_topic'],
             )
@@ -62,7 +62,7 @@ function tapatalk_push_quote_tag($post_id, $newtopic = false, $pushed_user_ids =
                 $request = $smcFunc['db_query']('', '
                     SELECT tu.userid
                     FROM {db_prefix}tapatalk_users tu
-                    WHERE tu.quote = 1 AND tu.userid IN ({'.(is_array($quote_ids) ? 'array_int': 'int').':quoteids})' ,
+                    WHERE tu.userid IN ({'.(is_array($quote_ids) ? 'array_int': 'int').':quoteids})' ,
                     array(
                         'quoteids' => $quote_ids,
                     )
@@ -107,7 +107,7 @@ function tapatalk_push_quote_tag($post_id, $newtopic = false, $pushed_user_ids =
                 $request = $smcFunc['db_query']('', '
                     SELECT tu.userid
                     FROM {db_prefix}tapatalk_users tu
-                    WHERE tu.tag = 1 AND tu.userid IN ({array_int:tag_ids})' ,
+                    WHERE tu.userid IN ({array_int:tag_ids})' ,
                     array(
                         'tag_ids' => $tag_ids,
                     )
@@ -168,7 +168,7 @@ function tapatalk_push_pm()
             $request = $smcFunc['db_query']('', '
                 SELECT tu.userid
                 FROM {db_prefix}tapatalk_users tu
-                WHERE tu.userid IN ({array_int:recipient_to}) AND tu.pm = 1',
+                WHERE tu.userid IN ({array_int:recipient_to})',
                 array(
                     'recipient_to' => $sent_recipients,//$recipientList['to'],
                 )
