@@ -1608,6 +1608,8 @@ function prefetch_account_func()
 {
     global $context, $user_profile, $settings, $scripturl, $modSettings;
 
+    if(empty($_REQUEST['u']))
+        return get_error();
     loadMemberData($_REQUEST['u']);
     $profile = $user_profile[$_REQUEST['u']];
     if (!empty($settings['show_user_images']) && empty($profile['options']['show_no_avatars']))
