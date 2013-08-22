@@ -1606,14 +1606,20 @@ function forget_password_func()
 
 function prefetch_account_func()
 {
-    global $context, $txt, $modSettings, $user_info, $smcFunc;
-    
+    global $context, $user_profile, $settings, $scripturl, $modSettings;
+
+    loadMemberData($_REQUEST['u']);
+    $profile = $user_profile[$_REQUEST['u']];
+    if (!empty($settings['show_user_images']) && empty($profile['options']['show_no_avatars']))
+        $avatar = $profile['avatar'] == '' ? ($profile['id_attach'] > 0 ? (empty($profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) : '') : (stristr($profile['avatar'], 'http://') ? $profile['avatar'] : $modSettings['avatar_url'] . '/' . $profile['avatar']);
+    else
+        $avatar = '';
     $result = new xmlrpcval(array(
         'result'        => new xmlrpcval(true, 'boolean'),
-        'user_id'         => new xmlrpcval($context['member']['id'], 'string'),
-        'login_name'        => new xmlrpcval(basic_clean($context['member']['username']), 'base64'),
-        'display_name'        => new xmlrpcval(basic_clean($context['member']['name']), 'base64'),
-        'avatar'                => new xmlrpcval($context['member']['avatar']['href'], 'string'),
+        'user_id'         => new xmlrpcval($user_profile[$_REQUEST['u']]['id_member'], 'string'),
+        'login_name'        => new xmlrpcval(basic_clean($user_profile[$_REQUEST['u']]['member_name']), 'base64'),
+        'display_name'        => new xmlrpcval(basic_clean($user_profile[$_REQUEST['u']]['real_name']), 'base64'),
+        'avatar'                => new xmlrpcval($avatar, 'string'),
     ), 'struct');
     
     return new xmlrpcresp($result);

@@ -348,7 +348,7 @@ switch ($request_name) {
         break;
     case 'prefetch_account':
         if ($params_num = 1) {
-            $_GET['action'] = 'profile';
+            $_GET['action'] = 'prefetch_account';
             $_GET['email'] = $request_params[0];
         } else {
             get_error('Parameter Error');

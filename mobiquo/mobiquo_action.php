@@ -2397,3 +2397,7 @@ function before_action_prefetch_account()
     $user = get_user_by_name_or_email($_GET['email'] , true);
     $_REQUEST['u'] = $_POST['u'] = $_GET['u'] = isset($user['id_member']) && !empty($user['id_member']) ? $user['id_member'] : 0;
 }
+
+function action_prefetch_account()
+{
+}
