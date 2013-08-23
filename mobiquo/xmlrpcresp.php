@@ -1626,3 +1626,39 @@ function prefetch_account_func()
     
     return new xmlrpcresp($result);
 }
+
+function search_user_func()
+{
+    global $user_lists;
+    
+    $page = (empty($_POST['page']) || $_POST['page'] < 0 )? 1 : $_POST['page'];
+    $perpage = (empty($_POST['perpage']) || $_POST['perpage'] < 0)? 20 : $_POST['perpage'];
+    $start = ($page - 1)*$perpage;
+    $limit = $page * $perpage;
+    
+    $total = count($user_lists);
+    $return_user_lists = array();
+
+    
+    if(!empty($user_lists))
+    {
+        $count = 0;
+        foreach ($user_lists as $user)
+        {
+            if(($count > $start -1) && ($count < $limit))
+            $return_user_lists[] = new xmlrpcval(array(
+                'user_name'     => new xmlrpcval($user['username'], 'base64'),
+                'user_id'       => new xmlrpcval($user['userid'], 'string'),
+                'icon_url'      => new xmlrpcval($user['icon_url'], 'string'),
+            ), 'struct');
+            $count ++;
+        }
+    }
+    $suggested_users = new xmlrpcval(array(
+        'total' => new xmlrpcval($total, 'int'),
+        'list'         => new xmlrpcval($return_user_lists, 'array'),
+    ), 'struct');
+    
+    
+    return new xmlrpcresp($suggested_users);
+}

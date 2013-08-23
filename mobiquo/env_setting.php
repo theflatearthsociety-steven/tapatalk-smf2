@@ -346,6 +346,12 @@ switch ($request_name) {
             get_error('Parameter Error');
         }
         break;
+    case 'search_user':
+        $_GET['suggest_type'] = 'member';
+        $_GET['search'] = $request_params[0];
+        $_POST['page'] = $request_params[1];
+        $_POST['perpage'] = $request_params[2];
+        break;
     case 'prefetch_account':
         if ($params_num = 1) {
             $_GET['action'] = 'prefetch_account';

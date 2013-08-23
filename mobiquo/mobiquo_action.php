@@ -571,55 +571,55 @@ function get_post_detail($reset = false)
 // Load the installed packages.
 function mobi_loadInstalledPackages()
 {
-	global $boarddir, $smcFunc;
+    global $boarddir, $smcFunc;
 
-	// First, check that the database is valid, installed.list is still king.
-	$install_file = implode('', file($boarddir . '/Packages/installed.list'));
-	if (trim($install_file) == '')
-	{
-		$smcFunc['db_query']('', '
-			UPDATE {db_prefix}log_packages
-			SET install_state = {int:not_installed}',
-			array(
-				'not_installed' => 0,
-			)
-		);
+    // First, check that the database is valid, installed.list is still king.
+    $install_file = implode('', file($boarddir . '/Packages/installed.list'));
+    if (trim($install_file) == '')
+    {
+        $smcFunc['db_query']('', '
+            UPDATE {db_prefix}log_packages
+            SET install_state = {int:not_installed}',
+            array(
+                'not_installed' => 0,
+            )
+        );
 
-		// Don't have anything left, so send an empty array.
-		return array();
-	}
+        // Don't have anything left, so send an empty array.
+        return array();
+    }
 
-	// Load the packages from the database - note this is ordered by install time to ensure latest package uninstalled first.
-	$request = $smcFunc['db_query']('', '
-		SELECT id_install, package_id, filename, name, version
-		FROM {db_prefix}log_packages
-		WHERE install_state != {int:not_installed}
-		ORDER BY time_installed DESC',
-		array(
-			'not_installed' => 0,
-		)
-	);
-	$installed = array();
-	$found = array();
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		// Already found this? If so don't add it twice!
-		if (in_array($row['package_id'], $found))
-			continue;
+    // Load the packages from the database - note this is ordered by install time to ensure latest package uninstalled first.
+    $request = $smcFunc['db_query']('', '
+        SELECT id_install, package_id, filename, name, version
+        FROM {db_prefix}log_packages
+        WHERE install_state != {int:not_installed}
+        ORDER BY time_installed DESC',
+        array(
+            'not_installed' => 0,
+        )
+    );
+    $installed = array();
+    $found = array();
+    while ($row = $smcFunc['db_fetch_assoc']($request))
+    {
+        // Already found this? If so don't add it twice!
+        if (in_array($row['package_id'], $found))
+            continue;
 
-		$found[] = $row['package_id'];
+        $found[] = $row['package_id'];
 
-		$installed[] = array(
-			'id' => $row['id_install'],
-			'name' => $row['name'],
-			'filename' => $row['filename'],
-			'package_id' => $row['package_id'],
-			'version' => $row['version'],
-		);
-	}
-	$smcFunc['db_free_result']($request);
+        $installed[] = array(
+            'id' => $row['id_install'],
+            'name' => $row['name'],
+            'filename' => $row['filename'],
+            'package_id' => $row['package_id'],
+            'version' => $row['version'],
+        );
+    }
+    $smcFunc['db_free_result']($request);
 
-	return $installed;
+    return $installed;
 }
 function action_get_latest_topic()
 {
@@ -1857,48 +1857,48 @@ function before_action_reply_topic()
 
 function before_action_reply_post()
 {
-	global $smcFunc, $topic, $board, $context, $language, $txt;
+    global $smcFunc, $topic, $board, $context, $language, $txt;
 
-	if(empty($_POST['message']))
-		fatal_lang_error('error_no_message');
+    if(empty($_POST['message']))
+        fatal_lang_error('error_no_message');
 
-	$request = $smcFunc['db_query']('', '
-		SELECT t.locked, t.is_sticky, t.id_poll, t.approved, t.id_first_msg, t.id_last_msg, t.id_member_started, t.id_board, m.subject
-		FROM {db_prefix}topics AS t
-			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
-		WHERE t.id_topic = {int:current_topic}
-		LIMIT 1',
-		array(
-			'current_topic' => $topic,
-		)
-	);
-	$topic_info = $smcFunc['db_fetch_assoc']($request);
-	$smcFunc['db_free_result']($request);
+    $request = $smcFunc['db_query']('', '
+        SELECT t.locked, t.is_sticky, t.id_poll, t.approved, t.id_first_msg, t.id_last_msg, t.id_member_started, t.id_board, m.subject
+        FROM {db_prefix}topics AS t
+            INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+        WHERE t.id_topic = {int:current_topic}
+        LIMIT 1',
+        array(
+            'current_topic' => $topic,
+        )
+    );
+    $topic_info = $smcFunc['db_fetch_assoc']($request);
+    $smcFunc['db_free_result']($request);
 
-	// Though the topic should be there, it might have vanished.
-	if (!is_array($topic_info))
-		fatal_lang_error('topic_doesnt_exist');
+    // Though the topic should be there, it might have vanished.
+    if (!is_array($topic_info))
+        fatal_lang_error('topic_doesnt_exist');
 
-	// Did this topic suddenly move? Just checking...
-	if ($topic_info['id_board'] != $board)
-		fatal_lang_error('not_a_topic');
+    // Did this topic suddenly move? Just checking...
+    if ($topic_info['id_board'] != $board)
+        fatal_lang_error('not_a_topic');
 
-	// Get a response prefix (like 'Re:') in the default forum language.
-	if (!isset($context['response_prefix']) && !($context['response_prefix'] = cache_get_data('response_prefix')))
-	{
-		if ($language === $user_info['language'])
-			$context['response_prefix'] = $txt['response_prefix'];
-		else
-		{
-			loadLanguage('index', $language, false);
-			$context['response_prefix'] = $txt['response_prefix'];
-			loadLanguage('index');
-		}
-		cache_put_data('response_prefix', $context['response_prefix'], 600);
-	}
-	if (trim($context['response_prefix']) != '' && $topic_info['subject'] != '' && $smcFunc['strpos']($topic_info['subject'], trim($context['response_prefix'])) !== 0)
-		$_POST['subject'] = $context['response_prefix'] . $topic_info['subject'];
-	
+    // Get a response prefix (like 'Re:') in the default forum language.
+    if (!isset($context['response_prefix']) && !($context['response_prefix'] = cache_get_data('response_prefix')))
+    {
+        if ($language === $user_info['language'])
+            $context['response_prefix'] = $txt['response_prefix'];
+        else
+        {
+            loadLanguage('index', $language, false);
+            $context['response_prefix'] = $txt['response_prefix'];
+            loadLanguage('index');
+        }
+        cache_put_data('response_prefix', $context['response_prefix'], 600);
+    }
+    if (trim($context['response_prefix']) != '' && $topic_info['subject'] != '' && $smcFunc['strpos']($topic_info['subject'], trim($context['response_prefix'])) !== 0)
+        $_POST['subject'] = $context['response_prefix'] . $topic_info['subject'];
+    
 }
 
 function before_action_save_raw_post()
@@ -2151,22 +2151,22 @@ function after_action_get_topic()
 function after_action_login()
 {
     //Add by tapatalk
-	global $request_params, $user_info, $modSettings;
-	if (isset($request_params[3]) && $request_params[3]) 
-	    update_push();
+    global $request_params, $user_info, $modSettings;
+    if (isset($request_params[3]) && $request_params[3]) 
+        update_push();
 
-	if(isset($modSettings['tp_allow_usergroup']) && !empty($modSettings['tp_allow_usergroup']))
-	{
-		$allow_tapatalk = false;
-		$allow_usergroups = explode(',', $modSettings['tp_allow_usergroup']);
-		foreach($user_info['groups'] as $group_id)
-		{
-			if(in_array($group_id, $allow_usergroups))
-				$allow_tapatalk = true;
-		}
-		if(!$allow_tapatalk)
-			get_error('You are not allowed to login via Tapatalk, please contact your forum administrator.');
-	}
+    if(isset($modSettings['tp_allow_usergroup']) && !empty($modSettings['tp_allow_usergroup']))
+    {
+        $allow_tapatalk = false;
+        $allow_usergroups = explode(',', $modSettings['tp_allow_usergroup']);
+        foreach($user_info['groups'] as $group_id)
+        {
+            if(in_array($group_id, $allow_usergroups))
+                $allow_tapatalk = true;
+        }
+        if(!$allow_tapatalk)
+            get_error('You are not allowed to login via Tapatalk, please contact your forum administrator.');
+    }
 }
 
 function before_action_m_ban_user()
@@ -2288,91 +2288,91 @@ function action_forget_password()
     checkSession();
     $where = '';
     $where_params = array();
-	// Coming with a known ID?
-	if(isset($_POST['username']) && $_POST['username'] != '')
-	{
-		$where = 'member_name = {string:member_name}';
-		$where_params['member_name'] = $_POST['username'];
-		$where_params['email_address'] = isset($_POST['email']) ? $_POST['email'] : '';
-	}
+    // Coming with a known ID?
+    if(isset($_POST['username']) && $_POST['username'] != '')
+    {
+        $where = 'member_name = {string:member_name}';
+        $where_params['member_name'] = $_POST['username'];
+        $where_params['email_address'] = isset($_POST['email']) ? $_POST['email'] : '';
+    }
 
-	// You must enter a username/email address.
-	if (empty($where))
-		fatal_lang_error('username_no_exist', false);
+    // You must enter a username/email address.
+    if (empty($where))
+        fatal_lang_error('username_no_exist', false);
 
-	// Find the user!
-	$request = $smcFunc['db_query']('', '
-		SELECT id_member, real_name, member_name, email_address, is_activated, validation_code, lngfile, openid_uri, secret_question
-		FROM {db_prefix}members
-		WHERE ' . $where . '
-		LIMIT 1',
-		array_merge($where_params, array(
-		))
-	);
-	$row = $smcFunc['db_fetch_assoc']($request);
-	if(empty($row))
-		fatal_lang_error('username_no_exist', true);
-	if(isset($_POST['verified']) && $_POST['verified'] && $row['email_address'] == $_POST['email'])
-	{
-	    $_POST['reminder_type'] = 'no-reminder';
-	}
-	else{
-	    $_POST['reminder_type'] = 'email';
-	    $_POST['verified'] = false;
+    // Find the user!
+    $request = $smcFunc['db_query']('', '
+        SELECT id_member, real_name, member_name, email_address, is_activated, validation_code, lngfile, openid_uri, secret_question
+        FROM {db_prefix}members
+        WHERE ' . $where . '
+        LIMIT 1',
+        array_merge($where_params, array(
+        ))
+    );
+    $row = $smcFunc['db_fetch_assoc']($request);
+    if(empty($row))
+        fatal_lang_error('username_no_exist', true);
+    if(isset($_POST['verified']) && $_POST['verified'] && $row['email_address'] == $_POST['email'])
+    {
+        $_POST['reminder_type'] = 'no-reminder';
+    }
+    else{
+        $_POST['reminder_type'] = 'email';
+        $_POST['verified'] = false;
 
-	}
-	// find the user?
-	if ($smcFunc['db_num_rows']($request) == 0)
-		fatal_lang_error('username_no_exist', false);
+    }
+    // find the user?
+    if ($smcFunc['db_num_rows']($request) == 0)
+        fatal_lang_error('username_no_exist', false);
 
-	$context['account_type'] = !empty($row['openid_uri']) ? 'openid' : 'password';
+    $context['account_type'] = !empty($row['openid_uri']) ? 'openid' : 'password';
 
-	// If the user isn't activated/approved, give them some feedback on what to do next.
-	if ($row['is_activated'] != 1)
-	{
-		loadLanguage('Profile');
-		// Awaiting approval...
-		if (trim($row['validation_code']) == '')
-			fatal_error(mobi_lang('registration_not_approved'), false);
-		else
-			fatal_error(mobi_lang('registration_not_activated'), false);
-	}
+    // If the user isn't activated/approved, give them some feedback on what to do next.
+    if ($row['is_activated'] != 1)
+    {
+        loadLanguage('Profile');
+        // Awaiting approval...
+        if (trim($row['validation_code']) == '')
+            fatal_error(mobi_lang('registration_not_approved'), false);
+        else
+            fatal_error(mobi_lang('registration_not_activated'), false);
+    }
 
-	// You can't get emailed if you have no email address.
-	$row['email_address'] = trim($row['email_address']);
-	if ($row['email_address'] == '')
-		fatal_error($txt['no_reminder_email'] . '<br />' . $txt['send_email'] . ' <a href="mailto:' . $webmaster_email . '">webmaster</a> ' . $txt['to_ask_password'] . '.');
+    // You can't get emailed if you have no email address.
+    $row['email_address'] = trim($row['email_address']);
+    if ($row['email_address'] == '')
+        fatal_error($txt['no_reminder_email'] . '<br />' . $txt['send_email'] . ' <a href="mailto:' . $webmaster_email . '">webmaster</a> ' . $txt['to_ask_password'] . '.');
 
-	// If they have no secret question then they can only get emailed the item, or they are requesting the email, send them an email.
-	if ($_POST['reminder_type'] == 'email')
-	{
-		// Randomly generate a new password, with only alpha numeric characters that is a max length of 10 chars.
-		require_once($sourcedir . '/Subs-Members.php');
-		$password = generateValidationCode();
+    // If they have no secret question then they can only get emailed the item, or they are requesting the email, send them an email.
+    if ($_POST['reminder_type'] == 'email')
+    {
+        // Randomly generate a new password, with only alpha numeric characters that is a max length of 10 chars.
+        require_once($sourcedir . '/Subs-Members.php');
+        $password = generateValidationCode();
 
-		require_once($sourcedir . '/Subs-Post.php');
-		$replacements = array(
-			'REALNAME' => $row['real_name'],
-			'REMINDLINK' => $scripturl . '?action=reminder;sa=setpassword;u=' . $row['id_member'] . ';code=' . $password,
-			'IP' => $user_info['ip'],
-			'MEMBERNAME' => $row['member_name'],
-			'OPENID' => $row['openid_uri'],
-		);
+        require_once($sourcedir . '/Subs-Post.php');
+        $replacements = array(
+            'REALNAME' => $row['real_name'],
+            'REMINDLINK' => $scripturl . '?action=reminder;sa=setpassword;u=' . $row['id_member'] . ';code=' . $password,
+            'IP' => $user_info['ip'],
+            'MEMBERNAME' => $row['member_name'],
+            'OPENID' => $row['openid_uri'],
+        );
 
-		$emaildata = loadEmailTemplate('forgot_' . $context['account_type'], $replacements, empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']);
-		$context['description'] = $txt['reminder_' . (!empty($row['openid_uri']) ? 'openid_' : '') . 'sent'];
+        $emaildata = loadEmailTemplate('forgot_' . $context['account_type'], $replacements, empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']);
+        $context['description'] = $txt['reminder_' . (!empty($row['openid_uri']) ? 'openid_' : '') . 'sent'];
 
-		// If they were using OpenID simply email them their OpenID identity.
-		$mail_result = sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], null, null, false, 0);
-		if (empty($row['openid_uri']))
-			// Set the password in the database.
-			updateMemberData($row['id_member'], array('validation_code' => substr(md5($password), 0, 10)));
+        // If they were using OpenID simply email them their OpenID identity.
+        $mail_result = sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], null, null, false, 0);
+        if (empty($row['openid_uri']))
+            // Set the password in the database.
+            updateMemberData($row['id_member'], array('validation_code' => substr(md5($password), 0, 10)));
 
-		// Set up the template.
-		$context['sub_template'] = 'sent';
-		$_POST['result_text'] = $mail_result ? '' : 'Failed to send confirmation email';
-		$_POST['result'] = $mail_result;
-	}
+        // Set up the template.
+        $context['sub_template'] = 'sent';
+        $_POST['result_text'] = $mail_result ? '' : 'Failed to send confirmation email';
+        $_POST['result'] = $mail_result;
+    }
 }
 
 function after_action_create_message()
@@ -2400,4 +2400,47 @@ function before_action_prefetch_account()
 
 function action_prefetch_account()
 {
+}
+
+function action_search_user()
+{
+    global $smcFunc, $user_info, $user_lists, $user_profile, $modSettings, $settings;
+    
+    $_REQUEST['search'] = trim($smcFunc['strtolower']($_REQUEST['search'])) . '*';
+    $_REQUEST['search'] = strtr($_REQUEST['search'], array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_', '&#038;' => '&amp;'));
+
+    // Find the member.
+    $request = $smcFunc['db_query']('', '
+        SELECT id_member, real_name
+        FROM {db_prefix}members
+        WHERE real_name LIKE {string:search}' . (!empty($context['search_param']['buddies']) ? '
+            AND id_member IN ({array_int:buddy_list})' : '') . '
+            AND is_activated IN (1, 11)
+        LIMIT ' . ($smcFunc['strlen']($_REQUEST['search']) <= 2 ? '100' : '800'),
+        array(
+            'buddy_list' => $user_info['buddies'],
+            'search' => $_REQUEST['search'],
+        )
+    );
+
+    $user_lists = array();
+
+    while ($row = $smcFunc['db_fetch_assoc']($request))
+    {
+        $avatar = '';
+        $row['real_name'] = strtr($row['real_name'], array('&amp;' => '&#038;', '&lt;' => '&#060;', '&gt;' => '&#062;', '&quot;' => '&#034;'));
+        
+        loadMemberData($row['id_member']);
+        $profile = $user_profile[$row['id_member']];
+        if (!empty($settings['show_user_images']) && empty($profile['options']['show_no_avatars']))
+            $avatar = $profile['avatar'] == '' ? ($profile['id_attach'] > 0 ? (empty($profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) : '') : (stristr($profile['avatar'], 'http://') ? $profile['avatar'] : $modSettings['avatar_url'] . '/' . $profile['avatar']);
+        else
+            $avatar = '';
+        $user_lists[] = array(
+            'username' => $row['real_name'],
+            'userid' => $row['id_member'],
+            'icon_url' => $avatar,
+        );
+    }
+    $smcFunc['db_free_result']($request);
 }

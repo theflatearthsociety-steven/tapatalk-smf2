@@ -32,7 +32,13 @@ $server_param = array(
                             array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcBase64, $xmlrpcBase64)),
         'docstring' => 'register need four parameters,the first is user name(Base64), second is password(Base64), third is md5(TapatalkID token), fourth is md5 of au_id join email of tapatalk id.',
     ),
-
+    
+    'search_user' => array(
+        'function' => 'search_user_func',
+        'signature' => array(array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcInt, $xmlrpcInt),
+                             array($xmlrpcStruct, $xmlrpcBase64)),
+    ),
+    
     'forget_password' => array(
         'function'  => 'forget_password_func',
         'signature' => array(array($xmlrpcStruct, $xmlrpcBase64),
