@@ -2404,7 +2404,7 @@ function action_prefetch_account()
 
 function action_search_user()
 {
-    global $smcFunc, $user_info, $user_lists, $user_profile, $modSettings, $settings;
+    global $smcFunc, $user_info, $user_lists, $user_profile, $modSettings, $settings, $scripturl;
     
     $_REQUEST['search'] = trim($smcFunc['strtolower']($_REQUEST['search'])) . '*';
     $_REQUEST['search'] = strtr($_REQUEST['search'], array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_', '&#038;' => '&amp;'));
