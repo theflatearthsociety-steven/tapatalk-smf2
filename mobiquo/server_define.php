@@ -522,4 +522,9 @@ $server_param = array(
         'signature' => array(array($xmlrpcStruct, $xmlrpcBase64)),
         'docstring' => 'forget_password need three parameters,the first is user name(Base64), second and thrid is validation token and code(String).',
     ),
+    'ignore_user' => array(
+      'function' => 'ignore_user_func',
+      'signature' => array(array($xmlrpcStruct, $xmlrpcString, $xmlrpcInt),
+                            array($xmlrpcStruct, $xmlrpcString)),
+    ),
 );

@@ -89,23 +89,22 @@ var native_ios_banner = false;
 if (app_ios_id != '-1' && navigator.userAgent.match(/Safari/i) != null &&
     (navigator.userAgent.match(/CriOS/i) == null && window.Number(navigator.userAgent.substr(navigator.userAgent.indexOf('OS ') + 3, 3).replace('_', '.')) >= 6))
 {
-    //banner_location_url = byo_ios_enable ? app_location_url_byo : app_location_url;
-    banner_location_url = byo_ios_enable ? "tapatalk-byo://" : "tapatalk://";   // hard code for tapatalk 1 issue
+    banner_location_url = byo_ios_enable ? app_location_url_byo : app_location_url;
     
     if (navigator.userAgent.match(/iPad/i) != null)
     {
-        document.write('<meta name="apple-itunes-app" content="app-id='+app_ios_hd_id+',app-argument="'+banner_location_url+'">');
+        document.write('<meta name="apple-itunes-app" content="app-id='+app_ios_hd_id+', app-argument='+banner_location_url+', affiliate-data=partnerId=30&siteID=w5J2vu1UnxA" />');
         native_ios_banner = true;
     }
     else if (navigator.userAgent.match(/iPod|iPhone/i) != null)
     {
-        document.write('<meta name="apple-itunes-app" content="app-id='+app_ios_id+',app-argument='+banner_location_url+'">');
+        document.write('<meta name="apple-itunes-app" content="app-id='+app_ios_id+', app-argument='+banner_location_url+', affiliate-data=partnerId=30&siteID=w5J2vu1UnxA" />');
         native_ios_banner = true;
     }
 }
 
 // for those forum system which can not add js in html body
-if (functionCallAfterWindowLoad) addWindowOnload(tapatalkDetect)
+if (!empty(functionCallAfterWindowLoad)) addWindowOnload(tapatalkDetect)
 
 var bannerLoaded = false
 
@@ -132,15 +131,13 @@ function tapatalkDetect()
         app_banner_message = app_banner_message.replace(/\[os_platform\]/gi, 'iPhone');
         app_install_url = app_ios_url;
         
-        //banner_location_url = byo_ios_enable ? app_location_url_byo : app_location_url;
-        banner_location_url = byo_ios_enable ? "tapatalk-byo://" : "tapatalk://";   // hard code for tapatalk 1 issue
+        banner_location_url = byo_ios_enable ? app_location_url_byo : app_location_url;
     }
     else if (navigator.userAgent.match(/iPad/i)) {
         app_banner_message = app_banner_message.replace(/\[os_platform\]/gi, 'iPad');
         app_install_url = app_ios_hd_url;
         
-        //banner_location_url = byo_ios_enable ? app_location_url_byo : app_location_url;
-        banner_location_url = byo_ios_enable ? "tapatalk-byo://" : "tapatalk://";   // hard code for tapatalk 1 issue
+        banner_location_url = byo_ios_enable ? app_location_url_byo : app_location_url;
     }
     else if (navigator.userAgent.match(/Silk/)) {
         app_banner_message = app_banner_message.replace(/\[os_platform\]/gi, 'Kindle');
@@ -283,7 +280,7 @@ function empty(a){
 
 function addtrack()
 {
-    document.write('<img src="http://activate.tapatalk.com/i.gif?host='+window.location.host+'" style="display:none;" border="0" >');
+    document.write('<img src="https://activate.tapatalk.com/i.gif?host='+window.location.host+'" style="display:none;" border="0" >');
 }
 
 /* to get element outer height */

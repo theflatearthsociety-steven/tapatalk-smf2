@@ -1,0 +1,127 @@
+
+Array
+(
+    [1] => Array
+        (
+            [is_online] => 0
+            [id_attach] => 15
+            [filename] => avatar_1_1373107818.png
+            [attachment_type] => 0
+            [signature] => 
+            [personal_text] => 
+            [location] => 
+            [gender] => 0
+            [avatar] => 
+            [id_member] => 1
+            [member_name] => admin
+            [real_name] => admin&amp;displayname
+            [email_address] => euhowzy@gmail.com
+            [hide_email] => 0
+            [date_registered] => 1351150026
+            [website_title] => 
+            [website_url] => 
+            [birthdate] => 0001-01-01
+            [member_ip] => 
+            [member_ip2] => 
+            [icq] => 
+            [aim] => 
+            [yim] => 
+            [msn] => 
+            [posts] => 80
+            [last_login] => 1377248481
+            [karma_good] => 0
+            [id_post_group] => 5
+            [karma_bad] => 0
+            [lngfile] => 
+            [id_group] => 1
+            [time_offset] => 0
+            [show_online] => 1
+            [buddy_list] => 
+            [member_group_color] => #FF0000
+            [member_group] => Administrator
+            [post_group_color] => 
+            [post_group] => Jr. Member
+            [is_activated] => 1
+            [warning] => 0
+            [stars] => 5#staradmin.gif
+            [usertitle] => 
+            [options] => Array
+                (
+                    [admin_preferences] => a:2:{s:2:"sb";s:8:"internal";s:2:"pv";s:7:"classic";}
+                )
+
+        )
+
+)
+Array
+(
+    [1] => Array
+        (
+            [is_online] => 0
+            [id_attach] => 15
+            [filename] => avatar_1_1373107818.png
+            [attachment_type] => 0
+            [signature] => 
+            [personal_text] => 
+            [location] => 
+            [gender] => 0
+            [avatar] => 
+            [id_member] => 1
+            [member_name] => admin
+            [real_name] => admin&amp;displayname
+            [email_address] => euhowzy@gmail.com
+            [hide_email] => 0
+            [date_registered] => 1351150026
+            [website_title] => 
+            [website_url] => 
+            [openid_uri] => 
+            [birthdate] => 0001-01-01
+            [icq] => 
+            [aim] => 
+            [yim] => 
+            [msn] => 
+            [posts] => 80
+            [last_login] => 1377248688
+            [karma_good] => 0
+            [karma_bad] => 0
+            [member_ip] => 
+            [member_ip2] => 
+            [lngfile] => 
+            [id_group] => 1
+            [id_theme] => 0
+            [buddy_list] => 
+            [pm_ignore_list] => 1,6
+            [pm_email_notify] => 0
+            [pm_receive_from] => 1
+            [time_offset] => 0
+            [usertitle] => 
+            [time_format] => 
+            [secret_question] => 
+            [is_activated] => 1
+            [additional_groups] => 
+            [smiley_set] => 
+            [show_online] => 1
+            [total_time_logged_in] => 162781
+            [id_post_group] => 5
+            [notify_announcements] => 1
+            [notify_regularity] => 1
+            [notify_send_body] => 0
+            [notify_types] => 2
+            [url] => 
+            [member_group_color] => #FF0000
+            [member_group] => Administrator
+            [post_group_color] => 
+            [post_group] => Jr. Member
+            [ignore_boards] => 
+            [warning] => 0
+            [stars] => 5#staradmin.gif
+            [password_salt] => dd01
+            [pm_prefs] => 0
+            [options] => Array
+                (
+                    [admin_preferences] => a:2:{s:2:"sb";s:8:"internal";s:2:"pv";s:7:"classic";}
+                )
+
+        )
+
+)

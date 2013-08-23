@@ -86,7 +86,7 @@ function login_func()
     if (!$modSettings['attachmentSizeLimit']) $modSettings['attachmentSizeLimit'] = 5120;
     if (!$modSettings['attachmentNumPerPostLimit']) $modSettings['attachmentNumPerPostLimit'] = 10;
 
-    loadMemberData($user_info['id']);
+    loadMemberData($user_info['id'], false, 'profile');
 
     $profile = $user_profile[$user_info['id']];
     if (!empty($settings['show_user_images']) && empty($profile['options']['show_no_avatars']))
@@ -106,7 +106,6 @@ function login_func()
             ), 'struct');
         }
     }
-
     $response = new xmlrpcval(array(
         'result'        => new xmlrpcval($login_status, 'boolean'),
         'result_text'   => new xmlrpcval($result_text, 'base64'),
@@ -118,6 +117,7 @@ function login_func()
         'username'      => new xmlrpcval(basic_clean($profile['real_name']), 'base64'),
         'email'         => new xmlrpcval($profile['email_address'], 'base64'),
         'usergroup_id'  => new xmlrpcval($usergroup_id, 'array'),
+        'ignored_uids'  => new xmlrpcval($profile['pm_ignore_list'], 'string'),
         'register'      => new xmlrpcval(isset($_POST['emailActivate']) && $_POST['emailActivate'], 'boolean'),
         'max_attachment'=> new xmlrpcval($modSettings['attachmentNumPerPostLimit'], 'int'),
         'max_png_size'  => new xmlrpcval($modSettings['attachmentSizeLimit']*1024, 'int'),
@@ -1661,4 +1661,10 @@ function search_user_func()
     
     
     return new xmlrpcresp($suggested_users);
+}
+
+function ignore_user_func()
+{
+    return xmlresptrue();
+    
 }

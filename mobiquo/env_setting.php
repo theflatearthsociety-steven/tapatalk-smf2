@@ -352,6 +352,15 @@ switch ($request_name) {
         $_POST['page'] = $request_params[1];
         $_POST['perpage'] = $request_params[2];
         break;
+    case 'ignore_user':
+        if(!empty($request_params[0]))
+        {
+            if(isset($request_params[1]) && $request_params[1] === 0)
+                $_GET['remove'] = $request_params[0];
+            else
+                $_POST['new_ignore'] = $request_params[0];
+        }
+        break;
     case 'prefetch_account':
         if ($params_num = 1) {
             $_GET['action'] = 'prefetch_account';

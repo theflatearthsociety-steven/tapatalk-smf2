@@ -2444,3 +2444,52 @@ function action_search_user()
     }
     $smcFunc['db_free_result']($request);
 }
+
+function action_ignore_user()
+{
+    global $txt, $scripturl, $modSettings, $user_info;
+	global $context, $user_profile, $memberContext, $smcFunc;
+	
+	// For making changes!
+	$ignoreArray = $user_info['ignoreusers'];
+
+
+	// Removing a member from the ignore list?
+	if (isset($_GET['remove']) && $user_info['id'])
+	{
+		checkSession('get');
+
+		// Heh, I'm lazy, do it the easy way...
+		foreach ($ignoreArray as $key => $id_remove)
+			if ($id_remove == (int) $_GET['remove'])
+				unset($ignoreArray[$key]);
+
+		// Make the changes.
+		$ignore_list = implode(',', $ignoreArray);
+		updateMemberData($memID, array('pm_ignore_list' => $ignore_list));
+
+		// Redirect off the page because we don't like all this ugly query stuff to stick in the history.
+	}
+	elseif (isset($_POST['new_ignore']) && $_POST['new_ignore'] && $user_info['id'])
+	{
+
+		// Now find out the id_member for the members in question.
+		$request = $smcFunc['db_query']('', '
+			SELECT id_member
+			FROM {db_prefix}members
+			WHERE id_member = {int:new_ignore}',
+			array(
+				'new_ignore' => $_POST['new_ignore'],
+			)
+		);
+
+		// Add the new member to the buddies array.
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$ignoreArray[] = (int) $row['id_member'];
+		$smcFunc['db_free_result']($request);
+
+		// Now update the current users buddy list.
+		$ignore_list = implode(',', $ignoreArray);
+		updateMemberData($memID, array('pm_ignore_list' => $ignore_list));
+	}
+}
