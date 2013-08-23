@@ -168,7 +168,7 @@ function smf_main()
     // If guest access is off, a guest can only do one of the very few following actions.
     elseif ((empty($modSettings['allow_guestAccess']) || !$modSettings['tp_guestOkayEnabled']) && $user_info['is_guest'] && (!isset($_REQUEST['action']) || !in_array($_REQUEST['action'], array('prefetch_account', 'update_password', 'forget_password', 'sign_in', 'coppa', 'login', 'login2', 'register', 'register2', 'reminder', 'activate', 'help', 'smstats', 'mailq', 'verificationcode', 'openidreturn',))))
     {
-        if ($request_name != 'get_config' || $request_name != 'prefetch_account') {
+        if ($request_name != 'get_config' && $request_name != 'prefetch_account') {
             loadLanguage('Login');
             get_error($txt['only_members_can_access']);
             //require_once($sourcedir . '/Subs-Auth.php');
@@ -297,6 +297,7 @@ function smf_main()
     
     // Allow modifying $actionArray easily.
     call_integration_hook('integrate_actions', array(&$actionArray));
+
     // Get the function and file to include - if it's not there, do the board index.
     if (!isset($_REQUEST['action']) || !isset($actionArray[$_REQUEST['action']]))
     {
