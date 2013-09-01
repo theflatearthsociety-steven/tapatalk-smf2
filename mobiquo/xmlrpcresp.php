@@ -228,7 +228,7 @@ function get_thread_func()
     $rpc_post_list = array();
     $post_place = 0;
     $msg_ids = array();
-    $support_post_thanks = isset($modSettings['integrate_pre_include']) && strpos($modSettings['integrate_pre_include'],'$sourcedir/Subs-ThankYou.php') && file_exists('$sourcedir/Subs-ThankYou.php');
+    $support_post_thanks = isset($modSettings['integrate_pre_include']) && strpos($modSettings['integrate_pre_include'],'$sourcedir/Subs-ThankYou.php');
 
     while ($message = get_post_detail()) {
         $attachments = array();
