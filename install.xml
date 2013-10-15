@@ -194,7 +194,8 @@ $txt['on_byo'] = 'On App Of This Forum';]]></add>
             <search position="before"><![CDATA[function template_body_above()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;]]></search>
-            <add><![CDATA[	echo $context['tapatalk_body_hook'];
+            <add><![CDATA[
+	echo $context['tapatalk_body_hook'];
 ]]></add>
         </operation>
         </file>
