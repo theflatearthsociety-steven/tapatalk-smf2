@@ -990,6 +990,7 @@ function getContentFromRemoteServer($url, $holdTime = 0, &$error_msg, $method = 
                 fputs($fp, "Connection: close\r\n\r\n");
                 fputs($fp, $data);
                 fclose($fp);
+                return 1;
             }
             else
             {
