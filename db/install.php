@@ -206,6 +206,18 @@ ADD PRIMARY KEY ( `pushid` ) ',
 	)
 );
 
+$default_settings = array(
+    array('tapatalkEnabled', 1),
+    array('tp_full_ads', 1),
+);
+
+$smcFunc['db_insert']('replace',
+	'{db_prefix}settings',
+	array('variable' => 'string-255', 'value' => 'string-65534'),
+	$default_settings,
+	array('variable')
+);
+
  if($direct_install)
 	echo 'Done....';
  

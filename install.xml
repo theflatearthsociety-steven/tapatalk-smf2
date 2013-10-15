@@ -5,7 +5,8 @@
     <file name="$sourcedir/Load.php">
         <operation>
             <search position="after"><![CDATA[	$context['menu_separator'] = !empty($settings['use_image_buttons']) ? ' ' : ' | ';]]></search>
-            <add><![CDATA[	include($boarddir.'/mobiquo/smartbanner.php');]]></add>
+            <add><![CDATA[	include($boarddir.'/mobiquo/smartbanner.php');
+]]></add>
         </operation>
     </file>
         <file name="$sourcedir/Post.php">
@@ -78,6 +79,7 @@ $txt['tp_rebranding_settings'] = 'Rebranding Settings';]]></add>
 //Tapatalk
 $txt['tapatalktitle'] = 'Tapatalk Settings';
 $txt['tapatalkEnabled'] = 'Enable tapatalk';
+$txt['tp_full_ads'] = 'Mobile Welcome Screen';
 $txt['tp_tapatalkRegisterEnabled'] = 'In-app Registration';
 $txt['tp_allow_usergroup'] = 'Usergroup allowed on Tapatalk';
 $txt['tp_general_settings'] = 'General';
@@ -129,9 +131,10 @@ Thank you! :)';
         <file name="$themedir/languages/Help.english.php">
         <operation>
             <search position="after"><![CDATA[?>]]></search>
-            <add><![CDATA[//Tapatalk start
+            <add><![CDATA[
+//Tapatalk start
 $helptxt['tapatalkEnabled'] = 'Enable tapatalk for your forum.';
-$helptxt['tp_tapatalkRegisterEnabled'] = 'Allows Tapatalk users to create new account, change password and update email address in-app.';
+$helptxt['tp_full_ads'] = 'Tapatalk will show a one time welcoming screen to mobile users to download the free app, the screen will contain your forum logo and branding only, with a button to get the free app.';
 $helptxt['tp_register_page_url'] = 'Registration URL relative to your forum root path';
 $helptxt['tp_push_key'] = 'Optional. To improve the quality of Push Notification from your forum, please fill-in copy and paste the Push Notification Key from Tapatalk Forum Owner Area to here.';
 $helptxt['tp_allow_usergroup'] = 'Allow usergroups to login via Tapatalk, leave this option empty means that all usergroups users can login via Tapatalk. Different usergroups should be departed by comma, for example, "3,11,6" which means only users who belongs to 3,6 and 11 usergroups can login via Tapatalk.';
