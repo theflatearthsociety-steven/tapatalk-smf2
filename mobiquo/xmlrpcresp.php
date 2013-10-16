@@ -224,12 +224,11 @@ function get_topic_func()
 
 function get_thread_func()
 {
-    global $context, $settings, $options, $txt, $smcFunc, $scripturl, $modSettings, $user_profile, $user_info;
+    global $context, $settings, $options, $txt, $smcFunc, $scripturl, $modSettings, $user_profile, $user_info, $topicinfo;
     $rpc_post_list = array();
     $post_place = 0;
     $msg_ids = array();
     $support_post_thanks = isset($modSettings['integrate_pre_include']) && strpos($modSettings['integrate_pre_include'],'$sourcedir/Subs-ThankYou.php');
-
     while ($message = get_post_detail()) {
         $attachments = array();
         if(!empty($message['attachment'])) {
@@ -372,6 +371,7 @@ function get_thread_func()
                 'topic_title'    => new xmlrpcval(basic_clean($context['subject']), 'base64'),
                 'can_subscribe'  => new xmlrpcval($context['can_mark_notify'], 'boolean'),
                 'is_subscribed'  => new xmlrpcval($context['is_marked_notify'], 'boolean'),
+                'is_pool'        => new xmlrpcval($topicinfo['id_poll'], 'boolean'),
                 'can_stick'      => new xmlrpcval($context['can_sticky'], 'boolean'),
                 'is_sticky'      => new xmlrpcval($context['is_sticky'], 'boolean'),
                 'can_reply'      => new xmlrpcval($context['can_reply'], 'boolean'),
