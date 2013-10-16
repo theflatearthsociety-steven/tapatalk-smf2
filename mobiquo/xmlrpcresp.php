@@ -25,12 +25,14 @@ function get_config_func()
             $config_list[$key] = new xmlrpcval($value, 'string');
         }
     }
-
+    
     if ($user_info['is_guest'] && allowedTo('search_posts'))
         $config_list['guest_search'] = new xmlrpcval('1', 'string');
 
     if ($user_info['is_guest'] && allowedTo('who_view'))
         $config_list['guest_whosonline'] = new xmlrpcval('1', 'string');
+    if(isset($modSettings['tp_push_key']) && !empty($modSettings['tp_push_key']))
+        $config_list['api_key'] = new xmlrpcval(md5($modSettings['tp_push_key']), 'string');
 
     action_get_board_stat();
     
