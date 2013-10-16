@@ -204,6 +204,16 @@ switch ($request_name) {
         }
         break;
     case 'get_box_info': break;
+    case 'get_recommended_user':
+        if ($params_num < 4) {
+            $page = isset($request_params[0]) && !empty($request_params[0]) ? $request_params[0] : 1;
+            $perpage = isset($request_params[1]) && !empty($request_params[1]) ? $request_params[1] : 20;
+            $_GET['start'] = ($page-1) * $perpage;
+            $_GET['end'] = $_GET['start'] + $perpage;
+            $_GET['mode'] = $request_params[2];
+        } else {
+            get_error('Parameter Error');
+        }
     case 'get_config': break;
     case 'get_forum': 
         if($params_num < 3)

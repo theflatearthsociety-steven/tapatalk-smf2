@@ -1672,3 +1672,105 @@ function ignore_user_func()
     return xmlresptrue();
     
 }
+
+function get_recommended_user_func()
+{
+    global $context, $smcFunc, $user_info, $profile, $user_profile, $settings, $scripturl;
+
+    $mobi_api_key = loadAPIKey();
+    $user_id = $user_info['id'];
+
+    if(!empty($mobi_api_key) && !empty($user_id))
+    {
+        $return_user_lists = array();
+        $total = 0;
+        $user_lists = $context['recommend'];
+        $start = $_REQUEST['start'];
+        $end = $_REQUEST['end'];
+        $return_user_lists = array();
+        if(isset($user_lists[$user_id])) unset($user_lists[$user_id]);
+        
+        if(!empty($user_lists))
+        {
+            if(isset($_REQUEST['mode']) && $_REQUEST['mode'] == 2)
+            {
+                $check_users = array_keys($user_lists);
+                $valid_users_result = $smcFunc['db_query']('', '
+                    SELECT *
+                    FROM {db_prefix}tapatalk_users 
+                    WHERE userid IN ({array_int:check_users})',
+                    array(
+                        'check_users' => $check_users
+                    )
+                );
+                
+                while ($tapausers = $smcFunc['db_fetch_assoc']($valid_users_result))
+                {
+                    unset($user_lists[$tapausers['userid']]);
+                }
+                if($is_tapa_user) continue;
+            }
+            $total = count($user_lists);
+            arsort($user_lists);
+            $num_track = 0;
+            foreach ($user_lists as $uid => $score)
+            {
+                if($num_track > $start - 1 && $num_track < $end)
+                {
+                    loadMemberData($uid);
+                    $profile = $user_profile[$uid];
+                    if (!empty($settings['show_user_images']) && empty($profile['options']['show_no_avatars']))
+                    {
+                        $avatar = $profile['avatar'] == '' ? ($profile['id_attach'] > 0 ? (empty($profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) : '') : (stristr($profile['avatar'], 'http://') ? $profile['avatar'] : $modSettings['avatar_url'] . '/' . $profile['avatar']);
+                    }
+                    else
+                        $avatar = '';
+                    if(!empty($profile))
+                    {
+                        $return_user_lists[] = new xmlrpcval(array(
+                            'username'   => new xmlrpcval(basic_clean($user_profile[$uid]['member_name']), 'base64'),
+                            'user_id'    => new xmlrpcval($user_profile[$uid]['id_member'], 'string'),
+                            'icon_url'   => new xmlrpcval($avatar, 'string'),
+                            'enc_email'  => new xmlrpcval(base64_encode(encrypt(trim($profile['email_address']), $mobi_api_key)), 'string'),
+                        ), 'struct');
+                    }
+                    $num_track ++;
+                }
+            }
+        }
+    }
+
+    $suggested_users = new xmlrpcval(array(
+        'total' => new xmlrpcval($total, 'int'),
+        'list'  => new xmlrpcval($return_user_lists, 'array'),
+    ), 'struct');
+
+    return new xmlrpcresp($suggested_users);
+}
+    if(isset($_GET['u']) && !empty($_GET['u']))
+        $queried_userid = $_GET['u'];
+    else
+    {
+        $loaded_id = loadMemberData($_GET['user'], true);
+        $queried_userid = is_array($loaded_id)? $loaded_id[0] : $loaded_id;
+    }
+    $xmlrpc_user_info = new xmlrpcval(array(
+        'user_id'               => new xmlrpcval($context['member']['id'], 'string'),
+        'post_count'            => new xmlrpcval(!isset($context['disabled_fields']['posts']) ? $context['member']['posts'] : '', 'int'),
+        'reg_time'              => new xmlrpcval($context['member']['registered'], 'dateTime.iso8601'),
+        'reg_timestamp'         => new xmlrpcval($context['member']['registered_timestamp'], 'string'),
+        'timestamp'             => new xmlrpcval($context['member']['last_login_timestamp'], 'string'),
+        'last_activity_time'    => new xmlrpcval($context['member']['last_login'], 'dateTime.iso8601'),
+        'icon_url'              => new xmlrpcval($context['member']['avatar']['href']),
+        'username'              => new xmlrpcval(basic_clean($context['member']['name']), 'base64'),
+        'display_text'          => new xmlrpcval(basic_clean($context['member']['blurb']), 'base64'),
+        'is_online'             => new xmlrpcval($context['member']['online']['is_online'], 'boolean'),
+        'can_ban'               => new xmlrpcval(!empty($context['menu_data_1']['sections']['profile_action']['areas']['banuser']), 'boolean'),
+        'is_ban'                => new xmlrpcval($context['member']['is_banned'], 'boolean'),
+        'can_upload'            => new xmlrpcval(allowedTo('profile_upload_avatar') && $context['user']['is_owner'], 'boolean'),
+        'can_send_pm'           => new xmlrpcval($context['can_send_pm'], 'boolean'),
+        'accept_pm'             => new xmlrpcval(allowedTo('pm_send'), 'boolean'),
+//        'is_buddy'              => new xmlrpcval($context['member']['is_buddy'], 'boolean'),
+//        'can_have_buddy'        => new xmlrpcval(!empty($context['can_have_buddy']) && !$context['user']['is_owner'], 'boolean'),
+        'custom_fields_list'    => new xmlrpcval($custom_fields, 'array'),
+    ), 'struct');

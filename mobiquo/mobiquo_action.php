@@ -2493,3 +2493,97 @@ function action_ignore_user()
 		updateMemberData($memID, array('pm_ignore_list' => $ignore_list));
 	}
 }
+
+function action_get_recommended_user()
+{
+    global $context, $user_info, $smcFunc;
+
+    if(empty($user_info['id']))
+    {
+        $context['recommend'] = array();
+        return;
+    }
+    $user_lists = array();
+
+    //add_watched_your_thread_users
+    $thread_ids = array();
+    $request = $smcFunc['db_query']('', '
+        SELECT t.id_topic
+        FROM {db_prefix}topics as t
+        WHERE t.id_member_started = {int:current_member}
+            AND approved = 1',
+        array(
+            'current_member' => $user_info['id']
+        )
+    );
+    while ($row = $smcFunc['db_fetch_assoc']($request))
+    {
+        $thread_ids[] = $row['id_topic'];
+    }
+	$request_members = $smcFunc['db_query']('', '
+		SELECT
+			ln.id_member 
+		FROM {db_prefix}log_notify as ln
+		WHERE ln.id_topic IN ({array_int:topic_list})',
+		array(
+			'topic_list' => $thread_ids,
+		)
+	);
+    while ($row = $smcFunc['db_fetch_assoc']($request_members))
+    {
+        $user_lists = merge_users($user_lists, array($row['id_member'] => 3));
+    }
+
+    //add_thread_watch_users
+	$request_members = $smcFunc['db_query']('', '
+		SELECT
+			t.id_member_started
+		FROM {db_prefix}log_notify ln 
+		LEFT JOIN {db_prefix}topics t ON (ln.id_topic = t.id_topic)
+		WHERE ln.id_member = {int:current_member}',
+		array(
+			'current_member' => $user_info['id'],
+		)
+	);
+    while ($row = $smcFunc['db_fetch_assoc']($request_members))
+    {
+        if(!empty($row['id_member_started']))
+            $user_lists = merge_users($user_lists, array($row['id_member_started']=> 3));
+    }
+
+    //add_coversation_users
+	$request_members = $smcFunc['db_query']('', '
+		SELECT pmr.id_member
+        FROM {db_prefix}personal_messages pm
+        LEFT JOIN {db_prefix}pm_recipients pmr ON (pmr.id_pm = pm.id_pm)
+        WHERE pm.id_member_from = {int:current_member}',
+        array(
+            'current_member' => $user_info['id'],
+        )
+    );
+    while ($row = $smcFunc['db_fetch_assoc']($request_members))
+    {
+        if(!empty($row['id_member']))
+            $user_lists = merge_users($user_lists, array($row['id_member']=> 10));
+    }
+
+    //add buddy list users
+	$request_buddys = $smcFunc['db_query']('', '
+		SELECT buddy_list
+        FROM {db_prefix}members
+        WHERE id_member = {int:current_member}',
+        array(
+            'current_member' => $user_info['id'],
+        )
+    );
+    while ($row = $smcFunc['db_fetch_assoc']($request_buddys))
+    {
+        if(!empty($row['buddy_list']))
+            $users = explode(',', $buddy_list);
+                foreach($users as $user)
+                    if(!empty($user))
+                        $user_lists = merge_users($user_lists, array($user => 5));
+    }
+
+    $context['recommend'] = $user_lists;
+}

@@ -1134,3 +1134,89 @@ function error_status($status = 0, $result_text = '')
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".$response->serialize('UTF-8');
     exit;
 }
+
+function merge_users($uids, $_uids)
+{
+    if(!empty($_uids) && is_array($_uids))
+    {
+        foreach($_uids as $id => $score)
+        {
+            if(isset($uids[$id]))
+            {
+                $uids[$id] += $score;
+            }
+            else
+            {
+                $uids[$id] = $score;
+            }
+        }
+    }
+    return $uids;
+}
+
+function loadAPIKey()
+{
+    global $mobi_api_key, $modSettings, $boardurl;
+    
+    if(empty($mobi_api_key))
+    {
+        $option_key = $modSettings['tp_push_key'];
+        if(isset($option_key) && !empty($option_key))
+        {
+            $mobi_api_key = $option_key;
+        }
+        else
+        {
+            $boardurl = urlencode($boardurl);
+            $response = getContentFromRemoteServer("http://directory.tapatalk.com/au_reg_verify.php?url=$boardurl", 10, $error);
+            if($response)
+                $result = json_decode($response, true);
+            if(isset($result) && isset($result['result']))
+                $mobi_api_key = $result['api_key'];
+            else
+            {
+                $data = array(
+                    'url'   =>  urlencode($boardurl),
+                );
+                $response = getContentFromRemoteServer('http://directory.tapatalk.com/au_reg_verify.php', 10, $error, 'POST', $data);
+                if($response)
+                    $result = json_decode($response, true);
+                if(isset($result) && isset($result['result']))
+                    $mobi_api_key = $result['api_key'];
+                else
+                    $mobi_api_key = 0;
+            }
+        }
+    }
+    return $mobi_api_key;
+}
+
+function keyED($txt,$encrypt_key)
+{
+    $encrypt_key = md5($encrypt_key);
+    $ctr=0;
+    $tmp = "";
+    for ($i=0;$i<strlen($txt);$i++)
+    {
+        if ($ctr==strlen($encrypt_key)) $ctr=0;
+        $tmp.= substr($txt,$i,1) ^ substr($encrypt_key,$ctr,1);
+        $ctr++;
+    }
+    return $tmp;
+}
+
+function encrypt($txt,$key)
+{
+    srand((double)microtime()*1000000);
+    $encrypt_key = md5(rand(0,32000));
+    $ctr=0;
+    $tmp = "";
+    for ($i=0;$i<strlen($txt);$i++)
+    {
+        if ($ctr==strlen($encrypt_key)) $ctr=0;
+        $tmp.= substr($encrypt_key,$ctr,1) .
+        (substr($txt,$i,1) ^ substr($encrypt_key,$ctr,1));
+        $ctr++;
+    }
+    return keyED($tmp,$key);
+}
