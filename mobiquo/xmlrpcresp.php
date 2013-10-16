@@ -12,7 +12,7 @@ function get_config_func()
         'push'       => new xmlrpcval('1','string'),
         'reg_url'       => new xmlrpcval($modSettings['tp_register_page_url'],'string'),
         'result_text'=> new xmlrpcval($maintenance == 1 ? $mmessage : ($modSettings['tapatalkEnabled']? '' : 'Sorry, taptalk is disabled by this forum administrator') , 'base64'),
-        'inappreg' => new xmlrpcval(($modSettings['registration_method'] != 3 && isset($modSettings['tp_tapatalkRegisterEnabled']) && $modSettings['tp_tapatalkRegisterEnabled'] )? '1': '0','string'),
+        'inappreg' => new xmlrpcval($modSettings['registration_method'] != 3 ? '1': '0','string'),
     );
     if(allowedTo('search_posts'))
         $config_list['guest_search'] = new xmlrpcval('1', 'string');
@@ -25,7 +25,9 @@ function get_config_func()
             $config_list[$key] = new xmlrpcval($value, 'string');
         }
     }
-    
+    if($modSettings['registration_method'] != 3)
+        if(function_exists('curl_init') || ini_get('allow_url_fopen'))
+            $config_list['sign_in'] = new xmlrpcval(1, 'string');
     if ($user_info['is_guest'] && allowedTo('search_posts'))
         $config_list['guest_search'] = new xmlrpcval('1', 'string');
 

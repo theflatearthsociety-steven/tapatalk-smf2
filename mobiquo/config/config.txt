@@ -31,7 +31,6 @@ ban_delete_type = none
 user_id = 1
 inappsignin = 1
 mark_pm_unread = 0
-sign_in = 1
 search_user = 1
 m_approve = 1
 m_report = 1
