@@ -914,7 +914,21 @@ function getEmailFromScription($token, $code, $key = '')
     if(isset($result) && isset($result['result']))
         return $result;
     else
-        return 0; //No connection to Tapatalk Server.
+    {
+        $data = array(
+            'token' => $token,
+            'code'  => $code,
+            'key'   => $key,
+            'url'   => $boardurl,
+        );
+        $response = getContentFromRemoteServer('http://directory.tapatalk.com/au_reg_verify.php', 10, $error, 'POST', $data);
+        if($response)
+            $result = json_decode($response, true);
+        if(isset($result) && isset($result['result']))
+            return $result;
+        else
+            return 0; //No connection to Tapatalk Server.
+    }
 }
 
 /**
