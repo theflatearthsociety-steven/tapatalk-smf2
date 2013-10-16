@@ -3,18 +3,19 @@
 $app_kindle_url = isset($modSettings['tp_kindle_url']) ? $modSettings['tp_kindle_url'] : '';
 $app_android_url = isset($modSettings['tp_android_url']) ? $modSettings['tp_android_url'] : '';
 $app_ios_id = isset($modSettings['tp_app_ios_id']) ? $modSettings['tp_app_ios_id'] : '';;
-
 $app_banner_message = isset($modSettings['tp_app_banner_msg']) ? $modSettings['tp_app_banner_msg'] : '';
 $app_banner_message = preg_replace('/\r\n/','<br>',$app_banner_message);
-
-$is_mobile_skin = false;
 $app_location_url = get_scheme_url();
+$is_mobile_skin = false;
+$app_forum_name = !empty($GLOBALS['mbname'])? $GLOBALS['mbname'] : '';
+$tapatalk_dir = 'mobiquo';
 $tapatalk_dir_url = $boardurl. '/mobiquo';
-$app_forum_name = !empty($GLOBALS['mbname'])? $GLOBALS['mbname'] : '';;
+$api_key = $modSettings['tp_push_key'];
+$app_ads_enable = $modSettings['tp_full_ads'];
 
 if (file_exists($boarddir . '/mobiquo/smartbanner/head.inc.php'))
     include($boarddir . '/mobiquo/smartbanner/head.inc.php');
-    
+
 $context['html_headers'] .= $app_head_include;
 
 if (!isset($context['tapatalk_body_hook']))
