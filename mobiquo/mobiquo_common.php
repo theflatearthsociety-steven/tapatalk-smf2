@@ -283,8 +283,6 @@ function post_html_clean($str)
     $str = preg_replace($search, $replace, $str);
     $str = preg_replace('/\[url(.*?)\](\s*)(.*?)\[\/url\]/', '[url$1]$3[/url]', $str);
 
-    // remove link on img
-    $str = preg_replace('/\[url=.*?\](\[img\].*?\[\/img\])\[\/url\]/', '$1', $str);
 
     $str = basic_clean($str);
     $str = parse_bbcode($str);
