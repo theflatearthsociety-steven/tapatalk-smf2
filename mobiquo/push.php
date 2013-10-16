@@ -1,7 +1,5 @@
 <?php
 
-error_reporting(-1);
-ini_set('diplay_errors', 1);
 define('IN_MOBIQUO', 1);
 if(isset($_GET['allowAccess']))
 {
@@ -32,7 +30,7 @@ else
     }
     else
     {
-        $output .= 'Failed</b><br /> No push key set in option<br />';
+        $output .= 'Failed</b><br />Please set Tapatalk API Key at forum option/setting<br />';
     }
     
     $ip =  do_post_request(array('ip' => 1), true);
