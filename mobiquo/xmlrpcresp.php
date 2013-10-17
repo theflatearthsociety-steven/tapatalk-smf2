@@ -375,7 +375,7 @@ function get_thread_func()
                 'topic_title'    => new xmlrpcval(basic_clean($context['subject']), 'base64'),
                 'can_subscribe'  => new xmlrpcval($context['can_mark_notify'], 'boolean'),
                 'is_subscribed'  => new xmlrpcval($context['is_marked_notify'], 'boolean'),
-                'is_pool'        => new xmlrpcval($topicinfo['id_poll'], 'boolean'),
+                'is_poll'        => new xmlrpcval($topicinfo['id_poll'], 'boolean'),
                 'can_stick'      => new xmlrpcval($context['can_sticky'], 'boolean'),
                 'is_sticky'      => new xmlrpcval($context['is_sticky'], 'boolean'),
                 'can_reply'      => new xmlrpcval($context['can_reply'], 'boolean'),
