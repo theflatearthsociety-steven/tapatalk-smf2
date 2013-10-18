@@ -209,7 +209,7 @@ switch ($request_name) {
             $page = isset($request_params[0]) && !empty($request_params[0]) ? $request_params[0] : 1;
             $perpage = isset($request_params[1]) && !empty($request_params[1]) ? $request_params[1] : 20;
             $_GET['start'] = ($page-1) * $perpage;
-            $_GET['end'] = $_GET['start'] + $perpage;
+            $_GET['end'] = $_GET['start'] + $perpage + 1;
             $_GET['mode'] = $request_params[2];
         } else {
             get_error('Parameter Error');

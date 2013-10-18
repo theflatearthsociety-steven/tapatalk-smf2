@@ -2579,7 +2579,7 @@ function action_get_recommended_user()
     while ($row = $smcFunc['db_fetch_assoc']($request_buddys))
     {
         if(!empty($row['buddy_list']))
-            $users = explode(',', $buddy_list);
+            $users = explode(',', $row['buddy_list']);
                 foreach($users as $user)
                     if(!empty($user))
                         $user_lists = merge_users($user_lists, array($user => 5));
