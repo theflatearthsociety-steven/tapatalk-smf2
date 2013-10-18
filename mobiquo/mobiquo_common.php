@@ -261,16 +261,16 @@ function post_html_clean($str)
     }
 
     $search = array(
-        '/<a [^>]*?href="(?!javascript)([^"]*?)"[^>]*?>([^<]*?)<\/a>/si',
         '/<img .*?src="(.*?)".*?\/?>/si',
+        '/<a [^>]*?href="(?!javascript)([^"]*?)"[^>]*?>([^<]*?)<\/a>/si',
         '/(<br\s*\/?>|<\/cite>|<\/li>|<\/ul>|<\/pre>|<\/div>|<\/tr>|<\/table>|<\/code>|<\/em>|<em.*?>)/si',
         '/<\/td>/si',
         '/<code class="[^"]+">(.+)<\/code>/si',
     );
 
     $replace = array(
-        '[url=$1]$2[/url]',
         '[img]$1[/img]',
+        '[url=$1]$2[/url]',
         "$1\n",
         ' ',
         '[quote]$1[/quote]',
