@@ -643,7 +643,7 @@ function forum_time($use_user_offset = true, $timestamp = null)
 	elseif ($timestamp == 0)
 		return 0;
 
-	return $timestamp + ($modSettings['time_offset'] + ($use_user_offset ? $user_info['time_offset'] : 0)) * 3600;
+	return intval($timestamp + ($modSettings['time_offset'] + ($use_user_offset ? $user_info['time_offset'] : 0)) * 3600);
 }
 
 // This gets all possible permutations of an array.
