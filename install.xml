@@ -99,7 +99,7 @@ $txt['tp_push_key'] = 'Tapatalk API Key';
 //Tapatalk BYO
 $txt['tp_app_banner_msg'] = 'BYO App Banner Message';
 $txt['tp_app_ios_id'] = 'BYO iOS App ID';
-$txt['tp_android_url'] = 'Android Product URL';
+$txt['tp_android_url'] = 'Android Product ID';
 $txt['tp_kf_url'] = 'Kindle Fire Product URL';
 $txt['tp_ol_icon_path'] = 'Mobile Online Icon Path';
 $txt['tp_ol_icon_link'] = 'Mobile Online Icon Link';
@@ -143,8 +143,8 @@ $helptxt['tp_dsa_boards'] = 'Prevent Tapatalk users to create new topic in the s
 $helptxt['tp_custom_content_replacement'] = 'Ability to match and replace thread content using PHP preg_replace function(http://www.php.net/manual/en/function.preg-replace.php). E.g. "\'pattern\', \'replacement\'" . You can define more than one replace rule on each line.';
 $helptxt['tp_app_banner_msg'] = 'E.g. "Follow {your_forum_name} with {app_name} for [os_platform]". Do not change the [os_platform] tag as it is displayed dynamically based on user\'s device platform.';
 $helptxt['tp_app_ios_id'] = 'Enter your product ID in Apple App Store, to be used on iPhone device';
-$helptxt['tp_android_url'] = 'Enter your BYO App URL from Google Play, to be used on Android device';
-$helptxt['tp_kf_url'] = 'Enter your BYO App URL from Amazon App Store, to be used on Kindle Fire device';
+$helptxt['tp_android_url'] = 'Enter your BYO App ID from Google Play, to be used on Android device. E.g. "com.quoord.tapatalkpro.activity"';
+$helptxt['tp_kf_url'] = 'Enter your BYO App URL from Amazon App Store, to be used on Kindle Fire device. E.g. "http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkpro.activity"';
 $helptxt['tp_ol_icon_path'] = 'Mobile Online Icon appears on Who\'s Online page to indicate member using Tapatalk app';
 $helptxt['tp_ol_icon_link'] = 'Target URL when icon is clicked';
 $helptxt['tp_ol_icon_desc'] = 'Mobile Online Icon Title appears on Who\'s Online page to indicate member using Tapatalk app';

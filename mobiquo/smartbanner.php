@@ -1,7 +1,7 @@
 <?php
 
 $app_kindle_url = isset($modSettings['tp_kindle_url']) ? $modSettings['tp_kindle_url'] : '';
-$app_android_url = isset($modSettings['tp_android_url']) ? $modSettings['tp_android_url'] : '';
+$app_android_id = isset($modSettings['tp_android_url']) ? $modSettings['tp_android_url'] : '';
 $app_ios_id = isset($modSettings['tp_app_ios_id']) ? $modSettings['tp_app_ios_id'] : '';;
 $app_banner_message = isset($modSettings['tp_app_banner_msg']) ? $modSettings['tp_app_banner_msg'] : '';
 $app_banner_message = preg_replace('/\r\n/','<br>',$app_banner_message);
