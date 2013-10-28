@@ -41,7 +41,7 @@ In this case, you can config these mod or functions here, and it can help pass t
 However, we can not guarantee this can fix all mod conflict with tapatalk and the mod features may not work in tapatalk.
 We set some known conflict mod and functions here as an example, you can add more seperated by comma.
 */
-mod_function = AnnoyUser, TP_loadTheme, TPortal_init, ecl_authorized_cookies, pmx_checkECL_Cookie, pmx_ECL_Error, allowPmx, hideTagExists
+mod_function = AnnoyUser, TP_loadTheme, TPortal_init, pmx_checkECL_Cookie, pmx_ECL_Error, allowPmx, hideTagExists
 
 /* Here indicate the flag is for which mod
 MOD CONTROL FLAG        MOD NAME
