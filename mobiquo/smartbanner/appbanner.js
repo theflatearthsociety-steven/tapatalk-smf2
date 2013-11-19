@@ -24,12 +24,12 @@ if (app_ios_id != '-1' && navigator.userAgent.match(/Safari/i) != null &&
     
     if (navigator.userAgent.match(/iPad/i) != null)
     {
-        document.write('<meta name="apple-itunes-app" content="app-id='+(app_ios_id ? app_ios_id : app_ios_hd_id_default)+', app-argument='+banner_location_url+', affiliate-data=partnerId=30&siteID=w5J2vu1UnxA" />');
+        document.write('<meta name="apple-itunes-app" content="app-id='+(app_ios_id ? app_ios_id : app_ios_hd_id_default)+', app-argument='+banner_location_url+'" />');
         native_ios_banner = true;
     }
     else if (navigator.userAgent.match(/iPod|iPhone/i) != null)
     {
-        document.write('<meta name="apple-itunes-app" content="app-id='+(app_ios_id ? app_ios_id : app_ios_id_default)+', app-argument='+banner_location_url+', affiliate-data=partnerId=30&siteID=w5J2vu1UnxA" />');
+        document.write('<meta name="apple-itunes-app" content="app-id='+(app_ios_id ? app_ios_id : app_ios_id_default)+', app-argument='+banner_location_url+'" />');
         native_ios_banner = true;
     }
 }
@@ -85,13 +85,16 @@ function tapatalkDetect()
         banner_location_url = app_android_id ? app_location_url_byo : app_location_url;
     }
     else if (navigator.userAgent.match(/IEMobile|Windows Phone/i)) {
+        if (app_ios_id || app_android_id || app_kindle_url) return;
         app_banner_message = app_banner_message.replace(/\[os_platform\]/gi, 'Windows Phone');
         banner_location_url = app_location_url;
     }
+    /*
     else if (navigator.userAgent.match(/BlackBerry/i)) {
         app_banner_message = app_banner_message.replace(/\[os_platform\]/gi, 'BlackBerry');
         banner_location_url = app_location_url;
     }
+    */
     else
         return
     
