@@ -166,7 +166,7 @@ function smf_main()
         }
     }
     // If guest access is off, a guest can only do one of the very few following actions.
-    elseif ((empty($modSettings['allow_guestAccess']) || !$modSettings['tp_guestOkayEnabled']) && $user_info['is_guest'] && (!isset($_REQUEST['action']) || !in_array($_REQUEST['action'], array('prefetch_account', 'update_password', 'forget_password', 'sign_in', 'coppa', 'login', 'login2', 'register', 'register2', 'reminder', 'activate', 'help', 'smstats', 'mailq', 'verificationcode', 'openidreturn',))))
+    elseif ((empty($modSettings['allow_guestAccess'])) && $user_info['is_guest'] && (!isset($_REQUEST['action']) || !in_array($_REQUEST['action'], array('prefetch_account', 'update_password', 'forget_password', 'sign_in', 'coppa', 'login', 'login2', 'register', 'register2', 'reminder', 'activate', 'help', 'smstats', 'mailq', 'verificationcode', 'openidreturn',))))
     {
         if ($request_name != 'get_config' && $request_name != 'prefetch_account') {
             loadLanguage('Login');
