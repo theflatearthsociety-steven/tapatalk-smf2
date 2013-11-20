@@ -201,6 +201,8 @@ $txt['on_byo'] = 'On App Of This Forum';]]></add>
         <operation>
             <search position="replace"><![CDATA[	// Show the "Powered by" and "Valid" logos, as well as the copyright. Remember, the copyright must be somewhere!]]></search>
             <add><![CDATA[
+    /* tapatalk start 20131119 */
+    ob_start();
 	$content = ob_get_contents();
 	ob_end_clean();
 	$content = preg_replace_callback('/(<img src=")(http:\/\/img.tapatalk.com\/d\/[0-9]{2}\/[0-9]{2}\/[0-9]{2})(.*?)(".*?>)/i',
@@ -211,6 +213,7 @@ $txt['on_byo'] = 'On App Of This Forum';]]></add>
 	$content);
 	echo $content;
 	ob_start();
+	/* tapatalk end 20131119 */
 	// Show the "Powered by" and "Valid" logos, as well as the copyright. Remember, the copyright must be somewhere!]]></add>
         </operation>
         </file>
