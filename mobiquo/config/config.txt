@@ -11,10 +11,6 @@ goto_unread = 1
 goto_post = 1
 get_latest_topic = 1
 
-mod_approve = 0
-mod_delete = 0
-mod_report = 1
-
 soft_delete = 0
 delete_reason = 0
 get_forum = 1
@@ -32,7 +28,6 @@ user_id = 1
 inappsignin = 1
 mark_pm_unread = 0
 search_user = 1
-m_approve = 1
 m_report = 1
 user_recommended = 1
 /* For mod conflict situation.
