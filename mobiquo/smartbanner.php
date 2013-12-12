@@ -10,7 +10,7 @@ $is_mobile_skin = false;
 $app_forum_name = !empty($GLOBALS['mbname'])? $GLOBALS['mbname'] : '';
 $tapatalk_dir = 'mobiquo';
 $tapatalk_dir_url = $boardurl. '/mobiquo';
-$api_key = $modSettings['tp_push_key'];
+$api_key = isset($modSettings['tp_push_key']) ? $modSettings['tp_push_key'] : '';
 $app_ads_enable = $modSettings['tp_full_ads'];
 $board_url = $boardurl;
 if (file_exists($boarddir . '/mobiquo/smartbanner/head.inc.php'))
