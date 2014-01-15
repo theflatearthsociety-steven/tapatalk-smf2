@@ -2520,6 +2520,10 @@ function action_get_recommended_user()
     {
         $thread_ids[] = $row['id_topic'];
     }
+    //fix bug:Database error, given array of integer values is empty. (topic_list)
+    if (!$thread_ids) {
+        $thread_ids[] = '2000000000';   //impossible big integer
+    }
 	$request_members = $smcFunc['db_query']('', '
 		SELECT
 			ln.id_member 
