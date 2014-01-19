@@ -1228,12 +1228,16 @@ function search_func()
     }
     
     //by Post? by Topic?
-    if (!$context['compact'])
+    //if (!$context['compact'])
+    if ((ExttMbqBase::$otherParameters['search_filter']['userid'] || ExttMbqBase::$otherParameters['search_filter']['searchuser']) && !ExttMbqBase::$otherParameters['search_filter']['showposts']) {
+         return search_topic_func();
+    } elseif (!$context['compact'])
     {
          return search_post_func();
     }
     else
     {
+        die('dddd');
          return search_topic_func();
     }
 }
@@ -1281,6 +1285,45 @@ function search_topic_func()
         $result = new xmlrpcval(array(
             'total_topic_num' => new xmlrpcval($context['num_results'] == 0 && !empty($topic_list) ? count($topic_list) : $context['num_results'], 'int'),
             'search_id'       => new xmlrpcval($context['params'], 'string'),
+            'topics'          => new xmlrpcval($topic_list, 'array')
+        ), 'struct');
+    } elseif (isset($context['exttMbqRecords'])) {  //search by user
+        foreach($context['exttMbqRecords'] as $topic)
+        {
+            $topic_info = get_topic_info($topic['board']['id'], $topic['id']);
+    
+            $xmlrpc_topic = new xmlrpcval(array(
+                'forum_id'          => new xmlrpcval($topic['board']['id']),
+                'forum_name'        => new xmlrpcval(basic_clean($topic['board']['name']), 'base64'),
+                'topic_id'          => new xmlrpcval($topic['id']),
+                'post_id'           => new xmlrpcval($topic['matches'][0]['id']),
+                'topic_title'       => new xmlrpcval(basic_clean($topic['matches'][0]['subject']), 'base64'),
+           'post_author_name'       => new xmlrpcval(basic_clean($topic['matches'][0]['member']['name']), 'base64'),
+                'short_content'     => new xmlrpcval(basic_clean($topic['matches'][0]['body'], 0, 1), 'base64'),
+                'icon_url'          => new xmlrpcval($topic['matches'][0]['member']['avatar']['href']),
+                'post_time'         => new xmlrpcval($topic['matches'][0]['time'], 'dateTime.iso8601'),
+                'timestamp'         => new xmlrpcval($topic['matches'][0]['timestamp'], 'string'),
+                'reply_number'      => new xmlrpcval($topic_info['num_replies'], 'int'),
+                'view_number'       => new xmlrpcval($topic_info['num_views'], 'int'),
+                'new_post'          => new xmlrpcval($topic_info['new'], 'boolean'),
+                'can_subscribe'     => new xmlrpcval($topic_info['can_mark_notify'], 'boolean'),
+                'is_subscribed'     => new xmlrpcval($topic_info['is_marked_notify'], 'boolean'),
+                'is_sticky'          => new xmlrpcval($topic_info['is_sticky'], 'boolean'),
+                'is_closed'         => new xmlrpcval($topic_info['is_locked'], 'boolean'),
+    
+                'can_delete'        => new xmlrpcval($topic_info['can_remove'], 'boolean'),
+                'can_close'         => new xmlrpcval($topic_info['can_lock'], 'boolean'),
+                'can_stick'         => new xmlrpcval($topic_info['can_sticky'], 'boolean'),
+                'can_move'          => new xmlrpcval($topic_info['can_move'], 'boolean'),
+                'can_rename'        => new xmlrpcval($topic_info['can_move'], 'boolean'),
+            ), 'struct');
+    
+            $topic_list[] = $xmlrpc_topic;
+        }
+    
+        $result = new xmlrpcval(array(
+            'total_topic_num' => new xmlrpcval($context['exttMbqTotal'] == 0 && !empty($topic_list) ? count($topic_list) : $context['exttMbqTotal'], 'int'),
+            'search_id'       => new xmlrpcval($context['exttMbqSearchId'], 'string'),
             'topics'          => new xmlrpcval($topic_list, 'array')
         ), 'struct');
     }
@@ -1331,6 +1374,44 @@ function search_post_func()
         $result = new xmlrpcval(array(
             'total_post_num' => new xmlrpcval($context['num_results'] == 0 && !empty($post_list) ? count($post_list) : $context['num_results'], 'int'),
             'search_id'       => new xmlrpcval($context['params'], 'string'),
+            'posts'          => new xmlrpcval($post_list, 'array')
+        ), 'struct');
+    } elseif (isset($context['exttMbqRecords'])) {  //search by user
+        foreach($context['exttMbqRecords'] as $topic)
+        {
+            $topic_info = get_topic_info($topic['board']['id'], $topic['id']);
+    
+            $xmlrpc_post = new xmlrpcval(array(
+                'forum_id'          => new xmlrpcval($topic['board']['id']),
+                'forum_name'        => new xmlrpcval(basic_clean($topic['board']['name']), 'base64'),
+                'topic_id'          => new xmlrpcval($topic['id']),
+                'topic_title'       => new xmlrpcval(basic_clean($topic['first_post']['subject']), 'base64'),
+                'post_id'           => new xmlrpcval($topic['matches'][0]['id'], 'string'),
+                'post_title'        => new xmlrpcval(basic_clean($topic['matches'][0]['subject']), 'base64'),
+           'post_author_name'       => new xmlrpcval(basic_clean($topic['matches'][0]['member']['name']), 'base64'),
+                'short_content'     => new xmlrpcval(basic_clean($topic['matches'][0]['body'], 0, 1), 'base64'),
+                'icon_url'          => new xmlrpcval($topic['matches'][0]['member']['avatar']['href']),
+                'post_time'         => new xmlrpcval($topic['matches'][0]['time'], 'dateTime.iso8601'),
+                'timestamp'         => new xmlrpcval($topic['matches'][0]['timestamp'], 'string'),
+                'reply_number'      => new xmlrpcval($topic_info['num_replies'], 'int'),
+                'view_number'       => new xmlrpcval($topic_info['num_views'], 'int'),
+                'new_post'          => new xmlrpcval($topic_info['new'], 'boolean'),
+                'can_subscribe'     => new xmlrpcval($topic_info['can_mark_notify'], 'boolean'),
+                'is_subscribed'     => new xmlrpcval($topic_info['is_marked_notify'], 'boolean'),
+                'is_closed'         => new xmlrpcval($topic_info['is_locked'], 'boolean'),
+                'is_sticky'          => new xmlrpcval($topic_info['is_sticky'], 'boolean'),
+    
+                'can_delete'        => new xmlrpcval($topic_info['can_remove'], 'boolean'),
+                'can_close'         => new xmlrpcval($topic_info['can_lock'], 'boolean'),
+                'can_stick'         => new xmlrpcval($topic_info['can_sticky'], 'boolean'),
+                'can_move'          => new xmlrpcval($topic_info['can_move'], 'boolean'),
+            ), 'struct');
+    
+            $post_list[] = $xmlrpc_post;
+        }
+        $result = new xmlrpcval(array(
+            'total_post_num' => new xmlrpcval($context['exttMbqTotal'] == 0 && !empty($post_list) ? count($post_list) : $context['exttMbqTotal'], 'int'),
+            'search_id'       => new xmlrpcval($context['exttMbqSearchId'], 'string'),
             'posts'          => new xmlrpcval($post_list, 'array')
         ), 'struct');
     }

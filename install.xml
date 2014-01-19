@@ -59,7 +59,6 @@
 	if (!empty($context['send_log']['failed']))]]></add>
         </operation>
     </file>
-        </file>
 
         <file name="$themedir/languages/Admin.english.php">
         <operation>
@@ -226,6 +225,35 @@ $txt['on_byo'] = 'On App Of This Forum';]]></add>
 			is_not_guest();
 			isAllowedTo('moderate_forum');
 		}]]></add>
+        </operation>
+        </file>
+        <file name="$sourcedir/Profile-View.php">
+        <operation>
+            <search position="replace"><![CDATA[	$looped = false;
+	while (true)]]></search>
+            <add><![CDATA[	$looped = false;
+	/* tapatalk 20140117 1 begin */
+	if (IN_MOBIQUO && (ExttMbqBase::$requestName == 'search') && (ExttMbqBase::$otherParameters['search_filter']['userid'] || ExttMbqBase::$otherParameters['search_filter']['searchuser'])) {
+	    //only used for search method,and works like get_user_reply_post or get_user_topic
+    	$context['exttMbqTotal'] = $msgCount;
+    	$context['exttMbqSearchId'] = ExttMbqBase::$otherParameters['searchid'];
+    	$start = ExttMbqBase::$oMbqDataPage->startNum;
+    	$maxIndex = ExttMbqBase::$oMbqDataPage->numPerPage;
+    }
+	/* tapatalk 20140117 1 end */
+	while (true)]]></add>
+        </operation>
+        <operation>
+            <search position="replace"><![CDATA[	$context['posts'] = array();
+	$board_ids = array('own' => array(), 'any' => array());]]></search>
+            <add><![CDATA[	$context['posts'] = array();
+	/* tapatalk 20140117 2 begin */
+	if (IN_MOBIQUO && (ExttMbqBase::$requestName == 'search') && (ExttMbqBase::$otherParameters['search_filter']['userid'] || ExttMbqBase::$otherParameters['search_filter']['searchuser'])) {
+	    //only used for search method,and works like get_user_reply_post or get_user_topic
+	    $context['exttMbqRecords'] = & $context['posts'];
+    }
+	/* tapatalk 20140117 2 end */
+	$board_ids = array('own' => array(), 'any' => array());]]></add>
         </operation>
         </file>
 </modification>

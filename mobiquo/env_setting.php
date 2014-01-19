@@ -15,6 +15,7 @@ if(isset($mobiquo_config['mod_function']) && !empty($mobiquo_config['mod_functio
 
 mobi_parse_requrest();
 if (!$request_name && isset($_POST['method_name'])) $request_name = $_POST['method_name'];
+ExttMbqBase::$requestName = $request_name;
 switch ($request_name) {
     case 'attach_image':
         if ($params_num >= 3) {
@@ -592,6 +593,35 @@ switch ($request_name) {
         {
             $search_filter = $request_params[0];
             $topic_per_page = isset($search_filter['perpage']) ? $search_filter['perpage'] : 20;
+            
+            ExttMbqBase::$oMbqDataPage = new MbqDataPage();
+            ExttMbqBase::$oMbqDataPage->initByPageAndPerPage($search_filter['page'], $search_filter['perpage']);
+            if (isset($search_filter['searchid']) && !empty($search_filter['searchid']))
+            {
+                ExttMbqBase::$otherParameters['searchid'] = $search_filter['searchid'];
+            }
+            ExttMbqBase::$otherParameters['search_filter'] = $search_filter;
+            if ($search_filter['userid'] || $search_filter['searchuser']) { //search by user
+                if ($search_filter['showposts']) {
+                    //refer get_user_reply_post case
+                    $_GET['action'] = 'profile';
+                    $_GET['area'] = 'showposts';
+                    if (isset($search_filter['userid']) && !empty($search_filter['userid']))
+                        $_GET['u'] = $search_filter['userid'];
+                    elseif (isset($search_filter['searchuser']))
+                        $_GET['user'] = $search_filter['searchuser'];
+                } else {
+                    //refer get_user_topic case
+                    $_GET['action'] = 'profile';
+                    $_GET['area'] = 'showposts';
+                    $_GET['sa'] = 'topics';
+                    if (isset($search_filter['userid']) && !empty($search_filter['userid']))
+                        $_GET['u'] = $search_filter['userid'];
+                    elseif (isset($search_filter['searchuser']))
+                        $_GET['user'] = $search_filter['searchuser'];
+                }
+                break;  //!!!
+            }
 
             $_GET['pagenumber'] = isset($search_filter['page']) ? $search_filter['page'] : 1;
             $_GET['start'] =  ($_GET['pagenumber'] - 1)*$topic_per_page;

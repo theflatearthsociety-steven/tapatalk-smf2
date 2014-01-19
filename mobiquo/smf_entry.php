@@ -147,6 +147,8 @@ function smf_main()
         //fatal_lang_error('not_a_topic', false);
         get_error('The topic is not approved');
 
+//error_log(print_r($_REQUEST, true));
+//error_log(print_r($request_name, true));
     // Do some logging, unless this is an attachment, avatar, toggle of editor buttons, theme option, XML feed etc.
     if (empty($_REQUEST['action']) || !in_array($_REQUEST['action'], array('dlattach', 'findmember', 'jseditor', 'jsoption', 'requestmembers', 'smstats', '.xml', 'xmlhttp', 'verificationcode', 'viewquery', 'viewsmfile')))
     {
@@ -308,10 +310,12 @@ function smf_main()
     }
     $local_action = array('login2', 'post', 'post2', 'who', 'profile', 'notify', 'notifyboard', 'markasread', 'unread', 'search2', 'pm');
     // Otherwise, it was set - so let's go to that action.
-    if (in_array($_REQUEST['action'], $local_action))
+    if (in_array($_REQUEST['action'], $local_action)) {
         require_once('include/' . $actionArray[$_REQUEST['action']][0]);
-    else
+    }
+    else {
         require_once($sourcedir . '/' . $actionArray[$_REQUEST['action']][0]);
+    }
     return $actionArray[$_REQUEST['action']][1];
 }
 

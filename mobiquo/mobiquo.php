@@ -3,6 +3,12 @@
 define('IN_MOBIQUO', true);
 // Get everything started up...
 
+class ExttMbqBase {
+    public static $requestName;
+    public static $oMbqDataPage;
+    public static $otherParameters = array();
+}
+
 if (function_exists('set_magic_quotes_runtime'))
     @set_magic_quotes_runtime(0);
 
@@ -13,6 +19,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
     include 'web.php';
 }
 define('SMF', 1);
+require('MbqDataPage.php');
 require('lib/xmlrpc.inc');
 require('lib/xmlrpcs.inc');
 require('server_define.php');
