@@ -1237,14 +1237,13 @@ function search_func()
     }
     else
     {
-        die('dddd');
          return search_topic_func();
     }
 }
 
 function search_topic_func()
 {
-    global $context;
+    global $context, $smcFunc;
 
     $topic_list = array();
     if (isset($context['get_topics']))
@@ -1290,19 +1289,32 @@ function search_topic_func()
     } elseif (isset($context['exttMbqRecords'])) {  //search by user
         foreach($context['exttMbqRecords'] as $topic)
         {
-            $topic_info = get_topic_info($topic['board']['id'], $topic['id']);
+            $topic_info = get_topic_info($topic['board']['id'], $topic['topic']);
+            
+            $mbqResult = $smcFunc['db_query']('', '
+                SELECT *
+                FROM {db_prefix}messages
+                WHERE id_msg = {int:id_msg}',
+                array(
+                    'id_msg' => $topic['id'],
+                )
+            );
+            $mbqRow = $smcFunc['db_fetch_assoc']($mbqResult);
+            require_once(ExttMbqBase::$otherParameters['sourcedir'] . '/Subs-Members.php');
+            $member = list_getMembers(0, 10, 'member_name', '(id_member = {int:memberId})', array('memberId' => $mbqRow['id_member']));
+            $member = $member[0];
     
             $xmlrpc_topic = new xmlrpcval(array(
                 'forum_id'          => new xmlrpcval($topic['board']['id']),
                 'forum_name'        => new xmlrpcval(basic_clean($topic['board']['name']), 'base64'),
-                'topic_id'          => new xmlrpcval($topic['id']),
-                'post_id'           => new xmlrpcval($topic['matches'][0]['id']),
-                'topic_title'       => new xmlrpcval(basic_clean($topic['matches'][0]['subject']), 'base64'),
-           'post_author_name'       => new xmlrpcval(basic_clean($topic['matches'][0]['member']['name']), 'base64'),
-                'short_content'     => new xmlrpcval(basic_clean($topic['matches'][0]['body'], 0, 1), 'base64'),
+                'topic_id'          => new xmlrpcval($topic['topic']),
+                'post_id'           => new xmlrpcval($topic['id']),
+                'topic_title'       => new xmlrpcval(basic_clean($topic['subject']), 'base64'),
+           'post_author_name'       => new xmlrpcval(basic_clean($member['member_name']), 'base64'),
+                'short_content'     => new xmlrpcval(basic_clean($topic['body'], 0, 1), 'base64'),
                 'icon_url'          => new xmlrpcval($topic['matches'][0]['member']['avatar']['href']),
-                'post_time'         => new xmlrpcval($topic['matches'][0]['time'], 'dateTime.iso8601'),
-                'timestamp'         => new xmlrpcval($topic['matches'][0]['timestamp'], 'string'),
+                'post_time'         => new xmlrpcval($topic['time'], 'dateTime.iso8601'),
+                'timestamp'         => new xmlrpcval($topic['timestamp'], 'string'),
                 'reply_number'      => new xmlrpcval($topic_info['num_replies'], 'int'),
                 'view_number'       => new xmlrpcval($topic_info['num_views'], 'int'),
                 'new_post'          => new xmlrpcval($topic_info['new'], 'boolean'),
@@ -1335,7 +1347,7 @@ function search_topic_func()
 
 function search_post_func()
 {
-    global $context;
+    global $context, $smcFunc;
     $post_list = array();
     if (isset($context['get_topics']))
     {
@@ -1379,20 +1391,33 @@ function search_post_func()
     } elseif (isset($context['exttMbqRecords'])) {  //search by user
         foreach($context['exttMbqRecords'] as $topic)
         {
-            $topic_info = get_topic_info($topic['board']['id'], $topic['id']);
+            $topic_info = get_topic_info($topic['board']['id'], $topic['topic']);
+            
+            $mbqResult = $smcFunc['db_query']('', '
+                SELECT *
+                FROM {db_prefix}messages
+                WHERE id_msg = {int:id_msg}',
+                array(
+                    'id_msg' => $topic['id'],
+                )
+            );
+            $mbqRow = $smcFunc['db_fetch_assoc']($mbqResult);
+            require_once(ExttMbqBase::$otherParameters['sourcedir'] . '/Subs-Members.php');
+            $member = list_getMembers(0, 10, 'member_name', '(id_member = {int:memberId})', array('memberId' => $mbqRow['id_member']));
+            $member = $member[0];
     
             $xmlrpc_post = new xmlrpcval(array(
                 'forum_id'          => new xmlrpcval($topic['board']['id']),
                 'forum_name'        => new xmlrpcval(basic_clean($topic['board']['name']), 'base64'),
-                'topic_id'          => new xmlrpcval($topic['id']),
-                'topic_title'       => new xmlrpcval(basic_clean($topic['first_post']['subject']), 'base64'),
-                'post_id'           => new xmlrpcval($topic['matches'][0]['id'], 'string'),
-                'post_title'        => new xmlrpcval(basic_clean($topic['matches'][0]['subject']), 'base64'),
-           'post_author_name'       => new xmlrpcval(basic_clean($topic['matches'][0]['member']['name']), 'base64'),
-                'short_content'     => new xmlrpcval(basic_clean($topic['matches'][0]['body'], 0, 1), 'base64'),
+                'topic_id'          => new xmlrpcval($topic['topic']),
+                'topic_title'       => new xmlrpcval(basic_clean($topic_info['first_subject']), 'base64'),
+                'post_id'           => new xmlrpcval($topic['id'], 'string'),
+                'post_title'        => new xmlrpcval(basic_clean($topic['subject']), 'base64'),
+           'post_author_name'       => new xmlrpcval(basic_clean($member['member_name']), 'base64'),
+                'short_content'     => new xmlrpcval(basic_clean($topic['body'], 0, 1), 'base64'),
                 'icon_url'          => new xmlrpcval($topic['matches'][0]['member']['avatar']['href']),
-                'post_time'         => new xmlrpcval($topic['matches'][0]['time'], 'dateTime.iso8601'),
-                'timestamp'         => new xmlrpcval($topic['matches'][0]['timestamp'], 'string'),
+                'post_time'         => new xmlrpcval($topic['time'], 'dateTime.iso8601'),
+                'timestamp'         => new xmlrpcval($topic['timestamp'], 'string'),
                 'reply_number'      => new xmlrpcval($topic_info['num_replies'], 'int'),
                 'view_number'       => new xmlrpcval($topic_info['num_views'], 'int'),
                 'new_post'          => new xmlrpcval($topic_info['new'], 'boolean'),

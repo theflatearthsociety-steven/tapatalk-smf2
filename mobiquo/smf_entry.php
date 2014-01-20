@@ -22,6 +22,8 @@ require_once(dirname(dirname(__FILE__)) . '/Settings.php');
 // Make absolutely sure the cache directory is defined.
 if ((empty($cachedir) || !file_exists($cachedir)) && file_exists($boarddir . '/cache'))
     $cachedir = $boarddir . '/cache';
+    
+ExttMbqBase::$otherParameters['sourcedir'] = $sourcedir;
 
 // And important includes.
 require_once($sourcedir . '/QueryString.php');
