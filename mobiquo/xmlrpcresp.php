@@ -175,7 +175,7 @@ function get_topic_func()
         }
         $xmlrpc_topic = new xmlrpcval(array(
             'forum_id'          => new xmlrpcval($board_info['id'], 'string'),
-            'forum_name'        => new xmlrpcval(basic_clean($board_info['name']), 'base64'),
+            //'forum_name'        => new xmlrpcval(basic_clean($board_info['name']), 'base64'),
             'topic_id'          => new xmlrpcval($topic['id'], 'string'),
             'topic_title'       => new xmlrpcval(basic_clean($topic['subject']), 'base64'),
             'topic_author_id'   => new xmlrpcval($topic['first_post']['member']['id'], 'string'),
@@ -1629,6 +1629,9 @@ function get_alert_func()
             'content_type'  => new xmlrpcval($result['type'], 'string'),
             'content_id'    => new xmlrpcval($result['type'] == 'pm' ? $result['id'] : $result['subid'], 'string'),
         );
+        if (($result['type'] == 'sub') || ($result['type'] == 'like') || ($result['type'] == 'thank') || ($result['type'] == 'quote') || ($result['type'] == 'tag') || ($result['type'] == 'newtopic')) {
+            $alert['topic_id'] = new xmlrpcval($result['id'], 'string');
+        }
         $alerts[] = new xmlrpcval($alert, 'struct');
     }
     $total_num = count($alerts);
