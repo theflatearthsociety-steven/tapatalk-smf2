@@ -29,7 +29,7 @@ function print_screen($current_plugin_version)
     global $modSettings;
     
 	echo "Forum XMLRPC Interface for Tapatalk Application<br><br>";
-	echo "Forum system version:".$modSettings['smfVersion']."<br>";
+	//echo "Forum system version:".$modSettings['smfVersion']."<br>";
 	echo "Current Tapatalk plugin version: ".$current_plugin_version."<br>";
 
 	echo "Latest Tapatalk plugin version: <a href=\"http://tapatalk.com/activate_tapatalk.php?plugin=vbulletin\" target=\"_blank\">".$latest_tp_plugin_version."</a><br>";
