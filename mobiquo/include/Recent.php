@@ -2,6 +2,36 @@
 
 defined('IN_MOBIQUO') or exit;
 
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
+
+if (!defined('SMF'))
+	die('Hacking attempt...');
+
+/*	This file had one very clear purpose.  It is here expressly to find and
+	retrieve information about recently posted topics, messages, and the like.
+
+	array getLastPost()
+		// !!!
+
+	array getLastPosts(int number_of_posts)
+		// !!!
+
+	void RecentPosts()
+		// !!!
+
+	void UnreadTopics()
+		// !!!
+*/
+
 // Get the latest post.
 function getLastPost()
 {

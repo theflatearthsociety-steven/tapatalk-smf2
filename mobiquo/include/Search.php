@@ -2,6 +2,49 @@
 
 defined('IN_MOBIQUO') or exit;
 
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
+
+if (!defined('SMF'))
+	die('Hacking attempt...');
+
+/*	These functions are here for searching, and they are:
+
+	void PlushSearch1()
+		- shows the screen to search forum posts (action=search), and uses the
+		  simple version if the simpleSearch setting is enabled.
+		- uses the main sub template of the Search template.
+		- uses the Search language file.
+		- requires the search_posts permission.
+		- decodes and loads search parameters given in the URL (if any).
+		- the form redirects to index.php?action=search2.
+
+	void PlushSearch2()
+		- checks user input and searches the messages table for messages
+		  matching the query.
+		- requires the search_posts permission.
+		- uses the results sub template of the Search template.
+		- uses the Search language file.
+		- stores the results into the search cache.
+		- show the results of the search query.
+
+	array prepareSearchContext(bool reset = false)
+		- callback function for the results sub template.
+		- loads the necessary contextual data to show a search result.
+
+	int searchSort(string $wordA, string $wordB)
+		- callback function for usort used to sort the fulltext results.
+		- passes sorting duty to the current API.
+*/
+
 // This defines two version types for checking the API's are compatible with this version of SMF.
 $GLOBALS['search_versions'] = array(
 	// This is the forum version but is repeated due to some people rewriting $forum_version.
@@ -472,10 +515,7 @@ function PlushSearch2()
 	}
 	// Select all boards you've selected AND are allowed to see.
 	elseif ($user_info['is_admin'] && (!empty($search_params['advanced']) || !empty($_REQUEST['brd'])))
-	{	
-//		$search_params['brd'] = empty($_REQUEST['brd']) ? array() : $_REQUEST['brd'];
-		if (!empty($_REQUEST['brd'])) $search_params['brd'] = $_REQUEST['brd'];
-	}
+		$search_params['brd'] = empty($_REQUEST['brd']) ? array() : $_REQUEST['brd'];
 	else
 	{
 		$see_board = empty($search_params['advanced']) ? 'query_wanna_see_board' : 'query_see_board';

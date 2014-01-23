@@ -2,6 +2,102 @@
 
 defined('IN_MOBIQUO') or exit;
 
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0.5
+ */
+
+if (!defined('SMF'))
+	die('Hacking attempt...');
+
+/*	This file is mainly meant for viewing personal messages.  It also sends,
+	deletes, and marks personal messages.  For compatibility reasons, they are
+	often called "instant messages".  The following functions are used:
+
+	void MessageMain()
+		// !!! ?action=pm
+
+	void messageIndexBar(string area)
+		// !!!
+
+	void MessageFolder()
+		// !!! ?action=pm;sa=folder
+
+	void prepareMessageContext(type reset = 'subject', bool reset = false)
+		// !!!
+
+	void MessageSearch()
+		// !!!
+
+	void MessageSearch2()
+		// !!!
+
+	void MessagePost()
+		// !!! ?action=pm;sa=post
+
+	void messagePostError(array error_types, array named_recipients, array recipient_ids)
+		// !!!
+
+	void MessagePost2()
+		// !!! ?action=pm;sa=post2
+
+	void WirelessAddBuddy()
+		// !!!
+
+	void MessageActionsApply()
+		// !!! ?action=pm;sa=pmactions
+
+	void MessageKillAllQuery()
+		// !!! ?action=pm;sa=killall
+
+	void MessageKillAll()
+		// !!! ?action=pm;sa=killall2
+
+	void MessagePrune()
+		// !!! ?action=pm;sa=prune
+
+	void deleteMessages(array personal_messages, string folder,
+			int owner = user)
+		// !!!
+
+	void markMessages(array personal_messages = all, int label = all,
+			int owner = user)
+		- marks the specified personal_messages read.
+		- if label is set, only marks messages with that label.
+		- if owner is set, marks messages owned by that member id.
+
+	void ManageLabels()
+		// !!!
+
+	void MessageSettings()
+		// !!!
+
+	void ReportMessage()
+		- allows the user to report a personal message to an administrator.
+		- in the first instance requires that the ID of the message to report
+		  is passed through $_GET.
+		- allows the user to report to either a particular administrator - or
+		  the whole admin team.
+		- will forward on a copy of the original message without allowing the
+		  reporter to make changes.
+		- uses the report_message sub-template.
+
+	void ManageRules()
+		// !!!
+
+	void LoadRules()
+		// !!!
+
+	void ApplyRules()
+		// !!!
+*/
+
 // This helps organize things...
 function MessageMain()
 {
@@ -181,7 +277,10 @@ function MessageMain()
 	);
 
 	if (!isset($_REQUEST['sa']) || !isset($subActions[$_REQUEST['sa']]))
+	{
+		$_REQUEST['sa'] = '';
 		MessageFolder();
+	}
 	else
 	{
 		messageIndexBar($_REQUEST['sa']);
@@ -911,7 +1010,7 @@ function prepareMessageContext($type = 'subject', $reset = false)
 	else
 	{
 		$memberContext[$message['id_member_from']]['can_view_profile'] = allowedTo('profile_view_any') || ($message['id_member_from'] == $user_info['id'] && allowedTo('profile_view_own'));
-		$memberContext[$message['id_member_from']]['can_see_warning'] = !isset($context['disabled_fields']['warning_status']) && $memberContext[$message['id_member_from']]['warning_status'] && (($context['user']['can_mod'] || !empty($modSettings['warning_show'])) || ($memberContext[$message['id_member_from']]['id'] == $context['user']['id'] && !empty($modSettings['warning_show']) && $modSettings['warning_show'] == 1));
+		$memberContext[$message['id_member_from']]['can_see_warning'] = !isset($context['disabled_fields']['warning_status']) && $memberContext[$message['id_member_from']]['warning_status'] && ($context['user']['can_mod'] || (!empty($modSettings['warning_show']) && ($modSettings['warning_show'] > 1 || $message['id_member_from'] == $user_info['id'])));
 	}
 
 	// Censor all the important text...
@@ -2073,12 +2172,12 @@ function MessagePost2()
 		preparsecode($message);
 
 		// Make sure there's still some content left without the tags.
-		if ($smcFunc['htmltrim'](strip_tags(parse_bbc($message, false), '<img>')) === '' && (!allowedTo('admin_forum') || strpos($message, '[html]') === false))
+		if ($smcFunc['htmltrim'](strip_tags(parse_bbc($smcFunc['htmlspecialchars']($message, ENT_QUOTES), false), '<img>')) === '' && (!allowedTo('admin_forum') || strpos($message, '[html]') === false))
 			$post_errors[] = 'no_message';
 	}
 
 	// Wrong verification code?
-	if (!$modSettings['disable_pm_verification'] && !$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'])
+	if (!$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'])
 	{
 		require_once($sourcedir . '/Subs-Editor.php');
 		$verificationOptions = array(
@@ -2114,8 +2213,8 @@ function MessagePost2()
 		// Set a descriptive title.
 		$context['page_title'] = $txt['preview'] . ' - ' . $context['preview_subject'];
 
-		// Pretend they messed up :P.
-		return messagePostError(array(), $namedRecipientList, $recipientList);
+		// Pretend they messed up but don't ignore if they really did :P.
+		return messagePostError($post_errors, $namedRecipientList, $recipientList);
 	}
 
 	// Adding a recipient cause javascript ain't working?
@@ -2189,9 +2288,7 @@ function MessagePost2()
 		));
 	// Message sent successfully?
 	if (!empty($context['send_log']) && empty($context['send_log']['failed']))
-	{
 		$context['current_label_redirect'] = $context['current_label_redirect'] . ';done=sent';
-    }
 
 	// Go back to the where they sent from, if possible...
 	redirectexit($context['current_label_redirect']);

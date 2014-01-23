@@ -2,6 +2,129 @@
 
 defined('IN_MOBIQUO') or exit;
 
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0.3
+ */
+
+if (!defined('SMF'))
+	die('Hacking attempt...');
+
+/*	This file has the hefty job of loading information for the forum.  It uses
+	the following functions:
+
+	void reloadSettings()
+		- loads or reloads the $modSettings array.
+		- loads any integration settings, SMF_INTEGRATION_SETTINGS, etc.
+
+	void loadUserSettings()
+		- sets up the $user_info array
+		- assigns $user_info['query_wanna_see_board'] for what boards the user can see.
+		- first checks for cookie or intergration validation.
+		- uses the current session if no integration function or cookie is found.
+		- checks password length, if member is activated and the login span isn't over.
+		- if validation fails for the user, $id_member is set to 0.
+		- updates the last visit time when needed.
+
+	void loadBoard()
+		- sets up the $board_info array for current board information.
+		- if cache is enabled, the $board_info array is stored in cache.
+		- redirects to appropriate post if only message id is requested.
+		- is only used when inside a topic or board.
+		- determines the local moderators for the board.
+		- adds group id 3 if the user is a local moderator for the board they are in.
+		- prevents access if user is not in proper group nor a local moderator of the board.
+
+	void loadPermissions()
+		// !!!
+
+	array loadMemberData(array members, bool is_name = false, string set = 'normal')
+		// !!!
+
+	bool loadMemberContext(int id_member)
+		// !!!
+
+	void loadTheme(int id_theme = auto_detect)
+		// !!!
+
+	void loadTemplate(string template_name, array style_sheets = array(), bool fatal = true)
+		- loads a template file with the name template_name from the current,
+		  default, or base theme.
+		- uses the template_include() function to include the file.
+		- detects a wrong default theme directory and tries to work around it.
+		- if fatal is true, dies with an error message if the template cannot
+		  be found.
+
+	void loadSubTemplate(string sub_template_name, bool fatal = false)
+		- loads the sub template specified by sub_template_name, which must be
+		  in an already-loaded template.
+		- if ?debug is in the query string, shows administrators a marker after
+		  every sub template for debugging purposes.
+
+	string loadLanguage(string template_name, string language = default, bool fatal = true, bool force_reload = false)
+		// !!!
+
+	array getBoardParents(int id_parent)
+		- finds all the parents of id_parent, and that board itself.
+		- additionally detects the moderators of said boards.
+		- returns an array of information about the boards found.
+
+	string &censorText(string &text, bool force = false)
+		- censors the passed string.
+		- if the theme setting allow_no_censored is on, and the theme option
+		  show_no_censored is enabled, does not censor - unless force is set.
+		- caches the list of censored words to reduce parsing.
+
+	void template_include(string filename, bool only_once = false)
+		- loads the template or language file specified by filename.
+		- if once is true, only includes the file once (like include_once.)
+		- uses eval unless disableTemplateEval is enabled.
+		- outputs a parse error if the file did not exist or contained errors.
+		- attempts to detect the error and line, and show detailed information.
+
+	void loadSession()
+		// !!!
+
+	void loadDatabase()
+		- takes care of mysql_set_mode, if set.
+		// !!!
+
+	bool sessionOpen(string session_save_path, string session_name)
+	bool sessionClose()
+	bool sessionRead(string session_id)
+	bool sessionWrite(string session_id, string data)
+	bool sessionDestroy(string session_id)
+	bool sessionGC(int max_lifetime)
+		- implementations of PHP's session API.
+		- handle the session data in the database (more scalable.)
+		- use the databaseSession_lifetime setting for garbage collection.
+		- set by loadSession().
+
+	void cache_put_data(string key, mixed value, int ttl = 120)
+		- puts value in the cache under key for ttl seconds.
+		- may "miss" so shouldn't be depended on, and may go to any of many
+		  various caching servers.
+		- supports eAccelerator, Turck MMCache, ZPS, and memcached.
+
+	mixed cache_get_data(string key, int ttl = 120)
+		- gets the value from the cache specified by key, so long as it is not
+		  older than ttl seconds.
+		- may often "miss", so shouldn't be depended on.
+		- supports the same as cache_put_data().
+
+	void get_memcached_server(int recursion_level = 3)
+		- used by cache_get_data() and cache_put_data().
+		- attempts to connect to a random server in the cache_memcached
+		  setting.
+		- recursively calls itself up to recursion_level times.
+*/
+
 // Load the $modSettings array.
 function reloadSettings()
 {
@@ -56,7 +179,7 @@ function reloadSettings()
 	$smcFunc += array(
 		'entity_fix' => create_function('$string', '
 			$num = substr($string, 0, 1) === \'x\' ? hexdec(substr($string, 1)) : (int) $string;
-			return $num < 0x20 || $num > 0x10FFFF || ($num >= 0xD800 && $num <= 0xDFFF) || $num == 0x202E ? \'\' : \'&#\' . $num . \';\';'),
+			return $num < 0x20 || $num > 0x10FFFF || ($num >= 0xD800 && $num <= 0xDFFF) || $num === 0x202E || $num === 0x202D ? \'\' : \'&#\' . $num . \';\';'),
 		'htmlspecialchars' => create_function('$string, $quote_style = ENT_COMPAT, $charset = \'ISO-8859-1\'', '
 			global $smcFunc;
 			return ' . strtr($ent_check[0], array('&' => '&amp;')) . 'htmlspecialchars($string, $quote_style, ' . ($utf8 ? '\'UTF-8\'' : '$charset') . ')' . $ent_check[1] . ';'),
@@ -270,7 +393,7 @@ function loadUserSettings()
 			$id_member = 0;
 
 		// If we no longer have the member maybe they're being all hackey, stop brute force!
-		if (!$id_member || !empty($user_settings['passwd_flood']))
+		if (!$id_member)
 		{
 			require_once('include/LogInOut.php');
 			validatePasswordFlood(!empty($user_settings['id_member']) ? $user_settings['id_member'] : $id_member, !empty($user_settings['passwd_flood']) ? $user_settings['passwd_flood'] : false, $id_member != 0);
@@ -729,7 +852,7 @@ function loadPermissions()
 	}
 
 	// If it is detected as a robot, and we are restricting permissions as a special group - then implement this.
-	$spider_restrict = $user_info['possibly_robot'] && !empty($modSettings['spider_group']) ? ' OR (id_group = {int:spider_group} && add_deny = 0)' : '';
+	$spider_restrict = $user_info['possibly_robot'] && !empty($modSettings['spider_group']) ? ' OR (id_group = {int:spider_group} AND add_deny = 0)' : '';
 
 	if (empty($user_info['permissions']))
 	{
@@ -1142,6 +1265,9 @@ function loadMemberContext($user, $display_custom_fields = false)
 			// BBC?
 			if ($custom['bbc'])
 				$value = parse_bbc($value);
+			// ... or checkbox?
+			elseif (isset($custom['type']) && $custom['type'] == 'check')
+				$value = $value ? $txt['yes'] : $txt['no'];
 
 			// Enclosing the user input within some other text?
 			if (!empty($custom['enclose']))
@@ -1217,7 +1343,7 @@ function detectBrowser()
 // Load a theme, by ID.
 function loadTheme($id_theme = 0, $initialize = true)
 {
-	global $user_info, $user_settings, $board_info, $sc;
+	global $user_info, $user_settings, $board_info, $sc, $boarddir;
 	global $txt, $boardurl, $scripturl, $mbname, $modSettings, $language;
 	global $context, $settings, $options, $sourcedir, $ssi_theme, $smcFunc;
 
@@ -1642,6 +1768,18 @@ function loadTheme($id_theme = 0, $initialize = true)
 		}
 	}
 
+	// Any files to include at this point?
+	if (!empty($modSettings['integrate_theme_include']))
+	{
+		$theme_includes = explode(',', $modSettings['integrate_theme_include']);
+		foreach ($theme_includes as $include)
+		{
+			$include = strtr(trim($include), array('$boarddir' => $boarddir, '$sourcedir' => $sourcedir, '$themedir' => $settings['theme_dir']));
+			if (file_exists($include))
+				require_once($include);
+		}
+	}
+
 	// Call load theme integration functions.
 	call_integration_hook('integrate_load_theme');
 
@@ -1852,51 +1990,58 @@ function getBoardParents($id_parent)
 {
 	global $scripturl, $smcFunc;
 
-	$boards = array();
-
-	// Loop while the parent is non-zero.
-	while ($id_parent != 0)
+	// First check if we have this cached already.
+	if (($boards = cache_get_data('board_parents-' . $id_parent, 480)) === null)
 	{
-		$result = $smcFunc['db_query']('', '
-			SELECT
-				b.id_parent, b.name, {int:board_parent} AS id_board, IFNULL(mem.id_member, 0) AS id_moderator,
-				mem.real_name, b.child_level
-			FROM {db_prefix}boards AS b
-				LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board)
-				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = mods.id_member)
-			WHERE b.id_board = {int:board_parent}',
-			array(
-				'board_parent' => $id_parent,
-			)
-		);
-		// In the EXTREMELY unlikely event this happens, give an error message.
-		if ($smcFunc['db_num_rows']($result) == 0)
-			fatal_lang_error('parent_not_found', 'critical');
-		while ($row = $smcFunc['db_fetch_assoc']($result))
+		$boards = array();
+		$original_parent = $id_parent;
+
+		// Loop while the parent is non-zero.
+		while ($id_parent != 0)
 		{
-			if (!isset($boards[$row['id_board']]))
+			$result = $smcFunc['db_query']('', '
+				SELECT
+					b.id_parent, b.name, {int:board_parent} AS id_board, IFNULL(mem.id_member, 0) AS id_moderator,
+					mem.real_name, b.child_level
+				FROM {db_prefix}boards AS b
+					LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board)
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = mods.id_member)
+				WHERE b.id_board = {int:board_parent}',
+				array(
+					'board_parent' => $id_parent,
+				)
+			);
+			// In the EXTREMELY unlikely event this happens, give an error message.
+			if ($smcFunc['db_num_rows']($result) == 0)
+				fatal_lang_error('parent_not_found', 'critical');
+			while ($row = $smcFunc['db_fetch_assoc']($result))
 			{
-				$id_parent = $row['id_parent'];
-				$boards[$row['id_board']] = array(
-					'url' => $scripturl . '?board=' . $row['id_board'] . '.0',
-					'name' => $row['name'],
-					'level' => $row['child_level'],
-					'moderators' => array()
-				);
-			}
-			// If a moderator exists for this board, add that moderator for all children too.
-			if (!empty($row['id_moderator']))
-				foreach ($boards as $id => $dummy)
+				if (!isset($boards[$row['id_board']]))
 				{
-					$boards[$id]['moderators'][$row['id_moderator']] = array(
-						'id' => $row['id_moderator'],
-						'name' => $row['real_name'],
-						'href' => $scripturl . '?action=profile;u=' . $row['id_moderator'],
-						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_moderator'] . '">' . $row['real_name'] . '</a>'
+					$id_parent = $row['id_parent'];
+					$boards[$row['id_board']] = array(
+						'url' => $scripturl . '?board=' . $row['id_board'] . '.0',
+						'name' => $row['name'],
+						'level' => $row['child_level'],
+						'moderators' => array()
 					);
 				}
+				// If a moderator exists for this board, add that moderator for all children too.
+				if (!empty($row['id_moderator']))
+					foreach ($boards as $id => $dummy)
+					{
+						$boards[$id]['moderators'][$row['id_moderator']] = array(
+							'id' => $row['id_moderator'],
+							'name' => $row['real_name'],
+							'href' => $scripturl . '?action=profile;u=' . $row['id_moderator'],
+							'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_moderator'] . '">' . $row['real_name'] . '</a>'
+						);
+					}
+			}
+			$smcFunc['db_free_result']($result);
 		}
-		$smcFunc['db_free_result']($result);
+
+		cache_put_data('board_parents-' . $original_parent, $boards, 480);
 	}
 
 	return $boards;
@@ -2223,7 +2368,7 @@ function loadSession()
 			@session_write_close();
 
 		// This is here to stop people from using bad junky PHPSESSIDs.
-		if (isset($_REQUEST[session_name()]) && preg_match('~^[A-Za-z0-9]{16,32}$~', $_REQUEST[session_name()]) == 0 && !isset($_COOKIE[session_name()]))
+		if (isset($_REQUEST[session_name()]) && preg_match('~^[A-Za-z0-9,-]{16,32}$~', $_REQUEST[session_name()]) == 0 && !isset($_COOKIE[session_name()]))
 		{
 			$session_id = md5(md5('smf_sess_' . time()) . mt_rand());
 			$_REQUEST[session_name()] = $session_id;
@@ -2283,7 +2428,7 @@ function sessionRead($session_id)
 {
 	global $smcFunc;
 
-	if (preg_match('~^[A-Za-z0-9]{16,32}$~', $session_id) == 0)
+	if (preg_match('~^[A-Za-z0-9,-]{16,32}$~', $session_id) == 0)
 		return false;
 
 	// Look for it in the database.
@@ -2306,7 +2451,7 @@ function sessionWrite($session_id, $data)
 {
 	global $smcFunc;
 
-	if (preg_match('~^[A-Za-z0-9]{16,32}$~', $session_id) == 0)
+	if (preg_match('~^[A-Za-z0-9,-]{16,32}$~', $session_id) == 0)
 		return false;
 
 	// First try to update an existing row...
@@ -2337,7 +2482,7 @@ function sessionDestroy($session_id)
 {
 	global $smcFunc;
 
-	if (preg_match('~^[A-Za-z0-9]{16,32}$~', $session_id) == 0)
+	if (preg_match('~^[A-Za-z0-9,-]{16,32}$~', $session_id) == 0)
 		return false;
 
 	// Just delete the row...

@@ -2,6 +2,83 @@
 
 defined('IN_MOBIQUO') or exit;
 
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
+
+if (!defined('SMF'))
+	die('Hacking attempt...');
+
+/*	This file is mainly concerned with minor tasks relating to boards, such as
+	marking them read, collapsing categories, or quick moderation.  It defines
+	the following list of functions:
+
+	void markBoardsRead(array boards)
+		// !!!
+
+	void MarkRead()
+		// !!!
+
+	int getMsgMemberID(int id_msg)
+		// !!!
+
+	void modifyBoard(int board_id, array boardOptions)
+		- general function to modify the settings and position of a board.
+		- used by ManageBoards.php to change the settings of a board.
+
+	int createBoard(array boardOptions)
+		- general function to create a new board and set its position.
+		- allows (almost) the same options as the modifyBoard() function.
+		- with the option inherit_permissions set, the parent board permissions
+		  will be inherited.
+		- returns the ID of the newly created board.
+
+	void deleteBoards(array boards_to_remove, moveChildrenTo = null)
+		- general function to delete one or more boards.
+		- allows to move the children of the board before deleting it
+		- if moveChildrenTo is set to null, the child boards will be deleted.
+		- deletes all topics that are on the given boards.
+		- deletes all information that's associated with the given boards.
+		- updates the statistics to reflect the new situation.
+
+	void reorderBoards()
+		- updates the database to put all boards in the right order.
+		- sorts the records of the boards table.
+		- used by modifyBoard(), deleteBoards(), modifyCategory(), and
+		  deleteCategories() functions.
+
+	void fixChildren(int parent, int newLevel, int newParent)
+		- recursively updates the children of parent's child_level and
+		  id_parent to newLevel and newParent.
+		- used when a board is deleted or moved, to affect its children.
+
+	bool isChildOf(int child, int parent)
+		- determines if child is a child of parent.
+		- recurses down the tree until there are no more parents.
+		- returns true if child is a child of parent.
+
+	void getBoardTree()
+		- load information regarding the boards and categories.
+		- the information retrieved is stored in globals:
+			- $boards		properties of each board.
+			- $boardList	a list of boards grouped by category ID.
+			- $cat_tree		properties of each category.
+
+	void recursiveBoards()
+		- function used by getBoardTree to recursively get a list of boards.
+
+	bool isChildOf(int child, int parent)
+		- determine if a certain board id is a child of another board.
+		- the parent might be several levels higher than the child.
+*/
+
 // Mark a board or multiple boards read.
 function markBoardsRead($boards, $unread = false)
 {
@@ -440,9 +517,11 @@ function modifyBoard($board_id, &$boardOptions)
 			$child_level = $boards[$boardOptions['target_board']]['level'] + 1;
 			$id_parent = $boardOptions['target_board'];
 
-			// !!! Change error message.
+			// People can be creative, in many ways...
 			if (isChildOf($id_parent, $board_id))
-				fatal_error('Unable to make a parent its own child');
+				fatal_lang_error('mboards_parent_own_child_error', false);
+			elseif ($id_parent == $board_id)
+				fatal_lang_error('mboards_board_own_child_error', false);
 
 			$after = $boards[$boardOptions['target_board']]['order'];
 
@@ -656,6 +735,8 @@ function modifyBoard($board_id, &$boardOptions)
 	if (isset($boardOptions['move_to']))
 		reorderBoards();
 
+	clean_cache('data');
+
 	if (empty($boardOptions['dont_log']))
 		logAction('edit_board', array('board' => $board_id), 'admin');
 }
@@ -736,6 +817,9 @@ function createBoard($boardOptions)
 			);
 		}
 	}
+
+	// Clean the data cache.
+	clean_cache('data');
 
 	// Created it.
 	logAction('add_board', array('board' => $board_id), 'admin');
@@ -865,6 +949,9 @@ function deleteBoards($boards_to_remove, $moveChildrenTo = null)
 
 	// Plus reset the cache to stop people getting odd results.
 	updateSettings(array('settings_updated' => time()));
+
+	// Clean the cache as well.
+	clean_cache('data');
 
 	// Let's do some serious logging.
 	foreach ($boards_to_remove as $id_board)

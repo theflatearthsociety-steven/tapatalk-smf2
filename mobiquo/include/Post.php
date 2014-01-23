@@ -2,6 +2,86 @@
 
 defined('IN_MOBIQUO') or exit;
 
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
+
+if (!defined('SMF'))
+	die('Hacking attempt...');
+
+/*	The job of this file is to handle everything related to posting replies,
+	new topics, quotes, and modifications to existing posts.  It also handles
+	quoting posts by way of javascript.
+
+	void Post()
+		- handles showing the post screen, loading the post to be modified, and
+		  loading any post quoted.
+		- additionally handles previews of posts.
+		- uses the Post template and language file, main sub template.
+		- allows wireless access using the protocol_post sub template.
+		- requires different permissions depending on the actions, but most
+		  notably post_new, post_reply_own, and post_reply_any.
+		- shows options for the editing and posting of calendar events and
+		  attachments, as well as the posting of polls.
+		- accessed from ?action=post.
+
+	void Post2()
+		- actually posts or saves the message composed with Post().
+		- requires various permissions depending on the action.
+		- handles attachment, post, and calendar saving.
+		- sends off notifications, and allows for announcements and moderation.
+		- accessed from ?action=post2.
+
+	void AnnounceTopic()
+		- handle the announce topic function (action=announce).
+		- checks the topic announcement permissions and loads the announcement
+		  template.
+		- requires the announce_topic permission.
+		- uses the ManageMembers template and Post language file.
+		- call the right function based on the sub-action.
+
+	void AnnouncementSelectMembergroup()
+		- lets the user select the membergroups that will receive the topic
+		  announcement.
+
+	void AnnouncementSend()
+		- splits the members to be sent a topic announcement into chunks.
+		- composes notification messages in all languages needed.
+		- does the actual sending of the topic announcements in chunks.
+		- calculates a rough estimate of the percentage items sent.
+
+	void notifyMembersBoard(notifyData)
+		- notifies members who have requested notification for new topics
+		  posted on a board of said posts.
+		- receives data on the topics to send out notifications to by the passed in array.
+		- only sends notifications to those who can *currently* see the topic
+		  (it doesn't matter if they could when they requested notification.)
+		- loads the Post language file multiple times for each language if the
+		  userLanguage setting is set.
+
+	void getTopic()
+		- gets a summary of the most recent posts in a topic.
+		- depends on the topicSummaryPosts setting.
+		- if you are editing a post, only shows posts previous to that post.
+
+	void QuoteFast()
+		- loads a post an inserts it into the current editing text box.
+		- uses the Post language file.
+		- uses special (sadly browser dependent) javascript to parse entities
+		  for internationalization reasons.
+		- accessed with ?action=quotefast.
+
+	void JavaScriptModify()
+		// !!!
+*/
+
 function Post()
 {
 	global $txt, $scripturl, $topic, $modSettings, $board;
@@ -1128,7 +1208,7 @@ function Post()
 	checkSubmitOnce('register');
 
 	// Finally, load the template.
-	if (WIRELESS)
+	if (WIRELESS && WIRELESS_PROTOCOL != 'wap')
 		$context['sub_template'] = WIRELESS_PROTOCOL . '_post';
 	elseif (!isset($_REQUEST['xml']))
 		loadTemplate('Post');
@@ -1177,17 +1257,19 @@ function Post2()
 	if (checkSession('post', '', false) != '')
 		$post_errors[] = 'session_timeout';
 
-//	// Wrong verification code?
-//	if (!$user_info['is_admin'] && !$user_info['is_mod'] && !empty($modSettings['posts_require_captcha']) && ($user_info['posts'] < $modSettings['posts_require_captcha'] || ($user_info['is_guest'] && $modSettings['posts_require_captcha'] == -1)))
-//	{
-//		require_once($sourcedir . '/Subs-Editor.php');
-//		$verificationOptions = array(
-//			'id' => 'post',
-//		);
-//		$context['require_verification'] = create_control_verification($verificationOptions, true);
-//		if (is_array($context['require_verification']))
-//			$post_errors = array_merge($post_errors, $context['require_verification']);
-//	}
+/*
+	// Wrong verification code?
+	if (!$user_info['is_admin'] && !$user_info['is_mod'] && !empty($modSettings['posts_require_captcha']) && ($user_info['posts'] < $modSettings['posts_require_captcha'] || ($user_info['is_guest'] && $modSettings['posts_require_captcha'] == -1)))
+	{
+		require_once($sourcedir . '/Subs-Editor.php');
+		$verificationOptions = array(
+			'id' => 'post',
+		);
+		$context['require_verification'] = create_control_verification($verificationOptions, true);
+		if (is_array($context['require_verification']))
+			$post_errors = array_merge($post_errors, $context['require_verification']);
+	}
+*/
 
 	require_once('include/Subs-Post.php');
 	loadLanguage('Post');
@@ -1972,16 +2054,18 @@ function Post2()
 			array('id_member', 'id_topic', 'id_board')
 		);
 	}
-//	elseif (!$newTopic)
-//		$smcFunc['db_query']('', '
-//			DELETE FROM {db_prefix}log_notify
-//			WHERE id_member = {int:current_member}
-//				AND id_topic = {int:current_topic}',
-//			array(
-//				'current_member' => $user_info['id'],
-//				'current_topic' => $topic,
-//			)
-//		);
+	/*
+	elseif (!$newTopic)
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_notify
+			WHERE id_member = {int:current_member}
+				AND id_topic = {int:current_topic}',
+			array(
+				'current_member' => $user_info['id'],
+				'current_topic' => $topic,
+			)
+		);
+	*/
 
 	// Log an act of moderation - modifying.
 	if (!empty($moderationAction))

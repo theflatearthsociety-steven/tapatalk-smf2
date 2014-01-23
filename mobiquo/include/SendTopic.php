@@ -2,6 +2,51 @@
 
 defined('IN_MOBIQUO') or exit;
 
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
+
+if (!defined('SMF'))
+	die('Hacking attempt...');
+
+/*	The functions in this file deal with sending topics to a friend or
+	moderator, and those functions are:
+
+	void SendTopic()
+		- sends information about a topic to a friend.
+		- uses the SendTopic template, with the main sub template.
+		- requires the send_topic permission.
+		- redirects back to the first page of the topic when done.
+		- is accessed via ?action=emailuser;sa=sendtopic.
+
+	void CustomEmail()
+		- send an email to the user - allow the sender to write the message.
+		- can either be passed a user ID as uid or a message id as msg.
+		- does not check permissions for a message ID as there is no information disclosed.
+
+	void ReportToModerator()
+		- gathers data from the user to report abuse to the moderator(s).
+		- uses the ReportToModerator template, main sub template.
+		- requires the report_any permission.
+		- uses ReportToModerator2() if post data was sent.
+		- accessed through ?action=reporttm.
+
+	void ReportToModerator2()
+		- sends off emails to all the moderators.
+		- sends to administrators and global moderators. (1 and 2)
+		- called by ReportToModerator(), and thus has the same permission
+		  and setting requirements as it does.
+		- accessed through ?action=reporttm when posting.
+
+*/
+
 // The main handling function for sending specialist (Or otherwise) emails to a user.
 function EmailUser()
 {
@@ -225,12 +270,12 @@ function CustomEmail()
 			'RECPNAME' => $context['recipient']['name'],
 		);
 
+		// Don't let them send too many!
+		spamProtection('sendmail');
+
 		// Get the template and get out!
 		$emaildata = loadEmailTemplate('send_email', $replacements);
 		sendmail($context['recipient']['email'], $emaildata['subject'], $emaildata['body'], $from_email, null, false, 1, null, true);
-
-		// Don't let them send too many!
-		spamProtection('sendmail');
 
 		// Now work out where to go!
 		if (isset($_REQUEST['uid']))

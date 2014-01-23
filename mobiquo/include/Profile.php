@@ -2,6 +2,32 @@
 
 defined('IN_MOBIQUO') or exit;
 
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0.6
+ */
+
+if (!defined('SMF'))
+	die('Hacking attempt...');
+
+/*	This file has the primary job of showing and editing people's profiles.
+	It also allows the user to change some of their or another's preferences,
+	and such things.  It uses the following functions:
+
+	void ModifyProfile(array errors = none)
+		// !!!
+
+	void loadCustomFields(int id_member, string area)
+		// !!!
+
+*/
+
 // Allow the change or view of profiles...
 function ModifyProfile($post_errors = array())
 {
@@ -292,7 +318,6 @@ function ModifyProfile($post_errors = array())
 					'file' => 'Profile-Actions.php',
 					'function' => 'activateAccount',
 					'sc' => 'get',
-					'select' => 'summary',
 					'permission' => array(
 						'own' => array(),
 						'any' => array('moderate_forum'),
@@ -659,7 +684,11 @@ function loadCustomFields($memID, $area = 'summary')
 
 		// If this was submitted already then make the value the posted version.
 		if (isset($_POST['customfield']) && isset($_POST['customfield'][$row['col_name']]))
+		{
 			$value = $smcFunc['htmlspecialchars']($_POST['customfield'][$row['col_name']]);
+			if (in_array($row['field_type'], array('select', 'radio')))
+					$value = ($options = explode(',', $row['field_options'])) && isset($options[$value]) ? $options[$value] : '';
+		}
 
 		// HTML for the input form.
 		$output_html = $value;

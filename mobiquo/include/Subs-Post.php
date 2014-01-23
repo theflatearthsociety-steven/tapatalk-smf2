@@ -2,6 +2,160 @@
 
 defined('IN_MOBIQUO') or exit;
 
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
+
+if (!defined('SMF'))
+	die('Hacking attempt...');
+
+/*	This file contains those functions pertaining to posting, and other such
+	operations, including sending emails, ims, blocking spam, preparsing posts,
+	spell checking, and the post box.  This is done with the following:
+
+	void preparsecode(string &message, boolean previewing = false)
+		- takes a message and parses it, returning nothing.
+		- cleans up links (javascript, etc.) and code/quote sections.
+		- won't convert \n's and a few other things if previewing is true.
+
+	string un_preparsecode(string message)
+		// !!!
+
+	void fixTags(string &message)
+		- used by preparsecode, fixes links in message and returns nothing.
+
+	void fixTag(string &message, string myTag, string protocol,
+			bool embeddedUrl = false, bool hasEqualSign = false,
+			bool hasExtra = false)
+		- used by fixTags, fixes a specific tag's links.
+		- myTag is the tag, protocol is http of ftp, embeddedUrl is whether
+		  it *can* be set to something, hasEqualSign is whether it *is*
+		  set to something, and hasExtra is whether it can have extra
+		  cruft after the begin tag.
+
+	bool sendmail(array to, string subject, string message,
+			string message_id = auto, string from = webmaster,
+			bool send_html = false, int priority = 3, bool hotmail_fix = null)
+		- sends an email to the specified recipient.
+		- uses the mail_type setting and the webmaster_email global.
+		- to is he email(s), string or array, to send to.
+		- subject and message are those of the email - expected to have
+		  slashes but not be parsed.
+		- subject is expected to have entities, message is not.
+		- from is a string which masks the address for use with replies.
+		- if message_id is specified, uses that as the local-part of the
+		  Message-ID header.
+		- send_html indicates whether or not the message is HTML vs. plain
+		  text, and does not add any HTML.
+		- returns whether or not the email was sent properly.
+
+	bool AddMailQueue(bool flush = true, array to_array = array(), string subject = '', string message = '',
+		string headers = '', bool send_html = false, int priority = 3)
+		//!!
+
+	array sendpm(array recipients, string subject, string message,
+			bool store_outbox = false, array from = current_member, int pm_head = 0)
+		- sends an personal message from the specified person to the
+		  specified people. (from defaults to the user.)
+		- recipients should be an array containing the arrays 'to' and 'bcc',
+		  both containing id_member's.
+		- subject and message should have no slashes and no html entities.
+		- pm_head is the ID of the chain being replied to - if any.
+		- from is an array, with the id, name, and username of the member.
+		- returns an array with log entries telling how many recipients were
+		  successful and which recipients it failed to send to.
+
+	string mimespecialchars(string text, bool with_charset = true,
+			hotmail_fix = false, string custom_charset = null)
+		- prepare text strings for sending as email.
+		- in case there are higher ASCII characters in the given string, this
+		  function will attempt the transport method 'quoted-printable'.
+		  Otherwise the transport method '7bit' is used.
+		- with hotmail_fix set all higher ASCII characters are converted to
+		  HTML entities to assure proper display of the mail.
+		- uses character set custom_charset if set.
+		- returns an array containing the character set, the converted string
+		  and the transport method.
+
+	bool smtp_mail(array mail_to_array, string subject, string message,
+			string headers)
+		- sends mail, like mail() but over SMTP.  Used internally.
+		- takes email addresses, a subject and message, and any headers.
+		- expects no slashes or entities.
+		- returns whether it sent or not.
+
+	bool server_parse(string message, resource socket, string response)
+		- sends the specified message to the server, and checks for the
+		  expected response. (used internally.)
+		- takes the message to send, socket to send on, and the expected
+		  response code.
+		- returns whether it responded as such.
+
+	void SpellCheck()
+		- spell checks the post for typos ;).
+		- uses the pspell library, which MUST be installed.
+		- has problems with internationalization.
+		- is accessed via ?action=spellcheck.
+
+	void sendNotifications(array topics, string type, array exclude = array(), array members_only = array())
+		- sends a notification to members who have elected to receive emails
+		  when things happen to a topic, such as replies are posted.
+		- uses the Post langauge file.
+		- topics represents the topics the action is happening to.
+		- the type can be any of reply, sticky, lock, unlock, remove, move,
+		  merge, and split.  An appropriate message will be sent for each.
+		- automatically finds the subject and its board, and checks permissions
+		  for each member who is "signed up" for notifications.
+		- will not send 'reply' notifications more than once in a row.
+		- members in the exclude array will not be processed for the topic with the same key.
+		- members_only are the only ones that will be sent the notification if they have it on.
+
+	bool createPost(&array msgOptions, &array topicOptions, &array posterOptions)
+		// !!!
+
+	bool createAttachment(&array attachmentOptions)
+		// !!!
+
+	bool modifyPost(&array msgOptions, &array topicOptions, &array posterOptions)
+		// !!!
+
+	bool approvePosts(array msgs, bool approve)
+		// !!!
+
+	array approveTopics(array topics, bool approve)
+		// !!!
+
+	void sendApprovalNotifications(array topicData)
+		// !!!
+
+	void updateLastMessages(array id_board's, int id_msg)
+		- takes an array of board IDs and updates their last messages.
+		- if the board has a parent, that parent board is also automatically
+		  updated.
+		- columns updated are id_last_msg and lastUpdated.
+		- note that id_last_msg should always be updated using this function,
+		  and is not automatically updated upon other changes.
+
+	void adminNotify(string type, int memberID, string member_name = null)
+		- sends all admins an email to let them know a new member has joined.
+		- types supported are 'approval', 'activation', and 'standard'.
+		- called by registerMember() function in Subs-Members.php.
+		- email is sent to all groups that have the moderate_forum permission.
+		- uses the Login language file.
+		- the language set by each member is being used (if available).
+
+	Sending emails from SMF:
+	---------------------------------------------------------------------------
+		// !!!
+*/
+
 // Parses some bbc before sending into the database...
 function preparsecode(&$message, $previewing = false)
 {
@@ -235,7 +389,8 @@ function un_preparsecode($message)
 		// If $i is a multiple of four (0, 4, 8, ...) then it's not a code section...
 		if ($i % 4 == 0)
 		{
-			$parts[$i] = preg_replace('~\[html\](.+?)\[/html\]~ie', '\'[html]\' . strtr(htmlspecialchars(\'$1\', ENT_QUOTES), array(\'\\&quot;\' => \'&quot;\', \'&amp;#13;\' => \'<br />\', \'&amp;#32;\' => \' \', \'&amp;#38;\' => \'&#38;\', \'&amp;#91;\' => \'[\', \'&amp;#93;\' => \']\')) . \'[/html]\'', $parts[$i]);
+			$parts[$i] = preg_replace('~\[html\](.+?)\[/html\]~ie', '\'[html]\' . strtr(htmlspecialchars(\'$1\', ENT_QUOTES), array(\'\\&quot;\' => \'&quot;\', \'&amp;#13;\' => \'<br />\', \'&amp;#32;\' => \' \', \'&amp;#91;\' => \'[\', \'&amp;#93;\' => \']\')) . \'[/html]\'', $parts[$i]);
+			// $parts[$i] = preg_replace('~\[html\](.+?)\[/html\]~ie', '\'[html]\' . strtr(htmlspecialchars(\'$1\', ENT_QUOTES), array(\'\\&quot;\' => \'&quot;\', \'&amp;#13;\' => \'<br />\', \'&amp;#32;\' => \' \', \'&amp;#38;\' => \'&#38;\', \'&amp;#91;\' => \'[\', \'&amp;#93;\' => \']\')) . \'[/html]\'', $parts[$i]);
 
 			// Attempt to un-parse the time to something less awful.
 			$parts[$i] = preg_replace('~\[time\](\d{0,10})\[/time\]~ie', '\'[time]\' . timeformat(\'$1\', false) . \'[/time]\'', $parts[$i]);

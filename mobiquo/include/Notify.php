@@ -2,6 +2,42 @@
 
 defined('IN_MOBIQUO') or exit;
 
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
+
+if (!defined('SMF'))
+	die('Hacking attempt...');
+
+/*	This file contains just the functions that turn on and off notifications to
+	topics or boards. The following two functions are included:
+
+	void Notify()
+		- is called to turn off/on notification for a particular topic.
+		- must be called with a topic specified in the URL.
+		- uses the Notify template (main sub template.) when called with no sa.
+		- the sub action can be 'on', 'off', or nothing for what to do.
+		- requires the mark_any_notify permission.
+		- upon successful completion of action will direct user back to topic.
+		- is accessed via ?action=notify.
+
+	void BoardNotify()
+		- is called to turn off/on notification for a particular board.
+		- must be called with a board specified in the URL.
+		- uses the Notify template. (notify_board sub template.)
+		- only uses the template if no sub action is used. (on/off)
+		- requires the mark_notify permission.
+		- redirects the user back to the board after it is done.
+		- is accessed via ?action=notifyboard.
+*/
+
 // Turn on/off notifications...
 function Notify()
 {

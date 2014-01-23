@@ -2,6 +2,57 @@
 
 defined('IN_MOBIQUO') or exit;
 
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0.2
+ */
+
+if (!defined('SMF'))
+	die('Hacking attempt...');
+
+/*	This file is mainly concerned, or that is to say only concerned, with the
+	Who's Online list.  It contains only the following functions:
+
+	void Who()
+		- prepares the who's online data for the Who template.
+		- uses the Who template (main sub template.) and language file.
+		- requires the who_view permission.
+		- is enabled with the who_enabled setting.
+		- is accessed via ?action=who.
+
+	array determineActions(array urls, string preferred_prefix = false)
+		- determine the actions of the members passed in urls.
+		- urls should be a single url (string) or an array of arrays, each
+		  inner array being (serialized request data, id_member).
+		- returns an array of descriptions if you passed an array, otherwise
+		  the string describing their current location.
+
+	void Credits(bool in_admin)
+		- prepares credit and copyright information for the credits page or the admin page
+		- if parameter is true the it will not load the sub template nor the template file
+
+	Adding actions to the Who's Online list:
+	---------------------------------------------------------------------------
+		Adding actions to this list is actually relatively easy....
+		- for actions anyone should be able to see, just add a string named
+		   whoall_ACTION.  (where ACTION is the action used in index.php.)
+		- for actions that have a subaction which should be represented
+		   differently, use whoall_ACTION_SUBACTION.
+		- for actions that include a topic, and should be restricted, use
+		   whotopic_ACTION.
+		- for actions that use a message, by msg or quote, use whopost_ACTION.
+		- for administrator-only actions, use whoadmin_ACTION.
+		- for actions that should be viewable only with certain permissions,
+		   use whoallow_ACTION and add a list of possible permissions to the
+		   $allowedActions array, using ACTION as the key.
+*/
+
 // Who's online, and what are they doing?
 function Who()
 {
@@ -48,6 +99,8 @@ function Who()
 		$show_methods['guests'] = '(lo.id_member = 0 AND lo.id_spider = 0)';
 		$context['show_methods']['spiders'] = $txt['who_show_spiders_only'];
 	}
+	elseif (empty($modSettings['show_spider_online']) && isset($_SESSION['who_online_filter']) && $_SESSION['who_online_filter'] == 'spiders')
+		unset($_SESSION['who_online_filter']);
 
 	// Does the user prefer a different sort direction?
 	if (isset($_REQUEST['sort']) && isset($sort_methods[$_REQUEST['sort']]))
@@ -290,21 +343,7 @@ function determineActions($urls, $preferred_prefix = false)
 			}
 			// It's the board index!!  It must be!
 			else
-			{
 				$data[$k] = $txt['who_index'];
-				// ...or maybe it's just integrated into another system...
-				if (count($integrate_actions = call_integration_hook('integrate_whos_online', array($actions))) > 0)
-				{
-					foreach ($integrate_actions as $integrate_action)
-					{
-						if (!empty($integrate_action))
-						{
-							$data[$k] = $integrate_action;
-							break;
-						}
-					}
-				}
-			}
 		}
 		// Probably an error or some goon?
 		elseif ($actions['action'] == '')
@@ -382,6 +421,19 @@ function determineActions($urls, $preferred_prefix = false)
 			// Unlisted or unknown action.
 			else
 				$data[$k] = $txt['who_unknown'];
+		}
+
+		// Maybe the action is integrated into another system?
+		if (count($integrate_actions = call_integration_hook('integrate_whos_online', array($actions))) > 0)
+		{
+			foreach ($integrate_actions as $integrate_action)
+			{
+				if (!empty($integrate_action))
+				{
+					$data[$k] = $integrate_action;
+					break;
+				}
+			}
 		}
 	}
 
@@ -480,18 +532,17 @@ function Credits($in_admin = false)
 				array(
 					'title' => $txt['credits_groups_ps'],
 					'members' => array(
+						'Michael &quot;Oldiesmann&quot; Eshom',
 						'Amacythe',
-						'Derek Schwab',
 						'Jeremy &quot;SleePy&quot; Darwood',
 						'Justin &quot;metallica48423&quot; O\'Leary',
-						'Kindred',
 					),
 				),
 				array(
 					'title' => $txt['credits_groups_dev'],
 					'members' => array(
 						'Norv',
-						'A&auml;ron van Geffen',
+						'Aaron van Geffen',
 						'Antechinus',
 						'Bjoern &quot;Bloc&quot; Kristiansen',
 						'Hendrik Jan &quot;Compuart&quot; Visser',
@@ -499,7 +550,7 @@ function Credits($in_admin = false)
 						'Karl &quot;RegularExpression&quot; Benson',
 						$user_info['is_admin'] ? 'Matt &quot;Grudge&quot; Wolf': 'Grudge',
 						'Michael &quot;Thantos&quot; Miller',
-						'Sinan &quot;&#12471;&#12490;&#12531;&quot; &Ccedil;evik',
+						'Selman &quot;[SiNaN]&quot; Eser',
 						'Theodore &quot;Orstio&quot; Hildebrandt',
 						'Thorsten &quot;TE&quot; Eurich',
 						'winrules',
@@ -510,10 +561,10 @@ function Credits($in_admin = false)
 					'members' => array(
 						'JimM',
 						'Adish &quot;(F.L.A.M.E.R)&quot; Patel',
+						'Aleksi &quot;Lex&quot; Kilpinen',
 						'Ben Scott',
 						'Bigguy',
-						'bluedevil',
-						'capady',
+						'CapadY',
 						'Chas Large',
 						'Duncan85',
 						'Eliana Tamerin',
@@ -523,30 +574,33 @@ function Credits($in_admin = false)
 						'Huw',
 						'Jan-Olof &quot;Owdy&quot; Eriksson',
 						'Jeremy &quot;jerm&quot; Strike',
+						'Jessica &quot;Miss All Sunday&quot; Gonzales',
 						'K@',
-						'Kays',
 						'Kevin &quot;greyknight17&quot; Hou',
 						'KGIII',
 						'Kill Em All',
-						'LexArma',
 						'Mattitude',
 						'Mashby',
+						'Mick G.',
+						'Michele &quot;Illori&quot; Davis',
 						'MrPhil',
 						'Nick &quot;Fizzy&quot; Dyer',
+						'Nick &quot;Ha&sup2;&quot;',
+						'Paul_Pauline',
 						'Piro &quot;Sarge&quot; Dhima',
 						'Rumbaar',
 						'Pitti',
 						'RedOne',
+						'S-Ace',
+						'Wade &quot;s&eta;&sigma;&omega;&quot; Poulsen',
 						'xenovanis',
 					),
 				),
 				array(
 					'title' => $txt['credits_groups_customize'],
 					'members' => array(
-						'Matt &quot;SlammedDime&quot; Zuba',
-						'&#12487;&#12451;&#12531;1031',
-						'Arantor',
 						'Brad &quot;IchBin&trade;&quot; Grow',
+						'&#12487;&#12451;&#12531;1031',
 						'Brannon &quot;B&quot; Hall',
 						'Bryan &quot;Runic&quot; Deakin',
 						'Bulakbol',
@@ -557,34 +611,39 @@ function Credits($in_admin = false)
 						'Jason &quot;JBlaze&quot; Clemons',
 						'Jerry',
 						'Jonathan &quot;vbgamer45&quot; Valentin',
+						'Kays',
 						'Killer Possum',
 						'Kirby',
-						'Marcus &quot;Nas&quot; Forsberg',
+						'Matt &quot;SlammedDime&quot; Zuba',
+						'Matthew &quot;Labradoodle-360&quot; Kerle',
 						'Nibogo',
 						'Niko',
+						'Peter &quot;Arantor&quot; Spicer',
 						'snork13',
+						'Spuds',
 						'Steven &quot;Fustrate&quot; Hoffman',
-						'Tyrsson',
+						'Joey &quot;Tyrsson&quot; Smith',
 					),
 				),
 				array(
 					'title' => $txt['credits_groups_docs'],
 					'members' => array(
-						'groundup',
+						'Joshua &quot;groundup&quot; Dickerson',
+						'AngellinaBelle',
 						'Daniel Diehl',
 						'Dannii Willis',
+						'emanuele',
 						'Graeme Spence',
 						'Jack &quot;akabugeyes&quot; Thorsen',
 						'Jade Elizabeth Trainor',
 						'Peter Duggan',
-						'snow',
 					),
 				),
 				array(
 					'title' => $txt['credits_groups_marketing'],
 					'members' => array(
-						'Michael &quot;Oldiesmann&quot; Eshom',
-						'CoreISP',
+						'Kindred',
+						'Marcus &quot;c&sigma;&sigma;&#1082;&iota;&#1108; &#1084;&sigma;&eta;&#1109;&#1090;&#1108;&#1103;&quot; Forsberg',
 						'Ralph &quot;[n3rve]&quot; Otowo',
 						'rickC',
 						'Tony Reid',
@@ -593,9 +652,16 @@ function Credits($in_admin = false)
 				array(
 					'title' => $txt['credits_groups_internationalizers'],
 					'members' => array(
-						'GravuTrad',
 						'Relyana',
 						'Akyhne',
+						'GravuTrad',
+					),
+				),
+				array(
+					'title' => $txt['credits_groups_servers'],
+					'members' => array(
+						'Derek Schwab',
+						'Liroy &quot;CoreISP&quot; van Hoewijk',
 					),
 				),
 			),
@@ -621,6 +687,8 @@ function Credits($in_admin = false)
 			array(
 				'title' => $txt['credits_groups_consultants'],
 				'members' => array(
+					'Brett Flannigan',
+					'Mark Rose',
 					'Ren&eacute;-Gilles &quot;Nao &#23578;&quot; Deberdt',
 				),
 			),
@@ -652,21 +720,6 @@ function Credits($in_admin = false)
 			),
 		),
 	);
-
-	if (!empty($modSettings['copy_settings']) || !empty($modSettings['copyright_key']))
-	{
-		if (empty($modSettings['copy_settings']))
-			$modSettings['copy_settings'] = 'a,0';
-
-		list ($key, $expire) = explode(',', $modSettings['copy_settings']);
-
-		if ($expire >= time())
-		{
-			$context['copyright_removal_expires'] = timeformat($expire);
-			$context['copyright_removal_validate_url'] = sprintf('http://www.simplemachines.org/copyright/index.php?action=validate;url=%1$s', base64_encode($boardurl));
-			$context['copyright_removal_validate'] = sprintf($txt['credits_removal_good'], $context['copyright_removal_expires'], $context['copyright_removal_validate_url']);
-		}
-	}
 
 	$context['copyrights'] = array(
 		'smf' => sprintf($forum_copyright, $forum_version),
