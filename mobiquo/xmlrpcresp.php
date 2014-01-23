@@ -7,11 +7,11 @@ function get_config_func()
     global $mobiquo_config, $user_info, $modSettings, $maintenance, $mmessage;
 
     $config_list = array(
-        'is_open'    => new xmlrpcval( ($maintenance == 0 && $modSettings['tapatalkEnabled']) ? true : false, 'boolean'),
+        'is_open'    => new xmlrpcval( ($maintenance == 0) ? true : false, 'boolean'),
         'guest_okay' => new xmlrpcval($modSettings['allow_guestAccess']? true : false, 'boolean'),
         'push'       => new xmlrpcval('1','string'),
         'reg_url'       => new xmlrpcval($modSettings['tp_register_page_url'],'string'),
-        'result_text'=> new xmlrpcval($maintenance == 1 ? $mmessage : ($modSettings['tapatalkEnabled']? '' : 'Sorry, taptalk is disabled by this forum administrator') , 'base64'),
+        'result_text'=> new xmlrpcval($maintenance == 1 ? $mmessage : '' , 'base64'),
         'inappreg' => new xmlrpcval($modSettings['registration_method'] != 3 ? '1': '0','string'),
     );
     if(allowedTo('search_posts'))

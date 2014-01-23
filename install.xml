@@ -77,7 +77,6 @@ $txt['tp_rebranding_settings'] = 'Rebranding Settings';]]></add>
             <add><![CDATA[
 //Tapatalk
 $txt['tapatalktitle'] = 'Tapatalk Settings';
-$txt['tapatalkEnabled'] = 'Enable tapatalk';
 $txt['tp_full_ads'] = 'Mobile Welcome Screen';
 $txt['tp_tapatalkRegisterEnabled'] = 'In-app Registration';
 $txt['tp_allow_usergroup'] = 'Usergroup allowed on Tapatalk';
@@ -132,7 +131,6 @@ Thank you! :)';
             <search position="after"><![CDATA[?>]]></search>
             <add><![CDATA[
 //Tapatalk start
-$helptxt['tapatalkEnabled'] = 'Enable tapatalk for your forum.';
 $helptxt['tp_full_ads'] = 'Tapatalk will show a one time welcoming screen to mobile users to download the free app, the screen will contain your forum logo and branding only, with a button to get the free app.';
 $helptxt['tp_register_page_url'] = 'Registration URL relative to your forum root path';
 $helptxt['tp_push_key'] = 'Optional. To improve the quality of Push Notification from your forum, please fill-in copy and paste the Push Notification Key from Tapatalk Forum Owner Area to here.';

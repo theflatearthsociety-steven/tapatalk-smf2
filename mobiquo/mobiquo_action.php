@@ -789,7 +789,7 @@ function action_register()
     checkSession();
     
     if(empty($_POST['password'])) get_error('password cannot be empty');
-    if(!($maintenance == 0 && $modSettings['tapatalkEnabled'])) get_error('Forum is in maintenance model or Tapatalk is disabled by forum administrator.');
+    if(!($maintenance == 0)) get_error('Forum is in maintenance model or Tapatalk is disabled by forum administrator.');
     
     foreach ($_POST as $key => $value)
         if (!is_array($_POST[$key]))

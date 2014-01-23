@@ -207,7 +207,6 @@ ADD PRIMARY KEY ( `pushid` ) ',
 );
 
 $default_settings = array(
-    array('tapatalkEnabled', 1),
     array('tp_full_ads', 1),
 );
 
