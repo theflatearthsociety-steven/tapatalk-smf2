@@ -232,6 +232,16 @@ function log_it($log_data)
     file_put_contents($log_file, print_r($log_data, true), FILE_APPEND);
 }
 
+/**
+ * recursively handle quote code and return
+ *
+ * @param  String  $newStr
+ * @return  String
+ */
+function exttMbqRecurHandleQuote($str) {
+    return preg_replace_callback('/<div class="quoteheader"><div class="topslice_quote"><a href="[^>]*#msg([^>]*)">Quote from: ([^<]*) on <strong>([^<]*)<\/strong> at ([^<]*)<\/a><\/div><\/div><blockquote class="(bbc_standard_quote|bbc_alternate_quote)">(.*)<\/blockquote><div class="quotefooter"><div class="botslice_quote"><\/div><\/div>(?!<div class="quotefooter"><div class="botslice_quote"><\/div><\/div>)/is', create_function('$matches','return "[quote name=\"$matches[2]\" post=$matches[1] timestamp=".strtotime($matches[3]." ".$matches[4])."]".exttMbqRecurHandleQuote($matches[6])."[/quote]";'), $str);
+}
+
 function post_html_clean($str)
 {
     global $modSettings;
@@ -259,6 +269,11 @@ function post_html_clean($str)
             }
         }
     }
+    
+    //handle quote
+    //$str = preg_replace_callback('/<div class="quoteheader"><div class="topslice_quote"><a href="[^>]*?#msg([^>]*?)">Quote from: ([^<]*?) on <strong>([^<]*?)<\/strong> at ([^<]*?)<\/a><\/div><\/div><blockquote class="bbc_standard_quote">(.*?)<\/blockquote><div class="quotefooter"><div class="botslice_quote"><\/div><\/div>/is', create_function('$matches','return "[quote name=\"$matches[2]\" post=$matches[1] timestamp=".strtotime($matches[3]." ".$matches[4])."]$matches[5][/quote]";'), $str);
+    //$str = preg_replace_callback('/<div class="quoteheader"><div class="topslice_quote"><a href="[^>]*#msg([^>]*)">Quote from: ([^<]*) on <strong>([^<]*)<\/strong> at ([^<]*)<\/a><\/div><\/div><blockquote class="bbc_standard_quote">(.*)<\/blockquote><div class="quotefooter"><div class="botslice_quote"><\/div><\/div>/is', create_function('$matches','return "[quote name=\"$matches[2]\" post=$matches[1] timestamp=".strtotime($matches[3]." ".$matches[4])."]$matches[5][/quote]";'), $str);
+    $str = preg_replace_callback('/<div class="quoteheader"><div class="topslice_quote"><a href="[^>]*#msg([^>]*)">Quote from: ([^<]*) on <strong>([^<]*)<\/strong> at ([^<]*)<\/a><\/div><\/div><blockquote class="(bbc_standard_quote|bbc_alternate_quote)">(.*)<\/blockquote><div class="quotefooter"><div class="botslice_quote"><\/div><\/div>(?!<div class="quotefooter"><div class="botslice_quote"><\/div><\/div>)/is', create_function('$matches','return "[quote name=\"$matches[2]\" post=$matches[1] timestamp=".strtotime($matches[3]." ".$matches[4])."]".exttMbqRecurHandleQuote($matches[6])."[/quote]";'), $str);
 
     $search = array(
         '/<img .*?src="(.*?)".*?\/?>/si',
@@ -277,7 +292,7 @@ function post_html_clean($str)
     );
 
     $str = preg_replace('/\n|\r/si', '', $str);
-    $str = parse_quote($str);
+    //$str = parse_quote($str); //looks useless in future
     $str = preg_replace('/<i class="pstatus".*?>.*?<\/i>(<br\s*\/>){0,2}/', '', $str);
     $str = preg_replace('/<script.*?>.*?<\/script>/', '', $str);
     $str = preg_replace($search, $replace, $str);
