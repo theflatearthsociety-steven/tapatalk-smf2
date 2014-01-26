@@ -208,6 +208,18 @@ $txt['on_byo'] = 'On App Of This Forum';]]></add>
 		'return \'<a href="http://tapatalk.com/tapatalk_image.php?img=\'.urlencode(base64_encode($matches[2].\'/original\'.$matches[3])).\'" target="_blank" class="externalLink">\'.$matches[1].$matches[2].\'/thumbnail\'.$matches[3].$matches[4].\'</a>\';'
 	),
 	$content);
+	if ($_GET['action'] != 'post') {
+        $exttMbqIsSsl = false;
+        if($_SERVER['HTTPS'] === 1){  //Apache
+            $exttMbqIsSsl = true;
+        }elseif($_SERVER['HTTPS'] === 'on'){ //IIS
+            $exttMbqIsSsl = true;
+        }elseif($_SERVER['SERVER_PORT'] == 443){ //other
+            $exttMbqIsSsl = true;
+        }
+        $exttMbqProtocol = $exttMbqIsSsl ? 'https' : 'http';
+        $content = preg_replace('/\[emoji(\d+)\]/i', '<img src="'.$exttMbqProtocol.'://s3.amazonaws.com/tapatalk-emoji/emoji$1.png" />', $content);
+    }
 	echo $content;
 	//ob_start();
 	/* tapatalk end 20131119 */
