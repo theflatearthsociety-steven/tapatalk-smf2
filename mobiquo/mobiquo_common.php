@@ -275,6 +275,9 @@ function post_html_clean($str)
     //$str = preg_replace_callback('/<div class="quoteheader"><div class="topslice_quote"><a href="[^>]*#msg([^>]*)">Quote from: ([^<]*) on <strong>([^<]*)<\/strong> at ([^<]*)<\/a><\/div><\/div><blockquote class="bbc_standard_quote">(.*)<\/blockquote><div class="quotefooter"><div class="botslice_quote"><\/div><\/div>/is', create_function('$matches','return "[quote name=\"$matches[2]\" post=$matches[1] timestamp=".strtotime($matches[3]." ".$matches[4])."]$matches[5][/quote]";'), $str);
     //$str = preg_replace_callback('/<div class="quoteheader"><div class="topslice_quote"><a href="[^>]*#msg([^>]*)">Quote from: ([^<]*) on <strong>([^<]*)<\/strong> at ([^<]*)<\/a><\/div><\/div><blockquote class="(bbc_standard_quote|bbc_alternate_quote)">(.*)<\/blockquote><div class="quotefooter"><div class="botslice_quote"><\/div><\/div>(?!<div class="quotefooter"><div class="botslice_quote"><\/div><\/div>)/is', create_function('$matches','return "[quote name=\"$matches[2]\" post=$matches[1] timestamp=".strtotime($matches[3]." ".$matches[4])."]".exttMbqRecurHandleQuote($matches[6])."[/quote]";'), $str);
     $str = preg_replace_callback('/<div class="quoteheader"><div class="topslice_quote"><a href="[^>]*#msg([^>]*)">Quote from: ([^<]*) on .*?m<\/a><\/div><\/div><blockquote class="(bbc_standard_quote|bbc_alternate_quote)">(.*)<\/blockquote><div class="quotefooter"><div class="botslice_quote"><\/div><\/div>(?!<div class="quotefooter"><div class="botslice_quote"><\/div><\/div>)/is', create_function('$matches','return "[quote name=\"$matches[2]\" post=$matches[1]]".exttMbqRecurHandleQuote($matches[4])."[/quote]";'), $str);
+    
+    //handle code
+    $str = preg_replace('/<div class="codeheader">Code: <a [^>]*?class="codeoperation"[^>]*?>\[Select\]<\/a><\/div><pre[^>]*?><code class="bbc_code">(.*?)<\/code><\/pre>/i', '[code]$1[/code]', $str);
 
     $search = array(
         '/<img .*?src="(.*?)".*?\/?>/si',
@@ -535,7 +538,8 @@ function mobiquo_parse_bbc($message, $smileys = true, $cache_id = '', $parse_tag
 {
     global $user_info, $modSettings, $context;
 
-    $message = preg_replace('/\[(\/?)(code|php|html)\]/si', '[$1quote]', $message);
+    //$message = preg_replace('/\[(\/?)(code|php|html)\]/si', '[$1quote]', $message);
+    $message = preg_replace('/\[(\/?)(php|html)\]/si', '[$1quote]', $message);
     $message = process_list_tag($message);
     $message = preg_replace('/\[(youtube|yt)\](.*?)\[\/\1\]/sie', "video_bbcode_format('$1', '$2')", $message);
     $user_info['time_format'] = $user_info['user_time_format'];
