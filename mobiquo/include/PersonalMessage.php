@@ -2177,7 +2177,8 @@ function MessagePost2()
 	}
 
 	// Wrong verification code?
-	if (!$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'])
+	//if (!$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'])
+	if (!$modSettings['disable_pm_verification'] && !$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'])
 	{
 		require_once($sourcedir . '/Subs-Editor.php');
 		$verificationOptions = array(
