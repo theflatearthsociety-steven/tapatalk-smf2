@@ -208,7 +208,7 @@ $txt['on_byo'] = 'On App Of This Forum';]]></add>
 		'return \'<a href="http://tapatalk.com/tapatalk_image.php?img=\'.urlencode(base64_encode($matches[2].\'/original\'.$matches[3])).\'" target="_blank" class="externalLink">\'.$matches[1].$matches[2].\'/thumbnail\'.$matches[3].$matches[4].\'</a>\';'
 	),
 	$content);
-	if (isset($_GET['action']) && ($_GET['action'] != 'post')) {
+	if (!isset($_GET['action']) || (isset($_GET['action']) && ($_GET['action'] != 'post'))) {
         $exttMbqIsSsl = false;
         if(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 1)){  //Apache
             $exttMbqIsSsl = true;
