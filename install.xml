@@ -210,11 +210,11 @@ $txt['on_byo'] = 'On App Of This Forum';]]></add>
 	$content);
 	if ($_GET['action'] != 'post') {
         $exttMbqIsSsl = false;
-        if($_SERVER['HTTPS'] === 1){  //Apache
+        if(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 1)){  //Apache
             $exttMbqIsSsl = true;
-        }elseif($_SERVER['HTTPS'] === 'on'){ //IIS
+        }elseif(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on')){ //IIS
             $exttMbqIsSsl = true;
-        }elseif($_SERVER['SERVER_PORT'] == 443){ //other
+        }elseif(isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443)){ //other
             $exttMbqIsSsl = true;
         }
         $exttMbqProtocol = $exttMbqIsSsl ? 'https' : 'http';

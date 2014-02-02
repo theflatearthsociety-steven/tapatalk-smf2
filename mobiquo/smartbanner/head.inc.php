@@ -77,7 +77,7 @@ if ($app_ios_id != -1 || $app_android_id != -1)
 $app_banner_head = '';
 if (file_exists($tapatalk_dir . '/smartbanner/welcome.php') && file_exists($tapatalk_dir . '/smartbanner/appbanner.js'))
 {
-    $GLOBALS['app_head_included'] = true;
+    $GLOBALS['app_head_include'] = true;
     
     $app_banner_head = '
         <!-- Tapatalk Banner&Welcome head start -->
