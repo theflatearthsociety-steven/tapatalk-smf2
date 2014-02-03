@@ -243,7 +243,7 @@ $txt['on_byo'] = 'On App Of This Forum';]]></add>
 	while (true)]]></search>
             <add><![CDATA[	$looped = false;
 	/* tapatalk 20140117 1 begin */
-	if (IN_MOBIQUO && (ExttMbqBase::$requestName == 'search') && (ExttMbqBase::$otherParameters['search_filter']['userid'] || ExttMbqBase::$otherParameters['search_filter']['searchuser'])) {
+	if (defined('IN_MOBIQUO') && IN_MOBIQUO && (ExttMbqBase::$requestName == 'search') && (ExttMbqBase::$otherParameters['search_filter']['userid'] || ExttMbqBase::$otherParameters['search_filter']['searchuser'])) {
 	    //only used for search method,and works like get_user_reply_post or get_user_topic
     	$context['exttMbqTotal'] = $msgCount;
     	$context['exttMbqSearchId'] = ExttMbqBase::$otherParameters['searchid'];
@@ -258,7 +258,7 @@ $txt['on_byo'] = 'On App Of This Forum';]]></add>
 	$board_ids = array('own' => array(), 'any' => array());]]></search>
             <add><![CDATA[	$context['posts'] = array();
 	/* tapatalk 20140117 2 begin */
-	if (IN_MOBIQUO && (ExttMbqBase::$requestName == 'search') && (ExttMbqBase::$otherParameters['search_filter']['userid'] || ExttMbqBase::$otherParameters['search_filter']['searchuser'])) {
+	if (defined('IN_MOBIQUO') && IN_MOBIQUO && (ExttMbqBase::$requestName == 'search') && (ExttMbqBase::$otherParameters['search_filter']['userid'] || ExttMbqBase::$otherParameters['search_filter']['searchuser'])) {
 	    //only used for search method,and works like get_user_reply_post or get_user_topic
 	    $context['exttMbqRecords'] = & $context['posts'];
     }

@@ -16,7 +16,8 @@ $board_url = $boardurl;
 if (file_exists($boarddir . '/mobiquo/smartbanner/head.inc.php'))
     include($boarddir . '/mobiquo/smartbanner/head.inc.php');
 
-$context['html_headers'] .= $app_head_include;
+//$context['html_headers'] .= $app_head_include;
+$context['html_headers'] .= isset($app_head_include) ? $app_head_include : '';
 
 if (!isset($context['tapatalk_body_hook']))
     $context['tapatalk_body_hook'] = '';
