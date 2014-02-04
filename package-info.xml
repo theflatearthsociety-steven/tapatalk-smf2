@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
-    <name>Tapatalk SMF 2.0 RC5/Final Plugin</name>
+    <name>Tapatalk SMF 2.0 Plugin</name>
     <id>Tapatalk:TapatalkDevelopmentTeam</id>
-    <version>3.9.1</version>
+    <version>3.9.2</version>
     <homepage>http://tapatalk.com</homepage>
     <type>modification</type>
     <install>
