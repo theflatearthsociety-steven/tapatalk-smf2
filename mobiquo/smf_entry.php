@@ -302,6 +302,7 @@ function smf_main()
     // Allow modifying $actionArray easily.
     call_integration_hook('integrate_actions', array(&$actionArray));
 
+    //error_log($request_name.'-'.$_REQUEST['action']);   //for debugging
     // Get the function and file to include - if it's not there, do the board index.
     if (!isset($_REQUEST['action']) || !isset($actionArray[$_REQUEST['action']]))
     {

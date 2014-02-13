@@ -420,7 +420,7 @@ function exttMbqLoadAssignableGroups() {
 				'newbie_group' => 4,
 			)
 		);
-		//$exttMbqGroups = array(0 => $txt['admin_register_group_none']); //!!! the default group
+		//$exttMbqGroups = array(0 => $txt['admin_register_group_none']); //!!! the default group,but does not work
 		$exttMbqGroups = array(0 => '(no primary membergroup)'); //!!! the default group
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$exttMbqGroups[$row['id_group']] = $row['group_name'];

@@ -1242,3 +1242,55 @@ function encrypt($txt,$key)
     }
     return keyED($tmp,$key);
 }
+
+/* calculate the flags for In App Registration */
+function exttMbqMakeFlags() {
+    global $modSettings;
+    
+    /* calculate the flags for In App Registration */
+    /* default */
+    $exttMbqSignIn = 1;
+    $exttMbqInappreg = 1;
+    $exttMbqSsoLogin = 1;
+    $exttMbqSsoSignin = 1;
+    $exttMbqSsoRegister = 1;
+    $exttMbqNativeRegister = 1;
+    /* final */
+    if ($modSettings['registration_method'] == 3) 
+    {
+        $exttMbqSignIn = 0;
+        $exttMbqInappreg = 0;
+        $exttMbqSsoSignin = 0;
+        $exttMbqSsoRegister = 0;
+        $exttMbqNativeRegister = 0;
+    }
+    if (!function_exists('curl_init') && !@ini_get('allow_url_fopen'))
+    {
+        $exttMbqSignIn = 0;
+        $exttMbqInappreg = 0;
+        $exttMbqSsoLogin = 0;
+        $exttMbqSsoSignin = 0;
+        $exttMbqSsoRegister = 0;
+    }
+    if (isset($modSettings['tp_iar_registration_options'])) {
+        if ($modSettings['tp_iar_registration_options'] == 3) {
+            $exttMbqSignIn = 0;
+            $exttMbqInappreg = 0;
+            $exttMbqSsoSignin = 0;
+            $exttMbqSsoRegister = 0;
+            $exttMbqNativeRegister = 0;
+        } elseif ($modSettings['tp_iar_registration_options'] == 2) {
+            $exttMbqSignIn = 0;
+            $exttMbqInappreg = 0;
+            $exttMbqSsoSignin = 0;
+            $exttMbqSsoRegister = 0;
+        }
+    }
+    
+    ExttMbqBase::$otherParameters['exttMbqSignIn'] = $exttMbqSignIn;
+    ExttMbqBase::$otherParameters['exttMbqInappreg'] = $exttMbqInappreg;
+    ExttMbqBase::$otherParameters['exttMbqSsoLogin'] = $exttMbqSsoLogin;
+    ExttMbqBase::$otherParameters['exttMbqSsoSignin'] = $exttMbqSsoSignin;
+    ExttMbqBase::$otherParameters['exttMbqSsoRegister'] = $exttMbqSsoRegister;
+    ExttMbqBase::$otherParameters['exttMbqNativeRegister'] = $exttMbqNativeRegister;
+}
