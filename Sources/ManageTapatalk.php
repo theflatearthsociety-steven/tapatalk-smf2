@@ -26,6 +26,7 @@ function ManageTapatalk()
         'others' => 'ManageTapatalkOthers',
         'boards' => 'ManageTapatalkBoards',
         'rebranding' => 'ManageTapatalkRebranding',
+        'iar' => 'ManageTapatalkIar',
     );
 
     // Load up all the tabs...
@@ -35,6 +36,10 @@ function ManageTapatalk()
             'general' => array(
                 'label' => $txt['tp_general_settings'],
                 'description' => $txt['tp_general_settingsDesc'],
+            ),
+            'iar' => array(
+                'label' => $txt['tp_iar_settings'],
+                'description' => $txt['tp_iar_settingsDesc'],
             ),
             'boards' => array(
                 'label' => $txt['tp_board_settings'],
@@ -55,6 +60,32 @@ function ManageTapatalk()
         $subActions[$_REQUEST['sa']]();
     else
         $subActions['general']();
+}
+
+function ManageTapatalkIar($return_config = false)
+{
+    global $txt, $scripturl, $context, $settings, $sc, $modSettings;
+
+    $config_vars = array(
+			array('select', 'tp_iar_registration_options', array('1' => 'Native Registration and Social Sign On (Recommended)', '2' => 'Native Registration Only', '3' => 'Redirect to External Registration URL')),
+            array('text',  'tp_iar_registration_url', 'value'=> isset($modSettings['tp_iar_registration_url'])? $modSettings['tp_iar_registration_url']: 'index.php?action=register', 'size' => '42'),
+			array('select', 'tp_iar_usergroup_assignment', exttMbqLoadAssignableGroups()),
+    );
+
+    if ($return_config)
+        return $config_vars;
+
+    // Saving?
+    if (isset($_GET['save']))
+    {
+        saveDBSettings($config_vars);
+        redirectexit('action=admin;area=tapatalksettings;sa=iar');
+    }
+
+    $context['post_url'] = $scripturl . '?action=admin;area=tapatalksettings;sa=iar;save';
+    $context['settings_title'] = $txt['tapatalktitle'];
+
+    prepareDBSettingContext($config_vars);
 }
 
 function ManageTapatalkGeneral($return_config = false)
@@ -234,8 +265,8 @@ function ManageTapatalkRebranding($return_config = false)
     global $txt, $scripturl, $context, $settings, $sc, $modSettings;
 
     $config_vars = array(
+            array('large_text', 'tp_app_banner_msg', 'value'=> isset($modSettings['tp_app_banner_msg'])? $modSettings['tp_app_banner_msg'] : '', 'size' => '4', 'cols' => '60'),
             array('text', 'tp_app_ios_id', 'value'=> isset($modSettings['tp_app_ios_id'])? $modSettings['tp_app_ios_id'] : ''),
-            array('text', 'tp_app_banner_msg', 'value'=> isset($modSettings['tp_app_banner_msg'])? $modSettings['tp_app_banner_msg'] : ''),
             array('text', 'tp_android_url', 'value'=> isset($modSettings['tp_android_url'])? $modSettings['tp_android_url'] : '' ,  'size' => '80'),
             array('text', 'tp_kf_url', 'value'=> isset($modSettings['tp_kf_url'])? $modSettings['tp_kf_url'] : '' ,  'size' => '80'),
 //            array('hide', 'tp_ol_icon_path', 'value'=> isset($modSettings['tp_ol_icon_path'])? $modSettings['tp_ol_icon_path'] : '/mobiquo/forum_icons/byo-online.png' ,  'size' => '80'),
@@ -361,6 +392,41 @@ function ManageTapatalkOthers($return_config = false)
     $context['settings_title'] = $txt['tapatalktitle'];
 
     prepareDBSettingContext($config_vars);
+}
+
+// Load the assignable member groups.
+//refer ManageRegistration.php->AdminRegister()
+function exttMbqLoadAssignableGroups() {
+	global $smcFunc, $txt;
+	
+    $exttMbqGroups = array();
+	if (allowedTo('manage_membergroups'))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT group_name, id_group
+			FROM {db_prefix}membergroups
+			WHERE id_group != {int:moderator_group}
+				AND min_posts = {int:min_posts}' . (allowedTo('admin_forum') ? '' : '
+				AND id_group != {int:admin_group}
+				AND group_type != {int:is_protected}') . '
+				AND hidden != {int:hidden_group}
+			ORDER BY min_posts, CASE WHEN id_group < {int:newbie_group} THEN id_group ELSE 4 END, group_name',
+			array(
+				'moderator_group' => 3,
+				'min_posts' => -1,
+				'admin_group' => 1,
+				'is_protected' => 1,
+				'hidden_group' => 2,
+				'newbie_group' => 4,
+			)
+		);
+		//$exttMbqGroups = array(0 => $txt['admin_register_group_none']); //!!! the default group
+		$exttMbqGroups = array(0 => '(no primary membergroup)'); //!!! the default group
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$exttMbqGroups[$row['id_group']] = $row['group_name'];
+		$smcFunc['db_free_result']($request);
+	}
+	return $exttMbqGroups;
 }
 
 

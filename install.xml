@@ -68,6 +68,7 @@ $txt['tapatalktitle'] = 'Tapatalk Settings';
 $txt['tp_general_settings'] = 'General';
 $txt['tp_other_settings'] = 'Others';
 $txt['tp_board_settings'] = 'Boards';
+$txt['tp_iar_settings'] = 'In App Registration';
 $txt['tp_rebranding_settings'] = 'Rebranding Settings';]]></add>
         </operation>
         </file>
@@ -94,6 +95,11 @@ $txt['tp_select_boards'] = 'Select Boards to HIDE on Tapatalk';
 $txt['tp_disable_newtopic'] = 'Disable New Topic For Boards';
 $txt['tp_register_page_url'] = 'Register page url';
 $txt['tp_push_key'] = 'Tapatalk API Key';
+//Tapatalk IAR
+$txt['tp_iar_registration_options'] = 'Registration Options';
+$txt['tp_iar_registration_url'] = 'Registration URL';
+$txt['tp_iar_usergroup_assignment'] = 'User Group Assignment';
+$txt['tp_iar_settingsDesc'] = 'Settings related to In App Registration';
 //Tapatalk BYO
 $txt['tp_app_banner_msg'] = 'BYO App Banner Message';
 $txt['tp_app_ios_id'] = 'BYO iOS App ID';
@@ -145,6 +151,12 @@ $helptxt['tp_kf_url'] = 'Enter your BYO App URL from Amazon App Store, to be use
 $helptxt['tp_ol_icon_path'] = 'Mobile Online Icon appears on Who\'s Online page to indicate member using Tapatalk app';
 $helptxt['tp_ol_icon_link'] = 'Target URL when icon is clicked';
 $helptxt['tp_ol_icon_desc'] = 'Mobile Online Icon Title appears on Who\'s Online page to indicate member using Tapatalk app';
+//Tapatalk IAR
+$helptxt['tp_iar_registration_options'] = 'Native Registration and Social Sign On (Recommended) - Facebook users can register for your forum using their Facebook credentials, and those not connected to Facebook can register for your forum via an in-app form.<br />
+Native Registration Only - No SSO available for Facebook users. All users must register for the forum via an in-app form.<br />
+Redirect to External Registration URL - All users registering for your forum will be redirected to a web browser outside of the app to continue registration.';
+$helptxt['tp_iar_registration_url'] = 'This field is required if you select "Redirect to External Registration URL" under "Registration Options". You do not need to include the forum root URL.';
+$helptxt['tp_iar_usergroup_assignment'] = 'You can assign users registered with Tapatalk to specific user groups. If you do not assign them to a specific group, they will be assigned a default group.';
 //Tapatalk ends
 
 ]]></add>
