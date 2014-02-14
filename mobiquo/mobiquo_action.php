@@ -788,8 +788,6 @@ function action_register()
 
     checkSession();
     
-    exttMbqMakeFlags();
-    
     if(empty($_POST['password'])) get_error('password cannot be empty');
     if(!($maintenance == 0)) get_error('Forum is in maintenance model or Tapatalk is disabled by forum administrator.');
     
@@ -1741,19 +1739,22 @@ function before_action_register()
     
     exttMbqMakeFlags();
     
-    if(!isset($modSettings['tp_push_key']) || empty($modSettings['tp_push_key']))
-        fatal_lang_error('Forum is not configured well, please contact administrator to set up push key for the forum!');
+    // emailActivate is ture means can not auto active
     $_POST['emailActivate'] = true;
+    
     if($params_num == 5)
     {
         if (!ExttMbqBase::$otherParameters['exttMbqSsoRegister']) {
             fatal_lang_error('registration_disabled', false);
         }
+        
         $email_response = getEmailFromScription($_POST['token'], $_POST['code'], $modSettings['tp_push_key']);
         if(empty($email_response))
-            fatal_lang_error('Failed to connect to tapatalk server, please try again later.');
+            fatal_error('Sorry, this community has not yet full configured to work with Tapatalk, this feature has been disabled.');
+        
         if( (!isset($_POST['email']) || empty($_POST['email'])) && (!isset($email_response['email']) || empty($email_response['email'])))
-            fatal_lang_error('You need to input an email or re-login tapatalk id to use default email of tapatalk id.');
+            fatal_error('Tapatalk ID session expired, please re-login Tapatalk ID and try again, if the problem persist please contact us.');
+        
         $_POST['emailActivate'] = $email_response['result'] && isset($email_response['email']) && !empty($email_response['email']) && ($email_response['email'] == $_POST['email']) ? false : true;
     } else {
         if (!ExttMbqBase::$otherParameters['exttMbqNativeRegister']) {
