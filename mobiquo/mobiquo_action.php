@@ -789,16 +789,9 @@ function action_register()
     checkSession();
     
     exttMbqMakeFlags();
-    if ((ExttMbqBase::$otherParameters['iarCase'] == 'sso_signin') && isset($modSettings['tp_iar_usergroup_assignment'])) {
-        $_POST['group'] = $modSettings['tp_iar_usergroup_assignment'];
-    }
     
     if(empty($_POST['password'])) get_error('password cannot be empty');
     if(!($maintenance == 0)) get_error('Forum is in maintenance model or Tapatalk is disabled by forum administrator.');
-    
-    foreach ($_POST as $key => $value)
-        if (!is_array($_POST[$key]))
-            $_POST[$key] = htmltrim__recursive(str_replace(array("\n", "\r"), '', $_POST[$key]));
     
     if ($modSettings['registration_method'] == 0)
         $register_mode = 'nothing';
@@ -809,8 +802,12 @@ function action_register()
     else
         $register_mode = 'activation';
     
+    foreach ($_POST as $key => $value)
+        if (!is_array($_POST[$key]))
+            $_POST[$key] = htmltrim__recursive(str_replace(array("\n", "\r"), '', $_POST[$key]));
+    
     $_POST['group'] = 0;
-    if (($register_mode == 'nothing') && (ExttMbqBase::$otherParameters['iarCase'] == 'sso_register') && isset($modSettings['tp_iar_usergroup_assignment'])) {
+    if ($register_mode == 'nothing' && isset($modSettings['tp_iar_usergroup_assignment'])) {
         $_POST['group'] = $modSettings['tp_iar_usergroup_assignment'];
     }
     $regOptions = array(
@@ -1749,7 +1746,6 @@ function before_action_register()
     $_POST['emailActivate'] = true;
     if($params_num == 5)
     {
-        ExttMbqBase::$otherParameters['iarCase'] = 'sso_register';
         if (!ExttMbqBase::$otherParameters['exttMbqSsoRegister']) {
             fatal_lang_error('registration_disabled', false);
         }
@@ -1760,7 +1756,6 @@ function before_action_register()
             fatal_lang_error('You need to input an email or re-login tapatalk id to use default email of tapatalk id.');
         $_POST['emailActivate'] = $email_response['result'] && isset($email_response['email']) && !empty($email_response['email']) && ($email_response['email'] == $_POST['email']) ? false : true;
     } else {
-        ExttMbqBase::$otherParameters['iarCase'] = 'native_register';
         if (!ExttMbqBase::$otherParameters['exttMbqNativeRegister']) {
             fatal_lang_error('registration_disabled', false);
         }
@@ -1777,7 +1772,8 @@ function before_action_sign_in()
     
     if(!isset($modSettings['tp_push_key']) || empty($modSettings['tp_push_key']))
         $modSettings['tp_push_key'] = '';
-
+    
+    $_POST['emailActivate'] = true;
     $email_response = getEmailFromScription($_POST['token'], $_POST['code'], $modSettings['tp_push_key']);
 
     if(empty($email_response))
@@ -1820,14 +1816,12 @@ function before_action_sign_in()
                     $_REQUEST['user'] = $_GET['user'] = $_POST['user'] = $_POST['username'];
                     $_REQUEST['cookielength'] = $_GET['cookielength'] = $_POST['cookielength'] = -1;
                     $_POST['tid_sign_in'] = true;
-                    $_POST['emailActivate'] = true;
+                    $_POST['emailActivate'] = false;
                     $_REQUEST['user'] = $_GET['user'] = $_POST['user'] = $_POST['username'];
                     $request_name = 'register';
-                    ExttMbqBase::$otherParameters['iarCase'] = 'sso_signin';
                     if (!ExttMbqBase::$otherParameters['exttMbqSsoSignin']) {
                         fatal_lang_error('registration_disabled', false);
                     }
-                    before_action_register();
                 }
                 else
                 {
