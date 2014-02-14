@@ -788,6 +788,11 @@ function action_register()
 
     checkSession();
     
+    exttMbqMakeFlags();
+    if ((ExttMbqBase::$otherParameters['iarCase'] == 'sso_signin') && isset($modSettings['tp_iar_usergroup_assignment'])) {
+        $_POST['group'] = $modSettings['tp_iar_usergroup_assignment'];
+    }
+    
     if(empty($_POST['password'])) get_error('password cannot be empty');
     if(!($maintenance == 0)) get_error('Forum is in maintenance model or Tapatalk is disabled by forum administrator.');
     
@@ -796,6 +801,9 @@ function action_register()
             $_POST[$key] = htmltrim__recursive(str_replace(array("\n", "\r"), '', $_POST[$key]));
     $register_mode = empty($modSettings['registration_method']) ? 'nothing' : ($_POST['emailActivate'] ? ($modSettings['registration_method'] == 1 ? 'activation' : 'approval') : 'nothing');
     if($_POST['emailActivate'] && $_POST['tid_sign_in']) $register_mode = 'nothing';
+    if (($register_mode != 'activation') && (ExttMbqBase::$otherParameters['iarCase'] == 'sso_register') && isset($modSettings['tp_iar_usergroup_assignment'])) {
+        $_POST['group'] = $modSettings['tp_iar_usergroup_assignment'];
+    }
     $regOptions = array(
         'interface' => $register_mode == 'approval' ? 'guest' : 'admin',
         'username' => $_POST['user'],
@@ -1725,23 +1733,36 @@ function before_action_register()
 {
     global $modSettings, $params_num;
     
+    exttMbqMakeFlags();
+    
     if(!isset($modSettings['tp_push_key']) || empty($modSettings['tp_push_key']))
         fatal_lang_error('Forum is not configured well, please contact administrator to set up push key for the forum!');
     $_POST['emailActivate'] = true;
     if($params_num == 5)
     {
+        ExttMbqBase::$otherParameters['iarCase'] = 'sso_register';
+        if (!ExttMbqBase::$otherParameters['exttMbqSsoRegister']) {
+            get_error('Sorry, not support sso register.');
+        }
         $email_response = getEmailFromScription($_POST['token'], $_POST['code'], $modSettings['tp_push_key']);
         if(empty($email_response))
             fatal_lang_error('Failed to connect to tapatalk server, please try again later.');
         if( (!isset($_POST['email']) || empty($_POST['email'])) && (!isset($email_response['email']) || empty($email_response['email'])))
             fatal_lang_error('You need to input an email or re-login tapatalk id to use default email of tapatalk id.');
         $_POST['emailActivate'] = $email_response['result'] && isset($email_response['email']) && !empty($email_response['email']) && ($email_response['email'] == $_POST['email']) ? false : true;
+    } else {
+        ExttMbqBase::$otherParameters['iarCase'] = 'native_register';
+        if (!ExttMbqBase::$otherParameters['exttMbqNativeRegister']) {
+            get_error('Sorry, not support native register.');
+        }
     }
 }
 
 function before_action_sign_in()
 {
     global $modSettings, $request_name;
+    
+    exttMbqMakeFlags();
     
     $_REQUEST['username'] = $_GET['username'] = $_POST['username'] = mobiquo_encode($_POST['username']);
     
@@ -1793,6 +1814,10 @@ function before_action_sign_in()
                     $_POST['emailActivate'] = true;
                     $_REQUEST['user'] = $_GET['user'] = $_POST['user'] = $_POST['username'];
                     $request_name = 'register';
+                    ExttMbqBase::$otherParameters['iarCase'] = 'sso_signin';
+                    if (!ExttMbqBase::$otherParameters['exttMbqSsoSignin']) {
+                        get_error('Sorry, not support sso signin.');
+                    }
                 }
                 else
                 {
