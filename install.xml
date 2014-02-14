@@ -93,7 +93,6 @@ $txt['tp_other_settingsDesc'] = 'Taptalk information';
 $txt['tp_rebranding_settingsDesc'] = 'Settings for users who have built their own mobile forum application, try build your <a href="http://tapatalk.com/build.php"> <u>own application</u></a>?';
 $txt['tp_select_boards'] = 'Select Boards to HIDE on Tapatalk';
 $txt['tp_disable_newtopic'] = 'Disable New Topic For Boards';
-$txt['tp_register_page_url'] = 'Register page url';
 $txt['tp_push_key'] = 'Tapatalk API Key';
 //Tapatalk IAR
 $txt['tp_iar_registration_options'] = 'Registration Options';
@@ -138,7 +137,6 @@ Thank you! :)';
             <add><![CDATA[
 //Tapatalk start
 $helptxt['tp_full_ads'] = 'Tapatalk will show a one time welcoming screen to mobile users to download the free app, the screen will contain your forum logo and branding only, with a button to get the free app.';
-$helptxt['tp_register_page_url'] = 'Registration URL relative to your forum root path';
 $helptxt['tp_push_key'] = 'Optional. To improve the quality of Push Notification from your forum, please fill-in copy and paste the Push Notification Key from Tapatalk Forum Owner Area to here.';
 $helptxt['tp_allow_usergroup'] = 'Allow usergroups to login via Tapatalk, leave this option empty means that all usergroups users can login via Tapatalk. Different usergroups should be departed by comma, for example, "3,11,6" which means only users who belongs to 3,6 and 11 usergroups can login via Tapatalk.';
 $helptxt['tp_hide_boards'] = 'Hide forums you don\'t want them to be listed in Tapatalk app.';
