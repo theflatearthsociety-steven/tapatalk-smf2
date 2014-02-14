@@ -799,9 +799,18 @@ function action_register()
     foreach ($_POST as $key => $value)
         if (!is_array($_POST[$key]))
             $_POST[$key] = htmltrim__recursive(str_replace(array("\n", "\r"), '', $_POST[$key]));
-    $register_mode = empty($modSettings['registration_method']) ? 'nothing' : ($_POST['emailActivate'] ? ($modSettings['registration_method'] == 1 ? 'activation' : 'approval') : 'nothing');
-    if($_POST['emailActivate'] && $_POST['tid_sign_in']) $register_mode = 'nothing';
-    if (($register_mode != 'activation') && (ExttMbqBase::$otherParameters['iarCase'] == 'sso_register') && isset($modSettings['tp_iar_usergroup_assignment'])) {
+    
+    if ($modSettings['registration_method'] == 0)
+        $register_mode = 'nothing';
+    else if ($modSettings['registration_method'] == 1)
+        $register_mode = $_POST['emailActivate'] === false ? 'nothing' : 'activation';
+    else if ($modSettings['registration_method'] == 2)
+        $register_mode = 'approval';
+    else
+        $register_mode = 'activation';
+    
+    $_POST['group'] = 0;
+    if (($register_mode == 'nothing') && (ExttMbqBase::$otherParameters['iarCase'] == 'sso_register') && isset($modSettings['tp_iar_usergroup_assignment'])) {
         $_POST['group'] = $modSettings['tp_iar_usergroup_assignment'];
     }
     $regOptions = array(
@@ -815,7 +824,7 @@ function action_register()
         'check_email_ban' => false,
         'send_welcome_email' => isset($_POST['emailPassword']) || empty($_POST['password']),
         'require' => $register_mode,
-        'memberGroup' => empty($_POST['group']) || !allowedTo('manage_membergroups') ? 0 : (int) $_POST['group'],
+        'memberGroup' => (int) $_POST['group'],
     );
     
     define('mobi_register',1);
@@ -1742,7 +1751,7 @@ function before_action_register()
     {
         ExttMbqBase::$otherParameters['iarCase'] = 'sso_register';
         if (!ExttMbqBase::$otherParameters['exttMbqSsoRegister']) {
-            get_error('Sorry, not support sso register.');
+            fatal_lang_error('registration_disabled', false);
         }
         $email_response = getEmailFromScription($_POST['token'], $_POST['code'], $modSettings['tp_push_key']);
         if(empty($email_response))
@@ -1753,7 +1762,7 @@ function before_action_register()
     } else {
         ExttMbqBase::$otherParameters['iarCase'] = 'native_register';
         if (!ExttMbqBase::$otherParameters['exttMbqNativeRegister']) {
-            get_error('Sorry, not support native register.');
+            fatal_lang_error('registration_disabled', false);
         }
     }
 }
@@ -1816,8 +1825,9 @@ function before_action_sign_in()
                     $request_name = 'register';
                     ExttMbqBase::$otherParameters['iarCase'] = 'sso_signin';
                     if (!ExttMbqBase::$otherParameters['exttMbqSsoSignin']) {
-                        get_error('Sorry, not support sso signin.');
+                        fatal_lang_error('registration_disabled', false);
                     }
+                    before_action_register();
                 }
                 else
                 {
