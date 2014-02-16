@@ -80,7 +80,11 @@ if (isset($_GET['user_id']))
 }
 elseif (isset($_GET['username']))
 {
-    $user = loadMemberData(base64_decode($_GET['username']), true, 'profile'); 
+    $user = loadMemberData(base64_decode($_GET['username']), true, 'profile');
+    if (empty($user))
+    {
+        $user = loadMemberData($_GET['username'], true, 'profile');
+    }
 }
 else
 {
