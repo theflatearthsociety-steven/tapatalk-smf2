@@ -136,7 +136,7 @@ function login_func()
         'user_type'     => new xmlrpcval($user_type, 'base64'),
         'email'         => new xmlrpcval($profile['email_address'], 'base64'),
         'usergroup_id'  => new xmlrpcval($usergroup_id, 'array'),
-        'ignored_uids'  => new xmlrpcval($profile['pm_ignore_list'], 'string'),
+        //'ignored_uids'  => new xmlrpcval($profile['pm_ignore_list'], 'string'),
         'register'      => new xmlrpcval(isset($_POST['emailActivate']) && $_POST['emailActivate'], 'boolean'),
         'max_attachment'=> new xmlrpcval($modSettings['attachmentNumPerPostLimit'], 'int'),
         'max_png_size'  => new xmlrpcval($modSettings['attachmentSizeLimit']*1024, 'int'),

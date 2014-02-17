@@ -273,8 +273,11 @@ function post_html_clean($str)
     
     //handle quote
     //$str = preg_replace_callback('/<div class="quoteheader"><div class="topslice_quote"><a href="[^>]*#msg([^>]*)">Quote from: ([^<]*) on <strong>([^<]*)<\/strong> at ([^<]*)<\/a><\/div><\/div><blockquote class="(bbc_standard_quote|bbc_alternate_quote)">(.*)<\/blockquote><div class="quotefooter"><div class="botslice_quote"><\/div><\/div>(?!<div class="quotefooter"><div class="botslice_quote"><\/div><\/div>)/is', create_function('$matches','return "[quote name=\"$matches[2]\" post=$matches[1] timestamp=".strtotime($matches[3]." ".$matches[4])."]".exttMbqRecurHandleQuote($matches[6])."[/quote]";'), $str);
-    //$str = preg_replace_callback('/<div class="quoteheader"><div class="topslice_quote"><a href="[^>]*#msg([^>]*)">Quote from: ([^<]*) on .*?m<\/a><\/div><\/div><blockquote class="(bbc_standard_quote|bbc_alternate_quote)">(.*)<\/blockquote><div class="quotefooter"><div class="botslice_quote"><\/div><\/div>(?!<div class="quotefooter"><div class="botslice_quote"><\/div><\/div>)/is', create_function('$matches','return "[quote name=\"$matches[2]\" post=$matches[1]]".exttMbqRecurHandleQuote($matches[4])."[/quote]";'), $str);<div class="quoteheader">
-    $str = preg_replace_callback('/<div class="quoteheader"><div class="topslice_quote"><a href="[^>]*(#msg([^>]*)|action=profile[^>]*)">Quote from: ([^<]*) on .*?m<\/a><\/div><\/div><blockquote class="(bbc_standard_quote|bbc_alternate_quote)">(.*)<\/blockquote><div class="quotefooter"><div class="botslice_quote"><\/div><\/div>(?!<div class="quotefooter"><div class="botslice_quote"><\/div><\/div>)/is', create_function('$matches','return "[quote name=\"$matches[3]\"".($matches[2] ? " post=$matches[2]":"")."]".exttMbqRecurHandleQuote($matches[5])."[/quote]";'), $str);
+    //$str = preg_replace_callback('/<div class="quoteheader"><div class="topslice_quote"><a href="[^>]*#msg([^>]*)">Quote from: ([^<]*) on .*?m<\/a><\/div><\/div><blockquote class="(bbc_standard_quote|bbc_alternate_quote)">(.*)<\/blockquote><div class="quotefooter"><div class="botslice_quote"><\/div><\/div>(?!<div class="quotefooter"><div class="botslice_quote"><\/div><\/div>)/is', create_function('$matches','return "[quote name=\"$matches[2]\" post=$matches[1]]".exttMbqRecurHandleQuote($matches[4])."[/quote]";'), $str);
+    //$str = preg_replace_callback('/<div class="quoteheader"><div class="topslice_quote"><a href="[^>]*(#msg([^>]*)|action=profile[^>]*)">Quote from: ([^<]*) on .*?m<\/a><\/div><\/div><blockquote class="(bbc_standard_quote|bbc_alternate_quote)">(.*)<\/blockquote><div class="quotefooter"><div class="botslice_quote"><\/div><\/div>(?!<div class="quotefooter"><div class="botslice_quote"><\/div><\/div>)/is', create_function('$matches','return "[quote name=\"$matches[3]\"".($matches[2] ? " post=$matches[2]":"")."]".exttMbqRecurHandleQuote($matches[5])."[/quote]";'), $str);
+    $str = preg_replace('/\[\/dummyquote\]/si', '[/quote]', $str);
+    // [dummyquote author=admin link=topic=1.msg4#msg4 date=1392612506]
+    $str = preg_replace('/\[dummyquote author=([^\]]*?) link=[^\]]*?#msg([^\]]*?) date=([^\]]*?)\]/si', '[quote name="$1" post=$2 timestamp=$3]', $str);
     
     //handle code
     /*
@@ -349,6 +352,7 @@ function parse_bbcode($str)
 
     if (isset($GLOBALS['return_html']) && $GLOBALS['return_html']) {
         $str = htmlspecialchars($str);
+        $str = preg_replace('/&quot;/si', '"', $str);
         $replace = array(
             '<$1>$2</$1>',
             '<$1>$2</$1>',
@@ -540,6 +544,8 @@ function mobiquo_parse_bbc($message, $smileys = true, $cache_id = '', $parse_tag
 {
     global $user_info, $modSettings, $context;
 
+    $message = preg_replace('/\[quote([^\]]*)\]/si', '[dummyquote$1]', $message);   //normal quote
+    $message = preg_replace('/\[\/quote\]/si', '[/dummyquote]', $message);  //normal quote
     $message = preg_replace('/\[(\/?)(code|php|html)\]/si', '[$1quote]', $message);
     //$message = preg_replace('/\[(\/?)(php|html)\]/si', '[$1quote]', $message);
     $message = process_list_tag($message);
