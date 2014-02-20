@@ -110,7 +110,7 @@ function fatal_lang_error($error, $log = 'general', $sprintf = array())
 	if (empty($context['theme_loaded']) && empty($fatal_error_called))
 	{
 		$fatal_error_called = true;
-		loadTheme();
+		@loadTheme();
 	}
 
 	// If we have no theme stuff we can't have the lanuage file...

@@ -1616,7 +1616,7 @@ function Post2()
 	}
 
 	// Make sure the user isn't spamming the board.
-	if (!isset($_REQUEST['msg']))
+	if (!isset($_REQUEST['msg']) && $request_name != 'upload_attach' && $request_name != 'remove_attachment')
 		spamProtection('post');
 
 	// At about this point, we're posting and that's that.
