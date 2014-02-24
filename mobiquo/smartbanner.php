@@ -30,7 +30,7 @@ $context['tapatalk_body_hook'] .= '
 top:auto;
 }
 </style>
-<script type="text/javascript">tapatalkDetect()</script>
+<script type="text/javascript">if (typeof(tapatalkDetect) == "function") tapatalkDetect();</script>
 <!-- Tapatalk Detect banner body end -->
 
 ';
