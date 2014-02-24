@@ -5,7 +5,7 @@
     <file name="$sourcedir/Load.php">
         <operation>
             <search position="after"><![CDATA[	$context['menu_separator'] = !empty($settings['use_image_buttons']) ? ' ' : ' | ';]]></search>
-            <add><![CDATA[	include($boarddir.'/mobiquo/smartbanner.php');
+            <add><![CDATA[	include_once($boarddir.'/mobiquo/smartbanner.php');
 ]]></add>
         </operation>
     </file>
@@ -23,7 +23,7 @@
 					tapatalk_push_reply($msgOptions['id']);
 				else if(file_exists($boarddir . '/mobiquo/push_hook.php'))
 				{
-					include($boarddir . '/mobiquo/push_hook.php');
+					include_once($boarddir . '/mobiquo/push_hook.php');
 					tapatalk_push_reply($msgOptions['id']);
 				}
 			}]]></add>
@@ -36,7 +36,7 @@
 				tapatalk_push_quote_tag($msgOptions['id'], true);
 			else if(file_exists($boarddir . '/mobiquo/push_hook.php'))
 			{
-				include($boarddir . '/mobiquo/push_hook.php');
+				include_once($boarddir . '/mobiquo/push_hook.php');
 				tapatalk_push_quote_tag($msgOptions['id'], true);
 			}]]></add>
         </operation>
@@ -51,7 +51,7 @@
 		tapatalk_push_pm();
 	else if(file_exists($boarddir . '/mobiquo/push_hook.php'))
 	{
-		include($boarddir . '/mobiquo/push_hook.php');
+		include_once($boarddir . '/mobiquo/push_hook.php');
 		tapatalk_push_pm();
 	}
 	//Tapatalk pm push - end
