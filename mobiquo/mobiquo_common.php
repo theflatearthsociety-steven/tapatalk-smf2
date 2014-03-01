@@ -280,9 +280,7 @@ function post_html_clean($str)
     $str = preg_replace('/\[dummyquote author=([^\]]*?) link=[^\]]*?#msg([^\]]*?) date=([^\]]*?)\]/si', '[quote name="$1" post=$2 timestamp=$3]', $str);
     
     //handle code
-    /*
     $str = preg_replace('/<div class="codeheader">Code: <a [^>]*?class="codeoperation"[^>]*?>\[Select\]<\/a><\/div><pre[^>]*?><code class="bbc_code">(.*?)<\/code><\/pre>/i', '[code]$1[/code]', $str);
-    */
 
     $search = array(
         '/<img .*?src="(.*?)".*?\/?>/si',
@@ -546,8 +544,8 @@ function mobiquo_parse_bbc($message, $smileys = true, $cache_id = '', $parse_tag
 
     $message = preg_replace('/\[quote([^\]]*)\]/si', '[dummyquote$1]', $message);   //normal quote
     $message = preg_replace('/\[\/quote\]/si', '[/dummyquote]', $message);  //normal quote
-    $message = preg_replace('/\[(\/?)(code|php|html)\]/si', '[$1quote]', $message);
-    //$message = preg_replace('/\[(\/?)(php|html)\]/si', '[$1quote]', $message);
+    //$message = preg_replace('/\[(\/?)(code|php|html)\]/si', '[$1quote]', $message);
+    $message = preg_replace('/\[(\/?)(php|html)\]/si', '[$1quote]', $message);
     $message = process_list_tag($message);
     $message = preg_replace('/\[(youtube|yt)\](.*?)\[\/\1\]/sie', "video_bbcode_format('$1', '$2')", $message);
     $user_info['time_format'] = $user_info['user_time_format'];

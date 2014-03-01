@@ -221,7 +221,7 @@ function ManageTapatalkBoards($return_config = false)
             'child_level' => $row['child_level'],
         );
     }
-    mysql_free_result($request);
+    $smcFunc['db_free_result']($request);
 
     // Now, let's sort the list of categories into the boards for templates that like that.
     $temp_boards = array();
