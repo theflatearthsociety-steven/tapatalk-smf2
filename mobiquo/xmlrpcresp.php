@@ -1049,13 +1049,32 @@ function reply_topic_func()
 
 function get_raw_post_func()
 {
-    global $context;
+    global $context,$attachments;
+    
+    $postId = $_GET['msg'];
+    $attachments = exttMbqGetAtt($postId);
+    $outputAtt = array();
+    foreach($attachments as $attachment)
+    {
+        $extension = pathinfo($attachment['name'], PATHINFO_EXTENSION);
+        if(empty($extension))
+            $extension = 'other';
+        $xmlrpc_attachment = new xmlrpcval(array(
+            'filename'      => new xmlrpcval(basic_clean($attachment['name']), 'base64'),
+            'filesize'      => new xmlrpcval($attachment['byte_size'], 'int'),
+            'content_type'  => new xmlrpcval($attachment['is_image'] ? 'image' : $extension),
+            'thumbnail_url' => new xmlrpcval($attachment['thumbnail']['has_thumb'] ? $attachment['thumbnail']['href'] : ''),
+            'url'           => new xmlrpcval($attachment['href'])
+        ), 'struct');
+        $outputAtt[] = $xmlrpc_attachment;
+    }
 
     $response = new xmlrpcval(
         array(
             'post_id'       => new xmlrpcval($_GET['msg']),
             'post_title'    => new xmlrpcval(basic_clean($context['subject']), 'base64'),
             'post_content'  => new xmlrpcval(basic_clean($context['message']), 'base64'),
+            'attachments'   => new xmlrpcval($outputAtt, 'array')
         ),
         'struct'
     );

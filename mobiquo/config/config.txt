@@ -31,6 +31,7 @@ search_user = 1
 m_report = 1
 user_recommended = 1
 emoji_support = 1
+advanced_edit = 1
 /* For mod conflict situation.
 If your forum installed some mod which changed code in file like 'Load.php' and called function defined in the mod, tapatalk may not work.
 In this case, you can config these mod or functions here, and it can help pass the function call problem. 

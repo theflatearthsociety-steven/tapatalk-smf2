@@ -1298,3 +1298,44 @@ function exttMbqMakeFlags() {
     ExttMbqBase::$otherParameters['exttMbqSsoRegister'] = $exttMbqSsoRegister;
     ExttMbqBase::$otherParameters['exttMbqNativeRegister'] = $exttMbqNativeRegister;
 }
+
+/**
+ * get attachments
+ *
+ * @param  Mixed  $id  post id
+ * @param  Array  option array
+ * @return  Array
+ * $opt['case'] = 'getPostAtt' means get attachments in post
+ */
+function exttMbqGetAtt($id, $opt = array()) {
+    global $smcFunc;
+    if (!$opt) {
+        $opt['case'] = 'getPostAtt';
+    }
+    if ($opt['case'] == 'getPostAtt') { //the return data same as the global $attachments in inlcude/Display.php->loadAttachmentContext function
+        if ($id) {
+            $ret = array();
+        	$request = $smcFunc['db_query']('', '
+        	    SELECT 
+        	        a.id_attach, a.id_folder, a.id_msg, a.filename, a.file_hash, a.size as filesize, a.downloads, a.approved, a.width, a.height, a.id_thumb, b.width as thumb_width, b.height as thumb_height 
+        	    FROM {db_prefix}attachments AS a
+        			LEFT JOIN {db_prefix}attachments AS b ON (a.id_thumb = b.id_attach AND b.attachment_type = 3)
+        	    WHERE
+        	        a.id_msg = {int:id} AND a.attachment_type = 0',
+        		array(
+        			'id' => $id,
+        		)
+        	);
+        	while ($row = $smcFunc['db_fetch_assoc']($request)) {
+        	    $ret[$row['id_msg']][] = $row;
+        	}
+        	$GLOBALS['attachments'] = $ret;
+        	require_once('include/Display.php');
+        	return loadAttachmentContext($id);
+        } else {
+            return array();
+        }
+    } else {
+        get_error('Invalid option case when get attachment.');
+    }
+}
