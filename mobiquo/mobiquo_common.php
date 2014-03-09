@@ -1302,10 +1302,11 @@ function exttMbqMakeFlags() {
 /**
  * get attachments
  *
- * @param  Mixed  $id  post id
+ * @param  Mixed  $id
  * @param  Array  option array
  * @return  Array
- * $opt['case'] = 'getPostAtt' means get attachments in post
+ * $opt['case'] = 'getPostAtt' means get attachments in post,$id is post id
+ * $opt['case'] = 'getAttByIds' means get attachments by attachment ids,$id is attachment ids
  */
 function exttMbqGetAtt($id, $opt = array()) {
     global $smcFunc;
@@ -1332,6 +1333,27 @@ function exttMbqGetAtt($id, $opt = array()) {
         	$GLOBALS['attachments'] = $ret;
         	require_once('include/Display.php');
         	return loadAttachmentContext($id);
+        } else {
+            return array();
+        }
+    } elseif ($opt['case'] == 'getAttByIds') {
+        if ($id) {
+            $ret = array();
+        	$request = $smcFunc['db_query']('', '
+        	    SELECT 
+        	        a.id_attach, a.id_folder, a.id_msg, a.filename, a.file_hash, a.size as filesize, a.downloads, a.approved, a.width, a.height, a.id_thumb, b.width as thumb_width, b.height as thumb_height 
+        	    FROM {db_prefix}attachments AS a
+        			LEFT JOIN {db_prefix}attachments AS b ON (a.id_thumb = b.id_attach AND b.attachment_type = 3)
+        	    WHERE
+        	        a.id_attach IN ({array_int:id}) AND a.attachment_type = 0',
+        		array(
+        			'id' => $id,
+        		)
+        	);
+        	while ($row = $smcFunc['db_fetch_assoc']($request)) {
+        	    $ret[$row['id_attach']] = $row;
+        	}
+        	return $ret;
         } else {
             return array();
         }

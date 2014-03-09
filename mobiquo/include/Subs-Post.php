@@ -2569,6 +2569,19 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	if ($modSettings['postmod_active'] && isset($msgOptions['approved']))
 		approvePosts($msgOptions['id'], $msgOptions['approved']);
 
+	// Fix the attachments.
+	//only for save_raw_post method now.
+	if (!empty($msgOptions['attachments']))
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}attachments
+			SET id_msg = {int:id_msg}
+			WHERE id_attach IN ({array_int:attachment_list})',
+			array(
+				'attachment_list' => $msgOptions['attachments'],
+				'id_msg' => $msgOptions['id'],
+			)
+		);
+
 	return true;
 }
 

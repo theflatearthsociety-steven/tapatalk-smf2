@@ -1934,6 +1934,34 @@ function before_action_reply_post()
 function before_action_save_raw_post()
 {
     check_topic_notify();
+    
+    //prepare entry parameters begin
+    global $smcFunc;
+    
+    $tempIds = isset($request_params[4]) ? explode('.', implode('.', $request_params[4])) : array();
+    $tempIds = array(16,14);
+    $atts = exttMbqGetAtt($tempIds, array('case' => 'getAttByIds'));
+    
+    $_POST['attachments'] = array();
+    $_POST['attach_del'][] = 0; //works like web page to prevent sql error.
+    if (count($tempIds) != count($atts)) {
+        get_error('Parameter error when save post.');
+    }
+    foreach ($atts as $att) {
+        if ($att['id_msg']) {
+            if ($att['id_msg'] == $_GET['msg']) {
+                $_POST['attach_del'][] = $att['id_attach'];
+            } else {
+                get_error('Include invalid attachment data when save post.');
+            }
+        } else {
+            $_POST['attachments'][] = $att['id_attach'];
+            if ($att['id_thumb']) {
+                $_POST['attachments'][] = $att['id_thumb'];     //!!!
+            }
+        }
+    }
+    //prepare entry parameters end
 }
 
 function check_topic_notify()
