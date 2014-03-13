@@ -1936,7 +1936,7 @@ function before_action_save_raw_post()
     check_topic_notify();
     
     //prepare entry parameters begin
-    global $smcFunc;
+    global $request_params;
     
     $tempIds = isset($request_params[4]) ? explode('.', implode('.', $request_params[4])) : array();
     $tempIds = array(16,14);
@@ -2249,6 +2249,24 @@ function before_action_m_ban_user()
     }
     else
         fatal_lang_error('invalid_username', false);
+}
+
+function before_action_m_move_post()
+{
+    //prepare entry parameters begin
+    global $request_params;
+    
+    if ($post = exttMbqGetPost($request_params[0])) {
+        if ($topic = exttMbqGetTopic($post['id_topic'])) {
+            $_GET['topic'] = $post['id_topic'];
+            $GLOBALS['topic'] = $post['id_topic'];  //used for $sourcedir/SplitTopics.php->SplitTopics()
+        } else {
+            get_error('Need valid topic when move post.');
+        }   
+    } else {
+        get_error('Need valid post id when move post.');
+    }
+    //prepare entry parameters end
 }
 
 function before_action_update_password()

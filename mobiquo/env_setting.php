@@ -811,6 +811,13 @@ switch ($request_name) {
         $_POST['custom_subject'] = $request_params[1];
         $_POST['enforce_subject'] = 1;
         break;
+    case 'm_move_post':
+        $_GET['action'] = 'splittopics';
+        $_GET['sa'] = 'execute';
+        $_POST['at'] = $request_params[0];
+        $_POST['step2'] = 'onlythis';
+        $_POST['subname'] = $request_params[2];
+        break;
     case 'm_ban_user':
         $_GET['action'] = 'admin';
         $_GET['area'] = 'ban';

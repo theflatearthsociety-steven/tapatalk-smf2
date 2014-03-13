@@ -1330,6 +1330,7 @@ function exttMbqGetAtt($id, $opt = array()) {
         	while ($row = $smcFunc['db_fetch_assoc']($request)) {
         	    $ret[$row['id_msg']][] = $row;
         	}
+        	$smcFunc['db_free_result']($request);
         	$GLOBALS['attachments'] = $ret;
         	require_once('include/Display.php');
         	return loadAttachmentContext($id);
@@ -1353,6 +1354,7 @@ function exttMbqGetAtt($id, $opt = array()) {
         	while ($row = $smcFunc['db_fetch_assoc']($request)) {
         	    $ret[$row['id_attach']] = $row;
         	}
+        	$smcFunc['db_free_result']($request);
         	return $ret;
         } else {
             return array();
@@ -1360,4 +1362,60 @@ function exttMbqGetAtt($id, $opt = array()) {
     } else {
         get_error('Invalid option case when get attachment.');
     }
+}
+
+/**
+ * get post
+ *
+ * @param  Mixed  $id  post id
+ * @return  Mixed
+ */
+function exttMbqGetPost($id) {
+    global $smcFunc;
+    
+	$request = $smcFunc['db_query']('', '
+	    SELECT 
+	        *
+	    FROM {db_prefix}messages AS a
+	    WHERE
+	        a.id_msg = {int:id}',
+		array(
+			'id' => $id,
+		)
+	);
+	if ($row = $smcFunc['db_fetch_assoc']($request)) {
+	    $smcFunc['db_free_result']($request); 
+	    return $row;
+	} else {
+	    $smcFunc['db_free_result']($request);
+	    return false;
+	}
+}
+
+/**
+ * get topic
+ *
+ * @param  Mixed  $id  topic id
+ * @return  Mixed
+ */
+function exttMbqGetTopic($id) {
+    global $smcFunc;
+    
+	$request = $smcFunc['db_query']('', '
+	    SELECT 
+	        *
+	    FROM {db_prefix}topics AS a
+	    WHERE
+	        a.id_topic = {int:id}',
+		array(
+			'id' => $id,
+		)
+	);
+	if ($row = $smcFunc['db_fetch_assoc']($request)) {
+	    $smcFunc['db_free_result']($request); 
+	    return $row;
+	} else {
+	    $smcFunc['db_free_result']($request);
+	    return false;
+	}
 }

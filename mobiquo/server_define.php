@@ -476,6 +476,11 @@ $server_param = array(
         'signature' => array(array($xmlrpcArray, $xmlrpcString, $xmlrpcBase64)),
     ),
     
+    'm_move_post' => array(
+        'function'  => 'xmlresptrue',
+        'signature' => array(array($xmlrpcArray, $xmlrpcString, $xmlrpcString, $xmlrpcBase64)),
+    ),
+    
     'm_ban_user' => array(
         'function'  => 'xmlresptrue',
         'signature' => array(array($xmlrpcArray, $xmlrpcBase64, $xmlrpcInt, $xmlrpcBase64)),
