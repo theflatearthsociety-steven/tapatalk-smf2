@@ -6,6 +6,7 @@ $app_ios_id = isset($modSettings['tp_app_ios_id']) ? $modSettings['tp_app_ios_id
 $app_banner_message = isset($modSettings['tp_app_banner_msg']) ? $modSettings['tp_app_banner_msg'] : '';
 $app_banner_message = preg_replace('/\r\n/','<br>',$app_banner_message);
 $app_location_url = get_scheme_url();
+$page_type = $GLOBALS['exttMbqTempPageType'];
 $is_mobile_skin = false;
 $app_forum_name = !empty($GLOBALS['mbname'])? $GLOBALS['mbname'] : '';
 $tapatalk_dir = 'mobiquo';
@@ -37,7 +38,7 @@ top:auto;
 
 function get_scheme_url()
 {
-    global $boardurl, $user_info, $context;
+    global $boardurl, $user_info, $context, $exttMbqTempPageType;
 
     $baseUrl = $boardurl;
     $baseUrl = preg_replace('/https?:\/\//', 'tapatalk://', $baseUrl);
@@ -98,5 +99,7 @@ function get_scheme_url()
     }
     $other_info_str = implode('&', $other_info);
     $scheme_url = $baseUrl . '/' . (!empty($user_info['id']) ? '?user_id='.$user_info['id'].'&' : '?') . 'location='.$location.(!empty($other_info_str) ? '&'.$other_info_str : '');
+    
+    $exttMbqTempPageType = $location;
     return $scheme_url;
 }

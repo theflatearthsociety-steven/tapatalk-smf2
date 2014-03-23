@@ -1,9 +1,6 @@
 <?php
 
-// don't include it when the request was not from mobile device
-$useragent = tt_getenv('HTTP_USER_AGENT');
-if (!preg_match('/iPhone|iPod|iPad|Silk|Android|IEMobile|Windows Phone/i', $useragent))
-    return;
+$app_head_include = '';
 
 // don't include it when the request was from inside app
 $in_app = tt_getenv('HTTP_IN_APP');
@@ -38,6 +35,29 @@ $app_android_id = isset($app_android_id) && $app_android_id ? preg_replace('/^.*
 $app_kindle_url = isset($app_kindle_url) ? $app_kindle_url : '';
 $app_banner_message = isset($app_banner_message) && $app_banner_message ? preg_replace('/\r\n|\n|\r/si', '<br />', $app_banner_message) : '';
 $is_mobile_skin = isset($is_mobile_skin) && $is_mobile_skin ? 1 : 0;
+
+// valid page_type: index, forum, topic, post, pm, search, profile, online, other
+$page_type = isset($page_type) && $page_type ? $page_type : 'other';
+
+
+// add App Indexing for Google Search
+$host_path = preg_replace('#tapatalk://#si', '', $app_location_url);
+if (in_array($page_type, array('index', 'forum', 'topic', 'post')) && $host_path)
+{
+    if ($app_android_id == $app_android_id_default || empty($app_android_id) || $app_android_id == -1)
+    {
+        $app_head_include = '
+        <!-- App Indexing for Google Search -->
+        <link href="android-app://com.quoord.tapatalkpro.activity/tapatalk/'.$host_path.'" rel="alternate" />
+        ';
+    }
+}
+
+
+// don't include it when the request was not from mobile device
+$useragent = tt_getenv('HTTP_USER_AGENT');
+if (!preg_match('/iPhone|iPod|iPad|Silk|Android|IEMobile|Windows Phone/i', $useragent))
+    return;
 
 
 // display twitter card
@@ -96,37 +116,14 @@ if (file_exists($tapatalk_dir . '/smartbanner/welcome.php') && file_exists($tapa
             var app_forum_code = "'.(trim($api_key) ? md5(trim($api_key)) : '').'";
             var app_referer = "'.addslashes(urlencode($app_referer)).'";
             var app_welcome_url = "'.addslashes($tapatalk_dir_url.'/smartbanner/welcome.php').'";
-            var app_welcome_enable = '.($app_ads_enable ? 1 : 0).';
+            var app_welcome_enable = '.(!isset($app_ads_enable) || $app_ads_enable ? 1 : 0).';
         </script>
         <script src="'.$tapatalk_dir_url.'/smartbanner/appbanner.js" type="text/javascript"></script>
         <!-- Tapatalk Banner head end-->
     ';
 }
 
-
-// add App Indexing for Google Search
-$app_indexing = '';
-$host_path = preg_replace('#tapatalk://#si', '', $app_location_url);
-if ($host_path)
-{
-    if ($app_android_id == $app_android_id_default)
-    {
-        $app_indexing = '
-        <!-- App Indexing for Google Search -->
-        <link href="android-app://com.quoord.tapatalkHD/tapatalk/'.urlencode($host_path).'" rel="alternate" />
-        <link href="android-app://com.quoord.tapatalkpro.activity/tapatalk/'.urlencode($host_path).'" rel="alternate" />
-        ';
-    }
-    else
-    {
-        $app_indexing = '
-        <!-- App Indexing for Google Search -->
-        <link href="android-app://'.urlencode($app_android_id).'/tapatalk-byo/'.urlencode($host_path).'" rel="alternate" />
-        ';
-    }
-}
-
-$app_head_include = $twitter_card_head.$app_banner_head.$app_indexing;
+$app_head_include .= $twitter_card_head.$app_banner_head;
 
 function tt_getenv($key)
 {
