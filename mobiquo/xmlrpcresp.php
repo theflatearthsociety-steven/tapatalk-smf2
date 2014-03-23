@@ -1556,6 +1556,20 @@ function m_get_report_post_func()
         {
             $avatar = $profile['avatar'] == '' ? ($profile['id_attach'] > 0 ? (empty($profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) : '') : (stristr($profile['avatar'], 'http://') ? $profile['avatar'] : $modSettings['avatar_url'] . '/' . $profile['avatar']);
         }
+        
+        $requestDetail = $smcFunc['db_query']('', '
+            SELECT d.*
+            FROM {db_prefix}log_reported_comments d, {db_prefix}log_reported r
+            WHERE d.id_report = r.id_report and r.id_topic = {int:id_topic} and r.id_msg = {int:id_msg} 
+            ORDER BY d.time_sent DESC LIMIT 1',
+            array(
+                'id_topic' => $topic_id,
+                'id_msg' => $matches[2]
+            )
+        );
+        $rDeatil = $smcFunc['db_fetch_assoc']($requestDetail);
+        $smcFunc['db_free_result']($requestDetail);
+        
         $post_list[] = new xmlrpcval(array(
             'forum_id'          => new xmlrpcval($board_id),
             'forum_name'        => new xmlrpcval(basic_clean($board_name), 'base64'),
@@ -1570,6 +1584,9 @@ function m_get_report_post_func()
             'timestamp'         => new xmlrpcval($post['timestamp_started'], 'string'),
             'short_content'     => new xmlrpcval(basic_clean($post['body'], 100, 1), 'base64'),
             'can_delete'        => new xmlrpcval(allowedTo('delete_any'), 'boolean'),
+            'reported_by_id'          => new xmlrpcval($rDeatil['id_member']),
+            'reported_by_name'  => new xmlrpcval(basic_clean($rDeatil['membername']), 'base64'),
+            'report_reason'  => new xmlrpcval(basic_clean($rDeatil['comment']), 'base64'),
         ), 'struct');
 
         unset($topic_id, $board_id, $request);
