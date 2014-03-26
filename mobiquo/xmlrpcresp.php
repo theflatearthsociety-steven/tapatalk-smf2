@@ -1060,6 +1060,7 @@ function get_raw_post_func()
         if(empty($extension))
             $extension = 'other';
         $xmlrpc_attachment = new xmlrpcval(array(
+            'attachment_id'      => new xmlrpcval($attachment['id']),
             'filename'      => new xmlrpcval(basic_clean($attachment['name']), 'base64'),
             'filesize'      => new xmlrpcval($attachment['byte_size'], 'int'),
             'content_type'  => new xmlrpcval($attachment['is_image'] ? 'image' : $extension),
