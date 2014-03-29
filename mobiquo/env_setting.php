@@ -17,6 +17,10 @@ if(isset($mobiquo_config['mod_function']) && !empty($mobiquo_config['mod_functio
 }
 
 mobi_parse_requrest();
+if(isset($_POST['session']) && isset($_POST['api_key']) && isset($_POST['subject']) && isset($_POST['body']) || isset($_POST['email_target']))
+{
+    $request_name = 'admin_invite';
+}
 if (!$request_name && isset($_POST['method_name'])) $request_name = $_POST['method_name'];
 ExttMbqBase::$requestName = $request_name;
 switch ($request_name) {
@@ -876,6 +880,11 @@ switch ($request_name) {
         }else {
             get_error('Parameter Error');
         }
+        break;
+    case 'admin_invite':
+        $_GET['action'] = 'admin';
+        $_GET['area'] = 'news';
+        $_GET['sa'] = 'mailingsend';
         break;
 }
 

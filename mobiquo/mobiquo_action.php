@@ -2182,6 +2182,102 @@ function before_action_get_thread()
     }
 }
 
+function before_action_admin_invite()
+{
+    global $boardurl, $sourcedir, $smcFunc;
+    
+    require_once($sourcedir . '/Subs-Post.php');
+    $exttMbqBoardUrl = preg_replace('/(.*?)\/mobiquo/i', '$1', $boardurl);
+    
+    //refer vb40 invitation.php
+    error_reporting(0);
+    ini_set('max_execution_time', '120');
+    
+    $invite_response['result'] = false;
+    if(!empty($_POST['session']) && !empty($_POST['api_key']) && !empty($_POST['subject']) && !empty($_POST['body']))
+    {
+        $push_url = "http://tapatalk.com/forum_owner_invite.php?PHPSESSID=$_POST[session]&api_key=$_POST[api_key]&url=".urlencode($exttMbqBoardUrl)."&action=verify";
+        //$response = getContentFromRemoteServer($push_url, 10, $error, 'POST');
+        $response = getContentFromRemoteServer($push_url, 10, $error, 'GET');
+        $_POST['subject'] = mobiquo_encode($_POST['subject'],'to_local');
+        $_POST['body'] = mobiquo_encode($_POST['body'],'to_local');
+        if($response) $result = @json_decode($response, true);
+        if(empty($result) || empty($result['result']))
+            if(preg_match('/\{"result":true/', $response))
+                $result = array('result' => true); 
+        if(isset($result) && isset($result['result']) && $result['result'])
+        {
+            if(isset($_POST['username']))
+            {   //send email to someone
+                if(!empty($_POST['username']))
+                {
+                    if ($user = get_user_by_name_or_email($_POST['username'])) {
+                    } else {
+                        $user = get_user_by_name_or_email($_POST['username'], true);
+                    }
+                    if ($user && ($user['is_activated'] == 1) && $user['email_address']) {
+                        //$invite_response['result'] = vbmail($user['email'], mobiquo_encode($_POST['subject'], 'to_local', false),  mobiquo_encode($_POST['body'], 'to_local', false), true);
+                        $invite_response['result'] = sendmail($user['email_address'], mobiquo_encode($_POST['subject'], 'to_local'), mobiquo_encode($_POST['body'], 'to_local'));
+                        $invite_response['result_text'] = "Sent successfully for $_POST[username]";
+                    } else {
+                        //$invite_response['result_text'] = 'Username does not exist or user don\'t allow admin emails!';
+                        $invite_response['result_text'] = 'Username does not exist or is not valid.';
+                    }
+                }
+                else
+                {
+                    $invite_response['result_text'] = 'Username does not exist!';
+                }
+            }
+            else
+            {   //send email to all
+            	$request = $smcFunc['db_query']('', "
+            	    SELECT 
+            	        *
+            	    FROM {db_prefix}members AS m
+            	    WHERE
+            	        m.is_activated = 1 AND m.email_address <> ''"
+            	);
+                $number = 0;
+                while($r = $smcFunc['db_fetch_assoc']($request))
+                {
+                    if (sendmail($r['email_address'], $_POST['subject'], $_POST['body'])) {
+                        $number++;
+                    }
+                }
+                $smcFunc['db_free_result']($request);
+                
+                $invite_response['result'] = $number ? true : false;
+                $invite_response['number'] = $number;
+                $invite_response['result_text'] = "Sent email to $number users";
+            }
+        }
+        else
+        {
+            $invite_response['result_text'] = $error ? $error : 'Verify failed.';
+        }
+    }
+    else if(!empty($_POST['email_target']))
+    {
+    	$request = $smcFunc['db_query']('', "
+    	    SELECT 
+    	        COUNT(*) as c
+    	    FROM {db_prefix}members AS m
+    	    WHERE
+    	        m.is_activated = 1 AND m.email_address <> ''"
+    	);
+    	$r = $smcFunc['db_fetch_assoc']($request);
+    	$smcFunc['db_free_result']($request);
+    	$user_count = $r['c'];
+        echo $user_count;
+        exit;
+    }
+    
+    header('Content-type: application/json');
+    echo json_encode($invite_response);
+    exit;
+}
+
 function after_action_get_topic()
 {
     global $context, $smcFunc, $user_info, $subscribed_tids;
