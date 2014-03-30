@@ -1735,7 +1735,7 @@ function before_action_create_message()
 
 function before_action_register()
 {
-    global $modSettings, $params_num;
+    global $modSettings, $params_num, $sourcedir;
     
     exttMbqMakeFlags();
     
@@ -1759,6 +1759,13 @@ function before_action_register()
     } else {
         if (!ExttMbqBase::$otherParameters['exttMbqNativeRegister']) {
             fatal_lang_error('registration_disabled', false);
+        }
+        require_once($sourcedir . '/Subs-Tapatalk.php');
+        $tp_iar_spam_prevention = isset($modSettings['tp_iar_spam_prevention']) ? $modSettings['tp_iar_spam_prevention'] : 1;
+        if ($tp_iar_spam_prevention == 1 || $tp_iar_spam_prevention == 3) {
+            if (exttmbq_is_spam($_POST['email'], exttMbqGetIP())) {
+                fatal_error('Sorry, can not register new user with spam info.');
+            }
         }
     }
 }
