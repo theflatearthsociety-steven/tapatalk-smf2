@@ -98,6 +98,7 @@ $txt['tp_push_key'] = 'Tapatalk API Key';
 $txt['tp_iar_registration_options'] = 'Registration Options';
 $txt['tp_iar_registration_url'] = 'Registration URL';
 $txt['tp_iar_usergroup_assignment'] = 'User Group Assignment';
+$txt['tp_iar_spam_prevention'] = 'Spam Prevention';
 $txt['tp_iar_settingsDesc'] = 'Settings related to In App Registration';
 //Tapatalk BYO
 $txt['tp_app_banner_msg'] = 'BYO App Banner Message';
@@ -155,6 +156,7 @@ Native Registration Only - No SSO available for Facebook users. All users must r
 Redirect to External Registration URL - All users registering for your forum will be redirected to a web browser outside of the app to continue registration.';
 $helptxt['tp_iar_registration_url'] = 'This field is required if you select "Redirect to External Registration URL" under "Registration Options". You do not need to include the forum root URL.';
 $helptxt['tp_iar_usergroup_assignment'] = 'You can assign users registered with Tapatalk to specific user groups. If you do not assign them to a specific group, they will be assigned a default group.';
+$helptxt['tp_iar_spam_prevention'] = 'By enabling StopForumSpam integration, new user registration from Tapatalk app and/or from web will be screened with StopForumSpam database to prevent existing black-listed spammers.';
 //Tapatalk ends
 
 ]]></add>

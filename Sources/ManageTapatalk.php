@@ -70,6 +70,7 @@ function ManageTapatalkIar($return_config = false)
 			array('select', 'tp_iar_registration_options', array('1' => 'Native Registration and Social Sign On (Recommended)', '2' => 'Native Registration Only', '3' => 'Redirect to External Registration URL')),
             array('text',  'tp_iar_registration_url', 'value'=> isset($modSettings['tp_iar_registration_url'])? $modSettings['tp_iar_registration_url']: 'index.php?action=register', 'size' => '42'),
 			array('select', 'tp_iar_usergroup_assignment', exttMbqLoadAssignableGroups()),
+			array('select', 'tp_iar_spam_prevention', array('1' => 'Enable StopForumSpam in Tapatalk in-app registration', '2' => 'Enable StopForumSpam in web registration', '3' => 'Enable both', '4' => 'Disable')),
     );
 
     if ($return_config)
