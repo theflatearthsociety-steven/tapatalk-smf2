@@ -282,17 +282,17 @@ function Login2()
 
 			$_SESSION['failed_login'] = @$_SESSION['failed_login'] + 1;
 
-			if ($_SESSION['failed_login'] >= $modSettings['failed_login_threshold'])
-				redirectexit('action=reminder');
-			else
-			{
+//			if ($_SESSION['failed_login'] >= $modSettings['failed_login_threshold'])
+//				redirectexit('action=reminder');
+//			else
+//			{
 				log_error($txt['incorrect_password'] . ' - <span class="remove">' . $user_settings['member_name'] . '</span>', 'user');
 
 				$context['disable_login_hashing'] = true;
 				$context['login_errors'] = array($txt['incorrect_password']);
 				unset($user_settings);
 				return;
-			}
+//			}
 		}
 	}
 	else if((!isset($_POST['tid_sign_in']) && !$_POST['tid_sign_in']))
