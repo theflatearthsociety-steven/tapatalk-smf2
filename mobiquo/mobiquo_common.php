@@ -10,28 +10,28 @@ function mobiquo_exit($str = '')
     global $request_name, $context, $topic, $board;
 
     switch ($request_name) {
-        case    'authorize_user': if (preg_match('/^action=login2;sa=check;member=/', $str)) return;
-        case'update_push_status': if (preg_match('/^action=login2;sa=check;member=/', $str)) return;
-        case             'login': if (preg_match('/^action=login2;sa=check;member=/', $str)) return;
-        case        'login_user': if (preg_match('/^action=login2;sa=check;member=/', $str)) return;
-        case       'logout_user': if (isset($_COOKIE['PHPSESSID'])) sessionDestroy($_COOKIE['PHPSESSID']); return;
+        case    'authorize_user': if (preg_match('/^action=login2;sa=check;member=/', $str)) return; break;
+        case'update_push_status': if (preg_match('/^action=login2;sa=check;member=/', $str)) return; break;
+        case             'login': if (preg_match('/^action=login2;sa=check;member=/', $str)) return; break;
+        case        'login_user': if (preg_match('/^action=login2;sa=check;member=/', $str)) return; break;
+        case       'logout_user': if (isset($_COOKIE['PHPSESSID'])) sessionDestroy($_COOKIE['PHPSESSID']); return; break;
         case    'delete_message': return;
         case    'create_message': if ($str == $context['current_label_redirect']) return;
-        case   'subscribe_topic': if ($str == 'topic=' . $topic . '.' . $_REQUEST['start']) return;
-        case 'unsubscribe_topic': if ($str == 'topic=' . $topic . '.' . $_REQUEST['start']) return;
-        case   'subscribe_forum': if ($str == 'board=' . $board . '.' . $_REQUEST['start']) return;
-        case 'unsubscribe_forum': if ($str == 'board=' . $board . '.' . $_REQUEST['start']) return;
+        case   'subscribe_topic': if ($str == 'topic=' . $topic . '.' . $_REQUEST['start']) return; break;
+        case 'unsubscribe_topic': if ($str == 'topic=' . $topic . '.' . $_REQUEST['start']) return; break;
+        case   'subscribe_forum': if ($str == 'board=' . $board . '.' . $_REQUEST['start']) return; break;
+        case 'unsubscribe_forum': if ($str == 'board=' . $board . '.' . $_REQUEST['start']) return; break;
         case       'report_post': return;
         case  'mark_all_as_read': return;
-        case     'upload_avatar': if ('action=profile;area=forumprofile;updated' == $str) return;
-        case      'update_email': if(preg_match('/^action=profile;area=account;updated/', $str)) return;
-        case     'm_stick_topic': if (preg_match("/^topic=$topic/", $str)) return;
-        case     'm_close_topic': if (preg_match("/^topic=$topic/", $str)) return;
-        case    'm_delete_topic': if ($str == 'board=' . $board . '.0') return;
-        case     'm_delete_post': if ($str == 'action=recent') return;
-        case      'm_move_topic': if ($str == 'board=' . $board . '.0') return;
-        case     'm_merge_topic': if (preg_match("/^action=mergetopics;sa=done;to=/", $str)) return;
-        case        'thank_post': if (preg_match("/^topic=$topic/", $str)) return;
+        case     'upload_avatar': if ('action=profile;area=forumprofile;updated' == $str) return; break;
+        case      'update_email': if (preg_match('/^action=profile;area=account;updated/', $str)) return; break;
+        case     'm_stick_topic': if (preg_match("/^topic=$topic/", $str)) return; break;
+        case     'm_close_topic': if (preg_match("/^topic=$topic/", $str)) return; break;
+        case    'm_delete_topic': if ($str == 'board=' . $board . '.0') return; break;
+        case     'm_delete_post': if ($str == 'action=recent') return; break;
+        case      'm_move_topic': if ($str == 'board=' . $board . '.0') return; break;
+        case     'm_merge_topic': if (preg_match("/^action=mergetopics;sa=done;to=/", $str)) return; break;
+        case        'thank_post': if (preg_match("/^topic=$topic/", $str)) return; break;
     }
     get_error('Unknown error');
 }
