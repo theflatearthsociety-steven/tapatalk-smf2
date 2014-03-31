@@ -96,6 +96,7 @@ function Login2()
 {
 	global $txt, $scripturl, $user_info, $user_settings, $smcFunc;
 	global $cookiename, $maintenance, $modSettings, $context, $sc, $sourcedir;
+	global $tid_sign_in;
 
 	// Load cookie authentication stuff.
 	require_once($sourcedir . '/Subs-Auth.php');
@@ -197,7 +198,7 @@ function Login2()
 	// Hmm... maybe 'admin' will login with no password. Uhh... NO!
 	if ((!isset($_POST['passwrd']) || $_POST['passwrd'] == '') && (!isset($_POST['hash_passwrd']) || strlen($_POST['hash_passwrd']) != 40))
 	{
-		if(!isset($_POST['tid_sign_in']) && !$_POST['tid_sign_in'])
+		if(!$tid_sign_in)
 		{
 			$context['login_errors'] = array($txt['no_password']);
 			return;
@@ -214,7 +215,7 @@ function Login2()
 	// Are we using any sort of integration to validate the login?
 	if (in_array('retry', call_integration_hook('integrate_validate_login', array($_POST['user'], isset($_POST['hash_passwrd']) && strlen($_POST['hash_passwrd']) == 40 ? $_POST['hash_passwrd'] : null, $modSettings['cookieTime'])), true))
 	{
-		if(!isset($_POST['tid_sign_in']) && !$_POST['tid_sign_in'])
+		if(!$tid_sign_in)
 		{
 			$context['login_errors'] = array($txt['login_hash_error']);
 			$context['disable_login_hashing'] = true;
@@ -261,8 +262,11 @@ function Login2()
 	$user_settings = $smcFunc['db_fetch_assoc']($request);
 	$smcFunc['db_free_result']($request);
 
+
+if(!$tid_sign_in)
+{
 	// Figure out the password using SMF's encryption - if what they typed is right.
-	if (isset($_POST['hash_passwrd']) && strlen($_POST['hash_passwrd']) == 40 && (!isset($_POST['tid_sign_in']) && !$_POST['tid_sign_in']) )
+	if (isset($_POST['hash_passwrd']) && strlen($_POST['hash_passwrd']) == 40 )
 	{
 		// Needs upgrading?
 		if (strlen($user_settings['passwd']) != 40)
@@ -295,11 +299,9 @@ function Login2()
 //			}
 		}
 	}
-	else if((!isset($_POST['tid_sign_in']) && !$_POST['tid_sign_in']))
+	else
 		$sha_passwd = sha1(strtolower($user_settings['member_name']) . un_htmlspecialchars($_POST['passwrd']));
 
-if((!isset($_POST['tid_sign_in']) && !$_POST['tid_sign_in']))
-{
 	// Bad password!  Thought you could fool the database?!
 	if ($user_settings['passwd'] != $sha_passwd)
 	{

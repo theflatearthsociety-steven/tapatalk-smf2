@@ -784,7 +784,7 @@ function action_get_new_topic()
 
 function action_register()
 {
-    global $sourcedir, $context, $modSettings, $request_name, $maintenance, $mmessage;
+    global $sourcedir, $context, $modSettings, $request_name, $maintenance, $mmessage, $tid_sign_in;
 
     checkSession();
     
@@ -836,7 +836,7 @@ function action_register()
         );
         $context['registration_done'] = sprintf($txt['admin_register_done'], $context['new_member']['link']);
     }
-    if(!empty($memberID) && isset($_POST['tid_sign_in']) && $_POST['tid_sign_in'])
+    if(!empty($memberID) && $tid_sign_in)
     {
         //update profile
         if(isset($_POST['tid_profile']) && !empty($_POST['tid_profile']) && is_array($_POST['tid_profile']))
@@ -1772,7 +1772,7 @@ function before_action_register()
 
 function before_action_sign_in()
 {
-    global $modSettings, $request_name;
+    global $modSettings, $request_name, $tid_sign_in;
     
     exttMbqMakeFlags();
     
@@ -1804,11 +1804,11 @@ function before_action_sign_in()
             {
                 //prepare login parameter
                 $_REQUEST['action'] = $_GET['action'] = $_POST['action'] = 'login2';
-                $_POST['tid_sign_in'] = true;
                 $_REQUEST['user'] = $_GET['user'] = $_POST['user'] = $user['member_name'];
                 $_REQUEST['passwrd'] = $_GET['passwrd'] = $_POST['passwrd'] = $_POST['password'];
                 $_REQUEST['cookielength'] = $_GET['cookielength'] = $_POST['cookielength'] = -1;
                 $request_name = 'login';
+                $tid_sign_in = true;
                 before_action_login();
             }
             else
@@ -1823,10 +1823,10 @@ function before_action_sign_in()
                     $_REQUEST['passwrd'] = $_GET['passwrd'] = $_POST['passwrd'] = $_POST['password'];
                     $_REQUEST['user'] = $_GET['user'] = $_POST['user'] = $_POST['username'];
                     $_REQUEST['cookielength'] = $_GET['cookielength'] = $_POST['cookielength'] = -1;
-                    $_POST['tid_sign_in'] = true;
                     $_POST['emailActivate'] = false;
                     $_REQUEST['user'] = $_GET['user'] = $_POST['user'] = $_POST['username'];
                     $request_name = 'register';
+                    $tid_sign_in = true;
                     if (!ExttMbqBase::$otherParameters['exttMbqSsoSignin']) {
                         fatal_lang_error('registration_disabled', false);
                     }
@@ -1850,11 +1850,11 @@ function before_action_sign_in()
         {
             //prepare login parameter
             $_REQUEST['action'] = $_GET['action'] = $_POST['action'] = 'login2';
-            $_POST['tid_sign_in'] = true;
             $_REQUEST['user'] = $_GET['user'] = $_POST['user'] = $_POST['username'];
             $_REQUEST['passwrd'] = $_GET['passwrd'] = $_POST['passwrd'] = $_POST['password'];
             $_REQUEST['cookielength'] = $_GET['cookielength'] = $_POST['cookielength'] = -1;
             $request_name = 'login';
+            $tid_sign_in = true;
             before_action_login();
         }
         else
@@ -1869,11 +1869,11 @@ function before_action_sign_in()
         {
             //prepare login parameter
             $_REQUEST['action'] = $_GET['action'] = $_POST['action'] = 'login2';
-            $_POST['tid_sign_in'] = true;
             $_REQUEST['user'] = $_GET['user'] = $_POST['user'] = $user['member_name'];
             $_REQUEST['passwrd'] = $_GET['passwrd'] = $_POST['passwrd'] = $_POST['password'];
             $_REQUEST['cookielength'] = $_GET['cookielength'] = $_POST['cookielength'] = -1;
             $request_name = 'login';
+            $tid_sign_in = true;
             before_action_login();
         }
         else
