@@ -101,5 +101,11 @@ function get_scheme_url()
     $scheme_url = $baseUrl . '/' . (!empty($user_info['id']) ? '?user_id='.$user_info['id'].'&' : '?') . 'location='.$location.(!empty($other_info_str) ? '&'.$other_info_str : '');
     
     $exttMbqTempPageType = $location;
+    if (
+        (isset($_GET['action']) && $_GET['action'] == 'post' && isset($_GET['msg']) && isset($_GET['topic'])) || 
+        (isset($_GET['action']) && $_GET['action'] == 'post' && isset($_GET['topic']) && isset($_GET['last_msg']))
+    ) {
+        $exttMbqTempPageType = 'other';
+    }
     return $scheme_url;
 }
