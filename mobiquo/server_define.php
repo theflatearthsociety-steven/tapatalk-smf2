@@ -111,7 +111,13 @@ $server_param = array(
 
     'save_raw_post' => array(
         'function'  => 'save_raw_post_func',
-        'signature' => array(array($xmlrpcStruct, $xmlrpcString, $xmlrpcBase64, $xmlrpcBase64)),
+        'signature' => array(
+            array($xmlrpcStruct, $xmlrpcString, $xmlrpcBase64, $xmlrpcBase64),
+            array($xmlrpcStruct, $xmlrpcString, $xmlrpcBase64, $xmlrpcBase64, $xmlrpcBoolean),
+            array($xmlrpcStruct, $xmlrpcString, $xmlrpcBase64, $xmlrpcBase64, $xmlrpcBoolean, $xmlrpcArray),
+            array($xmlrpcStruct, $xmlrpcString, $xmlrpcBase64, $xmlrpcBase64, $xmlrpcBoolean, $xmlrpcArray, $xmlrpcString),
+            array($xmlrpcStruct, $xmlrpcString, $xmlrpcBase64, $xmlrpcBase64, $xmlrpcBoolean, $xmlrpcArray, $xmlrpcString, $xmlrpcBase64)
+        ),
         'docstring' => 'parameter should be array(string, base64, base64)',
     ),
 
