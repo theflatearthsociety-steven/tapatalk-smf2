@@ -286,7 +286,7 @@ $txt['on_byo'] = 'On App Of This Forum';]]></add>
 	//Spam Prevention
 	require_once($sourcedir . '/Subs-Tapatalk.php');
     $tp_iar_spam_prevention = isset($modSettings['tp_iar_spam_prevention']) ? $modSettings['tp_iar_spam_prevention'] : 1;
-    if ($tp_iar_spam_prevention == 1 || $tp_iar_spam_prevention == 3) {
+    if ($tp_iar_spam_prevention == 2 || $tp_iar_spam_prevention == 3) {
         if (exttmbq_is_spam($_POST['email'], exttMbqGetIP())) {
             fatal_error('Sorry, can not register new user with spam info.');
         }

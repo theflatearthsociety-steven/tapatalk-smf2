@@ -444,6 +444,14 @@ switch ($request_name) {
         }
         break;
     case 'save_raw_post':
+        $_GET['action'] = 'post2';
+        $_GET['start'] = 0;
+        $_GET['msg'] = $request_params[0];
+
+        $_POST['icon'] = 'xx';
+        $_POST['subject'] = $request_params[1];
+        $_POST['message'] = $request_params[2];
+        /*
         if ($params_num == 3) {
             $_GET['action'] = 'post2';
             $_GET['start'] = 0;
@@ -455,6 +463,7 @@ switch ($request_name) {
         } else {
             get_error('Parameter Error');
         }
+        */
         break;
     case 'subscribe_topic':
         if ($params_num == 1) {
