@@ -3,7 +3,7 @@
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
     <name>Tapatalk SMF 2.0 Plugin</name>
     <id>Tapatalk:TapatalkDevelopmentTeam</id>
-    <version>3.9.3</version>
+    <version>3.9.4</version>
     <homepage>http://tapatalk.com</homepage>
     <type>modification</type>
     <install>
