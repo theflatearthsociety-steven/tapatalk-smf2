@@ -67,7 +67,7 @@ function exttmbq_is_spam($email, $ip='')
             $params .= "&ip=".urlencode($ip);
         }
         $resp = @file_get_contents("http://www.stopforumspam.com/api?f=serial".$params);
-        $resp = unserialize($resp, true);
+        $resp = unserialize($resp);
 
         if ((isset($resp['email']['confidence']) && $resp['email']['confidence'] > 50) ||
             (isset($resp['ip']['confidence']) && $resp['ip']['confidence'] > 60))
