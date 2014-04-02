@@ -484,7 +484,10 @@ $server_param = array(
     
     'm_move_post' => array(
         'function'  => 'xmlresptrue',
-        'signature' => array(array($xmlrpcArray, $xmlrpcString, $xmlrpcString, $xmlrpcBase64)),
+        'signature' => array(
+            array($xmlrpcArray, $xmlrpcString, $xmlrpcString, $xmlrpcBase64),
+            array($xmlrpcArray, $xmlrpcString, $xmlrpcString, $xmlrpcBase64, $xmlrpcString),
+        ),
     ),
     
     'm_ban_user' => array(

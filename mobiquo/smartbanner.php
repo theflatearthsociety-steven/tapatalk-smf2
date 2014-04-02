@@ -103,7 +103,20 @@ function get_scheme_url()
     $exttMbqTempPageType = $location;
     if (
         (isset($_GET['action']) && $_GET['action'] == 'post' && isset($_GET['msg']) && isset($_GET['topic'])) || 
-        (isset($_GET['action']) && $_GET['action'] == 'post' && isset($_GET['topic']) && isset($_GET['last_msg']))
+        (isset($_GET['action']) && $_GET['action'] == 'post' && isset($_GET['topic']) && isset($_GET['last_msg'])) || 
+        (isset($_GET['action']) && $_GET['action'] == 'help') || 
+        (isset($_GET['action']) && $_GET['action'] == 'search') || 
+        (isset($_GET['action']) && $_GET['action'] == 'calendar') || 
+        (isset($_GET['action']) && $_GET['action'] == 'register') || 
+        (isset($_GET['action']) && $_GET['action'] == 'post' && isset($_GET['board'])) || 
+        (isset($_GET['action']) && $_GET['action'] == 'post' && isset($_GET['quote']) && isset($_GET['topic'])) || 
+        (isset($_GET['action']) && $_GET['action'] == 'editpoll' && isset($_GET['add']) && isset($_GET['topic'])) || 
+        (isset($_GET['action']) && $_GET['action'] == 'splittopics' && isset($_GET['topic']) && isset($_GET['at'])) || 
+        (isset($_GET['action']) && $_GET['action'] == 'post' && isset($_GET['board']) && isset($_GET['poll'])) || 
+        (isset($_GET['action']) && $_GET['action'] == 'emailuser' && isset($_GET['sa']) && isset($_GET['topic'])) || 
+        (isset($_GET['action']) && $_GET['action'] == 'admin') || 
+        (isset($_GET['action']) && $_GET['action'] == 'moderate') || 
+        (isset($_GET['action']) && $_GET['action'] == 'mlist')
     ) {
         $exttMbqTempPageType = 'other';
     }
