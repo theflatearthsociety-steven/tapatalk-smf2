@@ -12,7 +12,8 @@ function mobiquo_exit($str = '')
     switch ($request_name) {
         case    'authorize_user': if (preg_match('/^action=login2;sa=check;member=/', $str)) return; break;
         case'update_push_status': if (preg_match('/^action=login2;sa=check;member=/', $str)) return; break;
-        case             'login': if (preg_match('/^action=login2;sa=check;member=/', $str)) return; break;
+        //case             'login': if (preg_match('/^action=login2;sa=check;member=/', $str)) return; break;
+        case             'login': return;
         case        'login_user': if (preg_match('/^action=login2;sa=check;member=/', $str)) return; break;
         case       'logout_user': if (isset($_COOKIE['PHPSESSID'])) sessionDestroy($_COOKIE['PHPSESSID']); return; break;
         case    'delete_message': return;
