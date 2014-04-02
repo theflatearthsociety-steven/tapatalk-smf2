@@ -278,6 +278,7 @@ function post_html_clean($str)
     $str = preg_replace('/\[\/dummyquote\]/si', '[/quote]', $str);
     // [dummyquote author=admin link=topic=1.msg4#msg4 date=1392612506]
     $str = preg_replace('/\[dummyquote author=([^\]]*?) link=[^\]]*?#msg([^\]]*?) date=([^\]]*?)\]/si', '[quote name="$1" post=$2 timestamp=$3]', $str);
+    $str = preg_replace('/\[dummyquote([^\]]*?)\]/si', '[quote]', $str);
     
     //handle code
     $str = preg_replace('/<div class="codeheader">Code: <a [^>]*?class="codeoperation"[^>]*?>\[Select\]<\/a><\/div><pre[^>]*?><code class="bbc_code">(.*?)<\/code><\/pre>/i', '[code]$1[/code]', $str);
@@ -309,6 +310,7 @@ function post_html_clean($str)
     $str = basic_clean($str);
     $str = parse_bbcode($str);
     $str = preg_replace('/\[quote\](.*?)\[\/quote\](((<\/?br *?\/?>)|\n)*)(.*?)$/si','[quote]$1[/quote]$5', $str);
+    $str = preg_replace_callback('/\[code\](.*?)\[\/code\]/si', create_function('$matches','return "[code]".base64_decode($matches[1])."[/code]";'), $str);
     return $str;
 }
 
@@ -542,6 +544,7 @@ function mobiquo_parse_bbc($message, $smileys = true, $cache_id = '', $parse_tag
 {
     global $user_info, $modSettings, $context;
 
+    $message = preg_replace_callback('/\[code\](.*?)\[\/code\]/si', create_function('$matches','return "[code]".base64_encode($matches[1])."[/code]";'), $message);
     $message = preg_replace('/\[quote([^\]]*)\]/si', '[dummyquote$1]', $message);   //normal quote
     $message = preg_replace('/\[\/quote\]/si', '[/dummyquote]', $message);  //normal quote
     //$message = preg_replace('/\[(\/?)(code|php|html)\]/si', '[$1quote]', $message);
