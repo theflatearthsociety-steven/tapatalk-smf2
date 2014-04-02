@@ -1945,7 +1945,8 @@ function before_action_save_raw_post()
     //prepare entry parameters begin
     global $request_params;
     
-    $tempIds = isset($request_params[4]) ? explode('.', implode('.', $request_params[4])) : array();
+    //$tempIds = isset($request_params[4]) ? explode('.', implode('.', $request_params[4])) : array();
+    $tempIds = (isset($request_params[4]) && is_array($request_params[4])) ? $request_params[4] : array();
     $atts = exttMbqGetAtt($tempIds, array('case' => 'getAttByIds'));
     
     $_POST['attachments'] = array();
