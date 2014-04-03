@@ -311,7 +311,7 @@ function post_html_clean($str)
     $str = basic_clean($str);
     $str = parse_bbcode($str);
     $str = preg_replace('/\[quote\](.*?)\[\/quote\](((<\/?br *?\/?>)|\n)*)(.*?)$/si','[quote]$1[/quote]$5', $str);
-    //$str = preg_replace_callback('/\[code\](.*?)\[\/code\]/si', create_function('$matches','return "[code]".exttmbq_restore_for_code($matches[1])."[/code]";'), $str);
+    $str = preg_replace_callback('/\[code\](.*?)\[\/code\]/si', create_function('$matches','return "[code]".exttmbq_restore_for_code($matches[1])."[/code]";'), $str);
     return $str;
 }
 
@@ -546,7 +546,7 @@ function mobiquo_parse_bbc($message, $smileys = true, $cache_id = '', $parse_tag
     global $user_info, $modSettings, $context;
 
     //$message = preg_replace_callback('/\[code\](.*?)\[\/code\]/si', create_function('$matches','return "[code]".base64_encode($matches[1])."[/code]";'), $message);
-    //$message = preg_replace_callback('/\[code\](.*?)\[\/code\]/si', create_function('$matches','return "[code]".exttmbq_convert_for_code($matches[1])."[/code]";'), $message);
+    $message = preg_replace_callback('/\[code\](.*?)\[\/code\]/si', create_function('$matches','return "[code]".exttmbq_convert_for_code($matches[1])."[/code]";'), $message);
     $message = preg_replace('/\[quote([^\]]*)\]/si', '[dummyquote$1]', $message);   //normal quote
     $message = preg_replace('/\[\/quote\]/si', '[/dummyquote]', $message);  //normal quote
     //$message = preg_replace('/\[(\/?)(code|php|html)\]/si', '[$1quote]', $message);
