@@ -806,7 +806,11 @@ switch ($request_name) {
         $_GET['action'] = 'movetopic2';
         $_GET['topic'] = $request_params[0];
         $_POST['toboard'] = $request_params[1];
-        $_POST['postRedirect'] = 1;
+        if (isset($request_params[2]) && $request_params[2]) {
+            $_POST['postRedirect'] = 'on';
+        } elseif (!isset($request_params[2])) {
+            $_POST['postRedirect'] = 'on';
+        }
         $_POST['reason'] = 'This topic has been moved to [BOARD].
 
 [TOPIC LINK]';

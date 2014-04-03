@@ -469,7 +469,10 @@ $server_param = array(
     
     'm_move_topic' => array(
         'function'  => 'xmlresptrue',
-        'signature' => array(array($xmlrpcArray, $xmlrpcString, $xmlrpcString)),
+        'signature' => array(
+            array($xmlrpcArray, $xmlrpcString, $xmlrpcString),
+            array($xmlrpcArray, $xmlrpcString, $xmlrpcString, $xmlrpcBoolean)
+        ),
     ),
     
     'm_merge_topic' => array(
