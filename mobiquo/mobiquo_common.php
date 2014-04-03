@@ -307,11 +307,10 @@ function post_html_clean($str)
     $str = preg_replace($search, $replace, $str);
     $str = preg_replace('/\[url(.*?)\](\s*)(.*?)\[\/url\]/', '[url$1]$3[/url]', $str);
 
-
     $str = basic_clean($str);
     $str = parse_bbcode($str);
     $str = preg_replace('/\[quote\](.*?)\[\/quote\](((<\/?br *?\/?>)|\n)*)(.*?)$/si','[quote]$1[/quote]$5', $str);
-    $str = preg_replace_callback('/\[code\](.*?)\[\/code\]/si', create_function('$matches','return "[code]".base64_decode($matches[1])."[/code]";'), $str);
+    //$str = preg_replace_callback('/\[code\](.*?)\[\/code\]/si', create_function('$matches','return "[code]".exttmbq_restore_for_code($matches[1])."[/code]";'), $str);
     return $str;
 }
 
@@ -545,7 +544,8 @@ function mobiquo_parse_bbc($message, $smileys = true, $cache_id = '', $parse_tag
 {
     global $user_info, $modSettings, $context;
 
-    $message = preg_replace_callback('/\[code\](.*?)\[\/code\]/si', create_function('$matches','return "[code]".base64_encode($matches[1])."[/code]";'), $message);
+    //$message = preg_replace_callback('/\[code\](.*?)\[\/code\]/si', create_function('$matches','return "[code]".base64_encode($matches[1])."[/code]";'), $message);
+    //$message = preg_replace_callback('/\[code\](.*?)\[\/code\]/si', create_function('$matches','return "[code]".exttmbq_convert_for_code($matches[1])."[/code]";'), $message);
     $message = preg_replace('/\[quote([^\]]*)\]/si', '[dummyquote$1]', $message);   //normal quote
     $message = preg_replace('/\[\/quote\]/si', '[/dummyquote]', $message);  //normal quote
     //$message = preg_replace('/\[(\/?)(code|php|html)\]/si', '[$1quote]', $message);
@@ -562,6 +562,30 @@ function mobiquo_parse_bbc($message, $smileys = true, $cache_id = '', $parse_tag
     $modSettings['todayMod'] = 0;
 
     return $message;
+}
+
+function exttmbq_convert_for_code($str) {
+    $leftJ = $GLOBALS['exttMbqVarArr']['microtime'].'-leftJ-'.$GLOBALS['exttMbqVarArr']['microtime'];
+    $rightJ= $GLOBALS['exttMbqVarArr']['microtime'].'-rightJ-'.$GLOBALS['exttMbqVarArr']['microtime'];
+    $leftZ = $GLOBALS['exttMbqVarArr']['microtime'].'-leftZ-'.$GLOBALS['exttMbqVarArr']['microtime'];
+    $rightZ= $GLOBALS['exttMbqVarArr']['microtime'].'-rightZ-'.$GLOBALS['exttMbqVarArr']['microtime'];
+    $str = str_replace('<', $leftJ, $str);
+    $str = str_replace('>', $rightJ, $str);
+    $str = str_replace('[', $leftZ, $str);
+    $str = str_replace(']', $rightZ, $str);
+    return $str;
+}
+
+function exttmbq_restore_for_code($str) {
+    $leftJ = $GLOBALS['exttMbqVarArr']['microtime'].'-leftJ-'.$GLOBALS['exttMbqVarArr']['microtime'];
+    $rightJ= $GLOBALS['exttMbqVarArr']['microtime'].'-rightJ-'.$GLOBALS['exttMbqVarArr']['microtime'];
+    $leftZ = $GLOBALS['exttMbqVarArr']['microtime'].'-leftZ-'.$GLOBALS['exttMbqVarArr']['microtime'];
+    $rightZ= $GLOBALS['exttMbqVarArr']['microtime'].'-rightZ-'.$GLOBALS['exttMbqVarArr']['microtime'];
+    $str = str_replace($leftJ, '<', $str);
+    $str = str_replace($rightJ, '>', $str);
+    $str = str_replace($leftZ, '[', $str);
+    $str = str_replace($rightZ, ']', $str);
+    return $str;
 }
 
 function video_bbcode_format($type, $url)

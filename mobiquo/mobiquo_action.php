@@ -1947,13 +1947,14 @@ function before_action_save_raw_post()
     
     //$tempIds = isset($request_params[4]) ? explode('.', implode('.', $request_params[4])) : array();
     $tempIds = (isset($request_params[4]) && is_array($request_params[4])) ? $request_params[4] : array();
+    $tempIds = array_unique($tempIds);
     $atts = exttMbqGetAtt($tempIds, array('case' => 'getAttByIds'));
     
     $_POST['attachments'] = array();
     $_POST['attach_del'][] = 0; //works like web page to prevent sql error.
-    if (count($tempIds) != count($atts)) {
-        get_error('Parameter error when save post.');
-    }
+    //if (count($tempIds) != count($atts)) {
+        //get_error('Parameter error when save post.');
+    //}
     foreach ($atts as $att) {
         if ($att['id_msg']) {
             if ($att['id_msg'] == $_GET['msg']) {

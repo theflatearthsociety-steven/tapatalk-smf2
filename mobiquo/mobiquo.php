@@ -9,6 +9,7 @@ class ExttMbqBase {
     public static $otherParameters = array();
 }
 $GLOBALS['exttMbqVarArr'] = array();    /* used for global variables */
+$GLOBALS['exttMbqVarArr']['microtime'] = microtime();
 
 if (function_exists('set_magic_quotes_runtime'))
     @set_magic_quotes_runtime(0);
