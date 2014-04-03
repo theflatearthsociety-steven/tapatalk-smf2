@@ -282,7 +282,8 @@ function post_html_clean($str)
     $str = preg_replace('/\[dummyquote([^\]]*?)\]/si', '[quote]', $str);
     
     //handle code
-    $str = preg_replace('/<div class="codeheader">Code: <a [^>]*?class="codeoperation"[^>]*?>\[Select\]<\/a><\/div><pre[^>]*?><code class="bbc_code">(.*?)<\/code><\/pre>/i', '[code]$1[/code]', $str);
+    $str = preg_replace('/<code class="bbc_code">(.*?)<\/code>/si', '[code]$1[/code]', $str);
+    $str = preg_replace('/<a [^>]*?class="codeoperation"[^>]*?>\[Select\]<\/a>/si', '', $str);
 
     $search = array(
         '/<img .*?src="(.*?)".*?\/?>/si',
