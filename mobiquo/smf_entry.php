@@ -30,6 +30,10 @@ require_once($sourcedir . '/QueryString.php');
 require_once('include/Subs.php');
 require_once('include/error_control.php');
 require_once('include/Load.php');
+
+if (file_exists($sourcedir . '/DreamPortal.php'))
+    require_once($sourcedir . '/DreamPortal.php');
+
 require($sourcedir . '/Security.php');
 
 // Using an pre-PHP5 version?
