@@ -2224,8 +2224,8 @@ function before_action_admin_invite()
                         $user = get_user_by_name_or_email($_POST['username'], true);
                     }
                     if ($user && ($user['is_activated'] == 1) && $user['email_address']) {
-                        //$invite_response['result'] = vbmail($user['email'], mobiquo_encode($_POST['subject'], 'to_local', false),  mobiquo_encode($_POST['body'], 'to_local', false), true);
-                        $invite_response['result'] = sendmail($user['email_address'], mobiquo_encode($_POST['subject'], 'to_local'), mobiquo_encode($_POST['body'], 'to_local'));
+                        //$invite_response['result'] = sendmail($user['email_address'], mobiquo_encode($_POST['subject'], 'to_local'), mobiquo_encode($_POST['body'], 'to_local'));
+                        $invite_response['result'] = sendmail($user['email_address'], $_POST['subject'], $_POST['body']);
                         $invite_response['result_text'] = "Sent successfully for $_POST[username]";
                     } else {
                         //$invite_response['result_text'] = 'Username does not exist or user don\'t allow admin emails!';
