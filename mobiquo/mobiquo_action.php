@@ -2194,6 +2194,7 @@ function before_action_admin_invite()
 {
     global $boardurl, $sourcedir, $smcFunc;
     
+    require_once('include/PHPMailer/class.phpmailer.php');
     require_once($sourcedir . '/Subs-Post.php');
     $exttMbqBoardUrl = preg_replace('/(.*?)\/mobiquo/i', '$1', $boardurl);
     
@@ -2212,7 +2213,7 @@ function before_action_admin_invite()
         if($response) $result = @json_decode($response, true);
         if(empty($result) || empty($result['result']))
             if(preg_match('/\{"result":true/', $response))
-                $result = array('result' => true); 
+                $result = array('result' => true);
         if(isset($result) && isset($result['result']) && $result['result'])
         {
             if(isset($_POST['username']))
@@ -2224,8 +2225,7 @@ function before_action_admin_invite()
                         $user = get_user_by_name_or_email($_POST['username'], true);
                     }
                     if ($user && ($user['is_activated'] == 1) && $user['email_address']) {
-                        //$invite_response['result'] = sendmail($user['email_address'], mobiquo_encode($_POST['subject'], 'to_local'), mobiquo_encode($_POST['body'], 'to_local'));
-                        $invite_response['result'] = sendmail($user['email_address'], $_POST['subject'], $_POST['body']);
+                        $invite_response['result'] = exttmbq_sendmail($user['email_address'], $_POST['subject'], $_POST['body']);
                         $invite_response['result_text'] = "Sent successfully for $_POST[username]";
                     } else {
                         //$invite_response['result_text'] = 'Username does not exist or user don\'t allow admin emails!';
@@ -2249,7 +2249,7 @@ function before_action_admin_invite()
                 $number = 0;
                 while($r = $smcFunc['db_fetch_assoc']($request))
                 {
-                    if (sendmail($r['email_address'], $_POST['subject'], $_POST['body'])) {
+                    if (exttmbq_sendmail($r['email_address'], $_POST['subject'], $_POST['body'])) {
                         $number++;
                     }
                 }

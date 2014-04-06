@@ -779,6 +779,53 @@ function mobiquo_encode($str, $mode = '')
     return remove_unknown_char($str);
 }
 
+/**
+ * send email
+ *
+ * @return  Boolean
+ */
+function exttmbq_sendmail($email, $subject, $body) {
+    global $modSettings, $webmaster_email;
+    if ( substr(phpversion(),0,1) < 5 ) {
+        return sendmail($email, $subject, $body);
+    } else {
+        if ($modSettings['mail_type'] == 1) {
+            $mail = new PHPMailer();
+            $mail->CharSet = 'utf-8';
+            $mail->IsSMTP();
+            $mail->Host = $modSettings['smtp_host'];
+            $mail->Port = $modSettings['smtp_port'];
+            
+            $mail->From = $webmaster_email;
+            $mail->FromName   = "";
+            $mail->SMTPAuth = true;
+            
+            $mail->Username = $modSettings['smtp_username'];
+            $mail->Password = base64_decode($modSettings['smtp_password']);
+            
+            $mail->IsHTML(true);
+            $mail->WordWrap = 50;
+            $mail->Subject=$subject;
+            $mail->AltBody = $body;
+            $mail->Body = str_replace("\r", "", $mail->AltBody);
+            $mail->Body = str_replace("\n", "<br />", $mail->Body);
+            //$mail->MsgHTML($body);
+            
+            $mail->AddAddress($email);
+            
+            if(!$mail->Send())
+            {
+                return true;
+            }else
+            {
+                return false;
+            }
+        } else {
+            return sendmail($email, $subject, $body);
+        }
+    }
+}
+
 function remove_unknown_char($str)
 {
     for ($i = 1; $i < 32; $i++)
