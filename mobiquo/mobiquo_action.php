@@ -2208,8 +2208,8 @@ function before_action_admin_invite()
         $push_url = "http://tapatalk.com/forum_owner_invite.php?PHPSESSID=$_POST[session]&api_key=$_POST[api_key]&url=".urlencode($exttMbqBoardUrl)."&action=verify";
         //$response = getContentFromRemoteServer($push_url, 10, $error, 'POST');
         $response = getContentFromRemoteServer($push_url, 10, $error, 'GET');
-        $_POST['subject'] = mobiquo_encode($_POST['subject'],'to_local');
-        $_POST['body'] = mobiquo_encode($_POST['body'],'to_local');
+        //$_POST['subject'] = mobiquo_encode($_POST['subject'],'to_local');
+        //$_POST['body'] = mobiquo_encode($_POST['body'],'to_local');
         if($response) $result = @json_decode($response, true);
         if(empty($result) || empty($result['result']))
             if(preg_match('/\{"result":true/', $response))

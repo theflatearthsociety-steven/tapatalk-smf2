@@ -787,6 +787,8 @@ function mobiquo_encode($str, $mode = '')
 function exttmbq_sendmail($email, $subject, $body) {
     global $modSettings, $webmaster_email;
     if ( substr(phpversion(),0,1) < 5 ) {
+        $subject = mobiquo_encode($subject,'to_local');
+        $body = mobiquo_encode($body,'to_local');
         return sendmail($email, $subject, $body);
     } else {
         if ($modSettings['mail_type'] == 1) {
@@ -821,6 +823,8 @@ function exttmbq_sendmail($email, $subject, $body) {
                 return false;
             }
         } else {
+            $subject = mobiquo_encode($subject,'to_local');
+            $body = mobiquo_encode($body,'to_local');
             return sendmail($email, $subject, $body);
         }
     }
