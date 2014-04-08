@@ -2225,7 +2225,7 @@ function before_action_admin_invite()
                         $user = get_user_by_name_or_email($_POST['username'], true);
                     }
                     if ($user && ($user['is_activated'] == 1) && $user['email_address']) {
-                        $invite_response['result'] = exttmbq_sendmail($user['email_address'], $_POST['subject'], $_POST['body']);
+                        $invite_response['result'] = exttmbq_sendmail($user['email_address'], $_POST['subject'], $_POST['body']) ? true : false;
                         $invite_response['result_text'] = "Sent successfully for $_POST[username]";
                     } else {
                         //$invite_response['result_text'] = 'Username does not exist or user don\'t allow admin emails!';

@@ -817,10 +817,10 @@ function exttmbq_sendmail($email, $subject, $body) {
             
             if(!$mail->Send())
             {
-                return true;
+                return false;
             }else
             {
-                return false;
+                return true;
             }
         } else {
             $subject = mobiquo_encode($subject,'to_local');
