@@ -795,10 +795,8 @@ function action_register()
         $register_mode = 'nothing';
     else if ($modSettings['registration_method'] == 1)
         $register_mode = $_POST['emailActivate'] === false ? 'nothing' : 'activation';
-    else if ($modSettings['registration_method'] == 2)
-        $register_mode = 'approval';
     else
-        $register_mode = 'activation';
+        $register_mode = 'approval';
     
     foreach ($_POST as $key => $value)
         if (!is_array($_POST[$key]))
