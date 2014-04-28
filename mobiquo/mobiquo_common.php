@@ -952,7 +952,7 @@ function tp_get_forum_icon($id, $type = 'forum', $lock = false, $new = false)
 
 function tp_get_forum_icon_by_name($id, $name, $final)
 {
-	global $boarddir, $boardurl;
+    global $boarddir, $boardurl;
 
     $tapatalk_forum_icon_dir = $boarddir.'/mobiquo/forum_icons/';
     $tapatalk_forum_icon_url = $boardurl.'/mobiquo/forum_icons/';
@@ -985,28 +985,28 @@ function tp_get_forum_icon_by_name($id, $name, $final)
 
 function update_push()
 {
-	global $smcFunc, $user_info, $db_prefix;
+    global $smcFunc, $user_info, $db_prefix;
 
-	if ($user_info['id'] && mobi_table_exist('tapatalk_users'))
-	{
-		$request = $smcFunc['db_insert']('ignore',
-					'{db_prefix}tapatalk_users',
-					array('userid' => 'int', 'updated' => 'int'),
-					array($user_info['id'], time()),
-					array('userid')
-				);
-		if ($smcFunc['db_affected_rows']($request) == 0)
-		{
-			$smcFunc['db_query']('', '
-				UPDATE {db_prefix}tapatalk_users
-				SET updated = '.time().'
-				WHERE userid = {int:user_id}',
-				array(
-					'user_id' => $user_info['id'],
-				)
-			);
-		}
-	}
+    if ($user_info['id'] && mobi_table_exist('tapatalk_users'))
+    {
+        $request = $smcFunc['db_insert']('ignore',
+                    '{db_prefix}tapatalk_users',
+                    array('userid' => 'int', 'updated' => 'int'),
+                    array($user_info['id'], time()),
+                    array('userid')
+                );
+        if ($smcFunc['db_affected_rows']($request) == 0)
+        {
+            $smcFunc['db_query']('', '
+                UPDATE {db_prefix}tapatalk_users
+                SET updated = '.time().'
+                WHERE userid = {int:user_id}',
+                array(
+                    'user_id' => $user_info['id'],
+                )
+            );
+        }
+    }
 }
 
 function getEmailFromScription($token, $code, $key = '')
@@ -1382,65 +1382,35 @@ function exttMbqMakeFlags() {
 /**
  * get attachments
  *
- * @param  Mixed  $id
- * @param  Array  option array
+ * @param  Int  $id
  * @return  Array
- * $opt['case'] = 'getPostAtt' means get attachments in post,$id is post id
- * $opt['case'] = 'getAttByIds' means get attachments by attachment ids,$id is attachment ids
  */
-function exttMbqGetAtt($id, $opt = array()) {
+function exttMbqGetAtt($id)
+{
     global $smcFunc;
-    if (!$opt) {
-        $opt['case'] = 'getPostAtt';
-    }
-    if ($opt['case'] == 'getPostAtt') { //the return data same as the global $attachments in inlcude/Display.php->loadAttachmentContext function
-        if ($id) {
-            $ret = array();
-        	$request = $smcFunc['db_query']('', '
-        	    SELECT 
-        	        a.id_attach, a.id_folder, a.id_msg, a.filename, a.file_hash, a.size as filesize, a.downloads, a.approved, a.width, a.height, a.id_thumb, b.width as thumb_width, b.height as thumb_height 
-        	    FROM {db_prefix}attachments AS a
-        			LEFT JOIN {db_prefix}attachments AS b ON (a.id_thumb = b.id_attach AND b.attachment_type = 3)
-        	    WHERE
-        	        a.id_msg = {int:id} AND a.attachment_type = 0',
-        		array(
-        			'id' => $id,
-        		)
-        	);
-        	while ($row = $smcFunc['db_fetch_assoc']($request)) {
-        	    $ret[$row['id_msg']][] = $row;
-        	}
-        	$smcFunc['db_free_result']($request);
-        	$GLOBALS['attachments'] = $ret;
-        	require_once('include/Display.php');
-        	return loadAttachmentContext($id);
-        } else {
-            return array();
+
+    if ($id) {
+        $ret = array();
+        $request = $smcFunc['db_query']('', '
+            SELECT 
+                a.id_attach, a.id_folder, a.id_msg, a.filename, a.file_hash, a.size as filesize, a.downloads, a.approved, a.width, a.height, a.id_thumb, b.width as thumb_width, b.height as thumb_height 
+            FROM {db_prefix}attachments AS a
+                LEFT JOIN {db_prefix}attachments AS b ON (a.id_thumb = b.id_attach AND b.attachment_type = 3)
+            WHERE
+                a.id_msg = {int:id} AND a.attachment_type = 0',
+            array(
+                'id' => $id,
+            )
+        );
+        while ($row = $smcFunc['db_fetch_assoc']($request)) {
+            $ret[$row['id_msg']][] = $row;
         }
-    } elseif ($opt['case'] == 'getAttByIds') {
-        if ($id) {
-            $ret = array();
-        	$request = $smcFunc['db_query']('', '
-        	    SELECT 
-        	        a.id_attach, a.id_folder, a.id_msg, a.filename, a.file_hash, a.size as filesize, a.downloads, a.approved, a.width, a.height, a.id_thumb, b.width as thumb_width, b.height as thumb_height 
-        	    FROM {db_prefix}attachments AS a
-        			LEFT JOIN {db_prefix}attachments AS b ON (a.id_thumb = b.id_attach AND b.attachment_type = 3)
-        	    WHERE
-        	        a.id_attach IN ({array_int:id}) AND a.attachment_type = 0',
-        		array(
-        			'id' => $id,
-        		)
-        	);
-        	while ($row = $smcFunc['db_fetch_assoc']($request)) {
-        	    $ret[$row['id_attach']] = $row;
-        	}
-        	$smcFunc['db_free_result']($request);
-        	return $ret;
-        } else {
-            return array();
-        }
+        $smcFunc['db_free_result']($request);
+        $GLOBALS['attachments'] = $ret;
+        require_once('include/Display.php');
+        return loadAttachmentContext($id);
     } else {
-        get_error('Invalid option case when get attachment.');
+        return array();
     }
 }
 
@@ -1453,23 +1423,23 @@ function exttMbqGetAtt($id, $opt = array()) {
 function exttMbqGetPost($id) {
     global $smcFunc;
     
-	$request = $smcFunc['db_query']('', '
-	    SELECT 
-	        *
-	    FROM {db_prefix}messages AS a
-	    WHERE
-	        a.id_msg = {int:id}',
-		array(
-			'id' => $id,
-		)
-	);
-	if ($row = $smcFunc['db_fetch_assoc']($request)) {
-	    $smcFunc['db_free_result']($request); 
-	    return $row;
-	} else {
-	    $smcFunc['db_free_result']($request);
-	    return false;
-	}
+    $request = $smcFunc['db_query']('', '
+        SELECT 
+            *
+        FROM {db_prefix}messages AS a
+        WHERE
+            a.id_msg = {int:id}',
+        array(
+            'id' => $id,
+        )
+    );
+    if ($row = $smcFunc['db_fetch_assoc']($request)) {
+        $smcFunc['db_free_result']($request); 
+        return $row;
+    } else {
+        $smcFunc['db_free_result']($request);
+        return false;
+    }
 }
 
 /**
@@ -1481,21 +1451,21 @@ function exttMbqGetPost($id) {
 function exttMbqGetTopic($id) {
     global $smcFunc;
     
-	$request = $smcFunc['db_query']('', '
-	    SELECT 
-	        *
-	    FROM {db_prefix}topics AS a
-	    WHERE
-	        a.id_topic = {int:id}',
-		array(
-			'id' => $id,
-		)
-	);
-	if ($row = $smcFunc['db_fetch_assoc']($request)) {
-	    $smcFunc['db_free_result']($request); 
-	    return $row;
-	} else {
-	    $smcFunc['db_free_result']($request);
-	    return false;
-	}
+    $request = $smcFunc['db_query']('', '
+        SELECT 
+            *
+        FROM {db_prefix}topics AS a
+        WHERE
+            a.id_topic = {int:id}',
+        array(
+            'id' => $id,
+        )
+    );
+    if ($row = $smcFunc['db_fetch_assoc']($request)) {
+        $smcFunc['db_free_result']($request); 
+        return $row;
+    } else {
+        $smcFunc['db_free_result']($request);
+        return false;
+    }
 }

@@ -451,6 +451,7 @@ switch ($request_name) {
         $_POST['icon'] = 'xx';
         $_POST['subject'] = $request_params[1];
         $_POST['message'] = $request_params[2];
+        $_POST['attachments'] = isset($request_params[4]) ? explode('.', implode('.', $request_params[4])) : array();
         /*
         if ($params_num == 3) {
             $_GET['action'] = 'post2';

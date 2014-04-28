@@ -1054,13 +1054,15 @@ function get_raw_post_func()
     $postId = $_GET['msg'];
     $attachments = exttMbqGetAtt($postId);
     $outputAtt = array();
+    $groupIds = array();
     foreach($attachments as $attachment)
     {
+        $thumb_id = intval($attachment['thumbnail']['id']);
         $extension = pathinfo($attachment['name'], PATHINFO_EXTENSION);
         if(empty($extension))
             $extension = 'other';
         $xmlrpc_attachment = new xmlrpcval(array(
-            'attachment_id'      => new xmlrpcval($attachment['id']),
+            'attachment_id' => new xmlrpcval($attachment['id'].'.'.$thumb_id),
             'filename'      => new xmlrpcval(basic_clean($attachment['name']), 'base64'),
             'filesize'      => new xmlrpcval($attachment['byte_size'], 'int'),
             'content_type'  => new xmlrpcval($attachment['is_image'] ? 'image' : $extension),
@@ -1068,19 +1070,22 @@ function get_raw_post_func()
             'url'           => new xmlrpcval($attachment['href'])
         ), 'struct');
         $outputAtt[] = $xmlrpc_attachment;
+        $groupIds[$attachment['id']] = $thumb_id;
     }
 
-    $response = new xmlrpcval(
-        array(
-            'post_id'       => new xmlrpcval($_GET['msg']),
-            'post_title'    => new xmlrpcval(basic_clean($context['subject']), 'base64'),
-            'post_content'  => new xmlrpcval(basic_clean($context['message']), 'base64'),
-            'attachments'   => new xmlrpcval($outputAtt, 'array')
-        ),
-        'struct'
+    $response = array(
+        'post_id'       => new xmlrpcval($_GET['msg']),
+        'post_title'    => new xmlrpcval(basic_clean($context['subject']), 'base64'),
+        'post_content'  => new xmlrpcval(basic_clean($context['message']), 'base64')
     );
+    
+    if ($outputAtt)
+    {
+        $response['group_id'] = new xmlrpcval(serialize($groupIds), 'string');
+        $response['attachments'] = new xmlrpcval($outputAtt, 'array');
+    }
 
-    return new xmlrpcresp($response);
+    return new xmlrpcresp(new xmlrpcval($response, 'struct'));
 }
 
 function save_raw_post_func()
