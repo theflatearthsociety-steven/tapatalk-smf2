@@ -1887,11 +1887,12 @@ function Post2()
 	        case 'new_topic':
 	            $attachIDs = $_POST['attachments'];
 	            break;
-	        case 'upload_attach':
-	            $GLOBALS['attachIDs'] = $attachIDs;
 	        case 'save_raw_post':
 	            $attachIDs = $_POST['attachments'];
 	            break;
+	        
+	        case 'upload_attach':
+	            $GLOBALS['attachIDs'] = $attachIDs;
 	        case 'remove_attachment':
 	            return;
 	    }
