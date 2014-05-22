@@ -211,7 +211,7 @@ function get_error($err_str)
     $response = new xmlrpcresp(
         new xmlrpcval(array(
             'result'        => new xmlrpcval(false, 'boolean'),
-            'result_text'   => new xmlrpcval(basic_clean($err_str), 'base64'),
+            'result_text'   => new xmlrpcval(error_clean($err_str), 'base64'),
         ),'struct')
     );
 
@@ -400,6 +400,17 @@ function basic_clean($str, $cut = 0, $is_shortcontent = 0)
         $str = trim($str);
         $str = cutstr($str, $cut);
     }
+
+    return trim($str);
+}
+
+function error_clean($str)
+{
+    $str = preg_replace('/<br\s*\/?>/si', "\n", $str);
+    $str = strip_tags($str);
+    $str = preg_replace('/(\r|\n)+/si', "\n", $str);
+    $str = to_utf8($str);
+    $str = html_entity_decode($str, ENT_QUOTES, 'UTF-8');
 
     return trim($str);
 }
