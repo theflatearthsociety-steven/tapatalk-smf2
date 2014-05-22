@@ -1,6 +1,7 @@
 <?php
 
 define('IN_MOBIQUO', 1);
+
 if(isset($_GET['allowAccess']))
 {
     echo "yes";
@@ -13,8 +14,6 @@ if (isset($_GET['checkip']))
 }
 else
 {
-    
-//    print_r($GLOBALS);
     $output = 'Tapatalk Push Notification Status Monitor<br><br>';
     $output .= 'Push notification test: <b>';
     require_once(dirname(dirname(__FILE__)) . '/SSI.php');

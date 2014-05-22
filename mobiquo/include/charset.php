@@ -1,5 +1,7 @@
 <?php
 
+defined('IN_MOBIQUO') or exit;
+
 // char from x80 to x9F
 $charset_89 = array(
     chr(128), chr(129), chr(130), chr(131), chr(132), chr(133), chr(134), chr(135), chr(136), chr(137), chr(138), chr(139), chr(140), chr(141), chr(142), chr(143),

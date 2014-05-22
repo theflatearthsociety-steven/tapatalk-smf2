@@ -1,4 +1,7 @@
 <?php
+
+defined('IN_MOBIQUO') or exit;
+
 if (function_exists('set_magic_quotes_runtime'))
 @set_magic_quotes_runtime(0);
 ini_set('max_execution_time', '120');

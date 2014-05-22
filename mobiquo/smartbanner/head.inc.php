@@ -1,5 +1,8 @@
 <?php
 
+if (!defined('SMF'))
+    die('Hacking attempt...');
+
 $app_head_include = '';
 
 // don't include it when the request was from inside app

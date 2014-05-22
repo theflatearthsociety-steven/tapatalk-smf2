@@ -1,5 +1,8 @@
 <?php
 
+if (!defined('SMF'))
+    die('Hacking attempt...');
+
 $app_kindle_url = isset($modSettings['tp_kindle_url']) ? $modSettings['tp_kindle_url'] : '';
 $app_android_id = isset($modSettings['tp_android_url']) ? $modSettings['tp_android_url'] : '';
 $app_ios_id = isset($modSettings['tp_app_ios_id']) ? $modSettings['tp_app_ios_id'] : '';;

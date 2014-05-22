@@ -1,5 +1,10 @@
 <?php
+
+if (!defined('SMF'))
+    die('Hacking attempt...');
+
 error_reporting(0);
+
 function tapatalk_push_reply($post_id)
 {
     global $user_info, $context, $smcFunc, $boardurl, $modSettings;
@@ -140,6 +145,7 @@ function tapatalk_push_quote_tag($post_id, $newtopic = false, $pushed_user_ids =
         }
     }
 }
+
 function tapatalk_push_pm()
 {
     global $user_info, $smcFunc, $boardurl, $modSettings, $context;
