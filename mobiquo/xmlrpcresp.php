@@ -124,6 +124,7 @@ function login_func()
             $user_type = 'mod';
         }
     }
+    
     $response = new xmlrpcval(array(
         'result'        => new xmlrpcval($login_status, 'boolean'),
         'result_text'   => new xmlrpcval($result_text, 'base64'),
@@ -133,6 +134,7 @@ function login_func()
         'post_count'    => new xmlrpcval($profile['posts'], 'int'),
         'user_id'       => new xmlrpcval($user_info['id'], 'string'),
         'username'      => new xmlrpcval(basic_clean($profile['real_name']), 'base64'),
+        'login_name'    => new xmlrpcval(basic_clean($profile['member_name']), 'base64'),
         'user_type'     => new xmlrpcval($user_type, 'base64'),
         'email'         => new xmlrpcval($profile['email_address'], 'base64'),
         'usergroup_id'  => new xmlrpcval($usergroup_id, 'array'),
