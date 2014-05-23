@@ -1563,6 +1563,12 @@ function m_get_report_post_func()
 
         list ($topic_id, $board_id, $board_name) = $smcFunc['db_fetch_row']($request);
 
+        if (empty($topic_id))
+        {
+            $context['total_reports']--;
+            continue;
+        }
+
         $avatar = '';
         if (!isset($user_profile[$post['author']['id']]))
             loadMemberData($post['author']['id']);
