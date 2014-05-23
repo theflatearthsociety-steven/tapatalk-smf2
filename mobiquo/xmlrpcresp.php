@@ -384,33 +384,39 @@ function get_thread_func()
     if(!empty($parent_boards) && is_array($parent_boards))
         foreach($parent_boards as $bd_content)
             $breadcrumbs[] = array('id' => $bd_content['id'], 'name' => $bd_content['name'], 'sub_only' => 0);
+    
     $breadcrumbs[] = array('id' => $board_info['id'], 'name' => $board_info['name'], 'sub_only' => 0);
+    
+    $can_modify = (!$context['is_locked'] || allowedTo('moderate_board')) 
+                   && (allowedTo('modify_any') || (allowedTo('modify_replies') && $context['user']['started']) || (allowedTo('modify_own') && $context['user']['started']));
+    
     $response = array(
-                'total_post_num' => new xmlrpcval($context['total_visible_posts'], 'int'),
-                'forum_id'       => new xmlrpcval($context['current_board'], 'string'),
-                'forum_name'     => new xmlrpcval(basic_clean($board_info['name']), 'base64'),
-                'topic_id'       => new xmlrpcval($context['current_topic'], 'string'),
-                'topic_title'    => new xmlrpcval(basic_clean($context['subject']), 'base64'),
-                'can_subscribe'  => new xmlrpcval($context['can_mark_notify'], 'boolean'),
-                'is_subscribed'  => new xmlrpcval($context['is_marked_notify'], 'boolean'),
-                'is_poll'        => new xmlrpcval($topicinfo['id_poll'], 'boolean'),
-                'can_stick'      => new xmlrpcval($context['can_sticky'], 'boolean'),
-                'is_sticky'      => new xmlrpcval($context['is_sticky'], 'boolean'),
-                'can_reply'      => new xmlrpcval($context['can_reply'], 'boolean'),
-                'can_delete'     => new xmlrpcval($context['can_delete'], 'boolean'),
-                'can_upload'     => new xmlrpcval($context['can_post_attachment'], 'boolean'),
-                'can_close'      => new xmlrpcval($context['can_lock'], 'boolean'),
-                'is_closed'      => new xmlrpcval($context['is_locked'], 'boolean'),
-                'position'       => new xmlrpcval($context['new_position'], 'int'),
-                'can_move'       => new xmlrpcval($context['can_move'], 'boolean'),
-                'can_report'     => new xmlrpcval(true, 'boolean'),
+        'total_post_num' => new xmlrpcval($context['total_visible_posts'], 'int'),
+        'forum_id'       => new xmlrpcval($context['current_board'], 'string'),
+        'forum_name'     => new xmlrpcval(basic_clean($board_info['name']), 'base64'),
+        'topic_id'       => new xmlrpcval($context['current_topic'], 'string'),
+        'topic_title'    => new xmlrpcval(basic_clean($context['subject']), 'base64'),
+        'can_subscribe'  => new xmlrpcval($context['can_mark_notify'], 'boolean'),
+        'is_subscribed'  => new xmlrpcval($context['is_marked_notify'], 'boolean'),
+        'is_poll'        => new xmlrpcval($topicinfo['id_poll'], 'boolean'),
+        'can_stick'      => new xmlrpcval($context['can_sticky'], 'boolean'),
+        'is_sticky'      => new xmlrpcval($context['is_sticky'], 'boolean'),
+        'can_reply'      => new xmlrpcval($context['can_reply'], 'boolean'),
+        'can_delete'     => new xmlrpcval($context['can_delete'], 'boolean'),
+        'can_upload'     => new xmlrpcval($context['can_post_attachment'], 'boolean'),
+        'can_close'      => new xmlrpcval($context['can_lock'], 'boolean'),
+        'is_closed'      => new xmlrpcval($context['is_locked'], 'boolean'),
+        'position'       => new xmlrpcval($context['new_position'], 'int'),
+        'can_move'       => new xmlrpcval($context['can_move'], 'boolean'),
+        'can_report'     => new xmlrpcval(true, 'boolean'),
+        'can_merge'      => new xmlrpcval($context['can_merge'] ? true : false, 'boolean'),
+        'can_rename'     => new xmlrpcval($can_modify, 'boolean'),
 //                'is_very_hot'           => new xmlrpcval($context['is_very_hot'] ? true : false, 'boolean'),
 //                'is_hot'                => new xmlrpcval($context['is_hot'] ? true : false, 'boolean'),
 //                'is_approved'           => new xmlrpcval($context['is_approved'] ? true : false, 'boolean'),
 //                'is_poll'               => new xmlrpcval($context['is_marked_notify'] ? true : false, 'boolean'),
 //                'can_approve'           => new xmlrpcval($context['can_approve'] ? true : false, 'boolean'),
 //                'can_ban'               => new xmlrpcval($context['can_ban'] ? true : false, 'boolean'),
-                'can_merge'             => new xmlrpcval($context['can_merge'] ? true : false, 'boolean'),
 //                'can_split'             => new xmlrpcval($context['can_split'] ? true : false, 'boolean'),
 //                'can_mark_notify'       => new xmlrpcval($context['can_mark_notify'] ? true : false, 'boolean'),
 //                'can_send_topic'        => new xmlrpcval($context['can_send_topic'] ? true : false, 'boolean'),
