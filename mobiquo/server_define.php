@@ -495,7 +495,8 @@ $server_param = array(
     
     'm_ban_user' => array(
         'function'  => 'xmlresptrue',
-        'signature' => array(array($xmlrpcArray, $xmlrpcBase64, $xmlrpcInt, $xmlrpcBase64)),
+        'signature' => array(array($xmlrpcArray, $xmlrpcBase64, $xmlrpcInt, $xmlrpcBase64),
+                             array($xmlrpcArray, $xmlrpcBase64, $xmlrpcInt, $xmlrpcBase64, $xmlrpcInt)),
         'docstring' => '',
     ),
     

@@ -843,11 +843,18 @@ switch ($request_name) {
         $_GET['sa'] = 'edit';
         $_POST['ban_name'] = $request_params[0];
         $_POST['reason'] = $request_params[2];
-        $_POST['expiration'] = 'never';
         $_POST['full_ban'] = 1;
         $_POST['ban_suggestion'] = array('email', 'user');
         $_POST['add_ban'] = 'Add';
-        $_POST['expiration'] = 'never';
+        if (isset($request_params[3]) && $request_params[3])
+        {
+            $_POST['expiration'] = 'one_day';
+            $_POST['expire_date'] = ceil($request_params[3]/86400);
+        }
+        else
+        {
+            $_POST['expiration'] = 'never';
+        }
         break;
     case 'login_mod':
         $_GET['action'] = 'admin';
