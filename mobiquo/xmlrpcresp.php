@@ -194,6 +194,7 @@ function get_topic_func()
             'new_post'          => new xmlrpcval($topic['new'], 'boolean'),
             'can_subscribe'     => new xmlrpcval($context['can_mark_notify'], 'boolean'),
             'is_subscribed'     => new xmlrpcval(in_array($topic['id'], $subscribed_tids), 'boolean'),
+            'is_moved'          => new xmlrpcval($topic['icon'] == 'moved', 'boolean'),
             
             'can_merge'         => new xmlrpcval(allowedTo('merge_any'), 'boolean'),
             'can_delete'        => new xmlrpcval(allowedTo('remove_any') || ($context['user']['id'] == $topic['first_post']['member']['id'] && allowedTo('remove_own')), 'boolean'),
