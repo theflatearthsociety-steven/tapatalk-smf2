@@ -101,19 +101,7 @@ function login_func()
         $avatar = $profile['avatar'] == '' ? ($profile['id_attach'] > 0 ? (empty($profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) : '') : (stristr($profile['avatar'], 'http://') ? $profile['avatar'] : $modSettings['avatar_url'] . '/' . $profile['avatar']);
     else
         $avatar = '';
-    $push_status = array();
-    if($login_status && !empty($user_info['id']))
-    {
-        $support_types = array('tag','quote','sub','pm');
 
-        foreach($support_types as $name)
-        {
-            $push_status[] = new xmlrpcval(array(
-                'name'  => new xmlrpcval($name, 'string'),
-                'value' => new xmlrpcval(true, 'boolean')
-            ), 'struct');
-        }
-    }
     $user_type = 'normal';
     if (is_numeric($profile['id_group'])) {
         if ($profile['id_group'] == 0) {
@@ -147,7 +135,7 @@ function login_func()
         'can_upload_avatar' => new xmlrpcval(allowedTo('profile_upload_avatar'), 'boolean'),
         'can_search'        => new xmlrpcval(allowedTo('search_posts'), 'boolean'),
         'can_whosonline'    => new xmlrpcval(allowedTo('who_view'), 'boolean'),
-        'push_type'         => new xmlrpcval($push_status, 'array'),
+        'post_countdown'    => new xmlrpcval(allowedTo('moderate_board') ? 0 : $modSettings['spamWaitTime'], 'int'),
     ), 'struct');
     return new xmlrpcresp($response);
 }
