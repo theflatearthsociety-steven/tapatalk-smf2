@@ -908,5 +908,9 @@ switch ($request_name) {
         $_GET['area'] = 'news';
         $_GET['sa'] = 'mailingsend';
         break;
+    case 'get_contact':
+        $_GET['action'] = 'get_contact';
+        $_POST['uid'] = intval($request_params[0]);
+        break;
 }
 

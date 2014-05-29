@@ -441,6 +441,10 @@ $server_param = array(
         'docstring' => 'parameter should be',
     ),
     
+    'get_contact' => array(
+        'function'  => 'get_contact_func',
+        'signature' => array(array($xmlrpcArray, $xmlrpcString)),
+    ),
     
     // Moderation functions
     'm_stick_topic' => array(

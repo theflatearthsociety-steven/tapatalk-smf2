@@ -1917,3 +1917,33 @@ function get_recommended_user_func()
 
     return new xmlrpcresp($suggested_users);
 }
+
+function get_contact_func()
+{
+    global $user_profile;
+    
+    $mobi_api_key = loadAPIKey();
+    $user_id = $_POST['uid'];
+    
+    $result = array(
+        'result' => new xmlrpcval(false, 'boolean'),
+    );
+    
+    if(!empty($mobi_api_key) && !empty($user_id))
+    {
+        loadMemberData($user_id);
+        $profile = $user_profile[$user_id];
+        
+        if($profile)
+        {
+            $result = array(
+                'result'        => new xmlrpcval(true, 'boolean'),
+                'user_id'       => new xmlrpcval($profile['id_member']),
+                'display_name'  => new xmlrpcval(basic_clean($profile['member_name']), 'base64'),
+                'enc_email'     => new xmlrpcval(base64_encode(encrypt(trim($profile['email_address']), $mobi_api_key))),
+            );
+        }
+    }
+    
+    return new xmlrpcresp(new xmlrpcval($result, 'struct'));
+}
