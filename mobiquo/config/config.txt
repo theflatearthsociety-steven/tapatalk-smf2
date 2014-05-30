@@ -10,6 +10,7 @@ mark_forum = 1
 goto_unread = 1
 goto_post = 1
 get_latest_topic = 1
+get_contact = 1
 
 soft_delete = 0
 delete_reason = 0

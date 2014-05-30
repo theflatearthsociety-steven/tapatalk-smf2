@@ -13,6 +13,10 @@ After installing this mod, head straight to http://tapatalk.com/activate_tapatal
 [center][color=red][size=18pt]Please manually change permission of all files under mobiquo/ folder (including the folder itself) to chmod 755 otherwise it won't work!! And please uninstall the old tapatalk plugin completely before you install the new plugin!![/size][/color][/center]
 [center][color=red][size=12pt]Please check on Forum_Root/mobiquo/config/config.txt to make sure that the config content is displayed well.(Forum_Root is the forum url you filled in forum owner area: http://tapatalk.com/landing.php)[/size][/color][/center]
 
+[b]License[/b]
+Tapatalk API for SMF 2 is free and open source software released under the BSD License. (http://www.simplemachines.org/about/smf/license.php)
+This software includes a modified version of the SMF 2 open source library available at http://download.simplemachines.org/. These modifications were made by Tapatalk as of May 30, 2014.
+
 For more information please visit http://tapatalk.com
 
 Thank you! :)

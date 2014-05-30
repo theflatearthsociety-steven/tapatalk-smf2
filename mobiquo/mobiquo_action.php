@@ -2740,3 +2740,7 @@ function action_get_recommended_user()
 
     $context['recommend'] = $user_lists;
 }
+
+function action_get_contact()
+{
+}

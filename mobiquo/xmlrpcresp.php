@@ -236,6 +236,7 @@ function get_topic_func()
 function get_thread_func()
 {
     global $context, $settings, $options, $txt, $smcFunc, $scripturl, $modSettings, $user_profile, $user_info, $topicinfo;
+    
     $rpc_post_list = array();
     $post_place = 0;
     $msg_ids = array();
@@ -293,6 +294,14 @@ function get_thread_func()
 //            'can_unapprove'     => new xmlrpcval($message['can_unapprove'] ? true : false, 'boolean'),
 
         );
+        
+        if ($settings['show_modify'] && $message['modified'])
+        {
+            $loaded_ids = loadMemberData($message['modified']['name'], true);
+            $xmlrpc_post['editor_id']       = new xmlrpcval($loaded_ids[0], 'string');
+            $xmlrpc_post['editor_name']     = new xmlrpcval(basic_clean($message['modified']['name']), 'base64');
+            $xmlrpc_post['editor_time']     = new xmlrpcval($message['modified']['timestamp'], 'string');
+        }
 
         $rpc_post_list[] = $xmlrpc_post;
     }
@@ -1916,4 +1925,34 @@ function get_recommended_user_func()
     ), 'struct');
 
     return new xmlrpcresp($suggested_users);
+}
+
+function get_contact_func()
+{
+    global $user_profile;
+    
+    $mobi_api_key = loadAPIKey();
+    $user_id = $_POST['uid'];
+    
+    $result = array(
+        'result' => new xmlrpcval(false, 'boolean'),
+    );
+    
+    if(!empty($mobi_api_key) && !empty($user_id))
+    {
+        loadMemberData($user_id);
+        $profile = $user_profile[$user_id];
+        
+        if($profile)
+        {
+            $result = array(
+                'result'        => new xmlrpcval(true, 'boolean'),
+                'user_id'       => new xmlrpcval($profile['id_member']),
+                'display_name'  => new xmlrpcval(basic_clean($profile['member_name']), 'base64'),
+                'enc_email'     => new xmlrpcval(base64_encode(encrypt(trim($profile['email_address']), $mobi_api_key))),
+            );
+        }
+    }
+    
+    return new xmlrpcresp(new xmlrpcval($result, 'struct'));
 }
