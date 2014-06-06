@@ -221,8 +221,8 @@ function before_action_report_post()
 
 function action_report_post()
 {
-    
 }
+
 function before_action_get_topic()
 {
     global $modSettings, $board, $context, $board_info, $user_info, $smcFunc, $topic_per_page, $mode, $start_num;
@@ -278,6 +278,16 @@ function before_action_get_topic()
         $modSettings['defaultMaxTopics'] = $topic_per_page;
     }
     before_action_get_thread();
+}
+
+function before_action_get_unread_topic()
+{
+    global $modSettings, $context;
+    
+    if (empty($context['load_average']) || empty($modSettings['loadavg_allunread']) || $context['load_average'] < $modSettings['loadavg_allunread'])
+    {
+        $_GET['all'] = 1;
+    }
 }
 
 function action_get_topic(){}
