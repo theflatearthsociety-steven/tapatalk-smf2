@@ -842,6 +842,7 @@ switch ($request_name) {
         $_GET['area'] = 'ban';
         $_GET['sa'] = 'edit';
         $_POST['ban_name'] = $request_params[0];
+        $_POST['mode'] = $request_params[1];
         $_POST['reason'] = $request_params[2];
         $_POST['full_ban'] = 1;
         $_POST['ban_suggestion'] = array('email', 'user');

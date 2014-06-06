@@ -23,6 +23,7 @@ function mobiquo_exit($str = '')
         case 'unsubscribe_forum': if ($str == 'board=' . $board . '.' . $_REQUEST['start']) return; break;
         case       'report_post': return;
         case  'mark_all_as_read': return;
+        case        'm_ban_user': return;
         case     'upload_avatar': if ('action=profile;area=forumprofile;updated' == $str) return; break;
         case      'update_email': if (preg_match('/^action=profile;area=account;updated/', $str)) return; break;
         case     'm_stick_topic': if (preg_match("/^topic=$topic/", $str)) return; break;

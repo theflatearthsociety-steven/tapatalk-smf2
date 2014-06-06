@@ -2310,6 +2310,28 @@ function after_action_login()
     }
 }
 
+function after_action_m_ban_user()
+{
+    // delete user's topics and posts after ban
+    if ($_POST['mode'] == 2)
+    {
+        $_GET['action'] = 'profile';
+        $_GET['area'] = 'deleteaccount';
+        $_GET['save'] = 1;
+        $_POST['remove_type'] = 'topics';
+        $_POST['u'] = $_POST['bannedUser'];
+        $_POST['sa'] = 'deleteaccount';
+        $_REQUEST['action'] = 'profile';
+        $_REQUEST['u'] = $_POST['bannedUser'];
+        $_REQUEST['area'] = 'deleteaccount';
+        $_REQUEST['remove_type'] = 'topics';
+        $_REQUEST['sa'] = 'deleteaccount';
+        $_REQUEST['save'] = 1;
+        require_once('include/Profile.php');
+        ModifyProfile();
+    }
+}
+
 function before_action_m_ban_user()
 {
     global $txt, $smcFunc;
