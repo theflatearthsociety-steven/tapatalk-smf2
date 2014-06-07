@@ -1,5 +1,6 @@
-version = sm-2a_3.9.5
+version = sm-2a_4.0.0
 api_level = 3
+is_beta = 1
 
 disable_search = 0
 disable_latest = 0
