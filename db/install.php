@@ -175,8 +175,8 @@ $installed = $smcFunc['db_create_table']('{db_prefix}tapatalk_push', $push_colum
 
 $smcFunc['db_query']('', '
 	ALTER TABLE {db_prefix}tapatalk_users
-	ADD `quote` SMALLINT( 5 ) NOT NULL DEFAULT \'1\' AFTER `subscribe` ,
-    ADD `tag` SMALLINT( 5 ) NOT NULL DEFAULT \'1\' AFTER `quote`',
+	ADD `quote` SMALLINT( 5 ) NOT NULL DEFAULT 1 AFTER `subscribe` ,
+    ADD `tag` SMALLINT( 5 ) NOT NULL DEFAULT 1 AFTER `quote`',
 	array(
 		'db_error_skip' => true,
 	)

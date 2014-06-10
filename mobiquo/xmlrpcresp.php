@@ -295,7 +295,7 @@ function get_thread_func()
 
         );
         
-        if ($settings['show_modify'] && $message['modified'])
+        if ($settings['show_modify'] && $message['modified'] && $message['modified']['name'])
         {
             $loaded_ids = loadMemberData($message['modified']['name'], true);
             $xmlrpc_post['editor_id']       = new xmlrpcval($loaded_ids[0], 'string');
@@ -1948,7 +1948,7 @@ function get_contact_func()
             $result = array(
                 'result'        => new xmlrpcval(true, 'boolean'),
                 'user_id'       => new xmlrpcval($profile['id_member']),
-                'display_name'  => new xmlrpcval(basic_clean($profile['member_name']), 'base64'),
+                'display_name'  => new xmlrpcval(basic_clean($profile['real_name']), 'base64'),
                 'enc_email'     => new xmlrpcval(base64_encode(encrypt(trim($profile['email_address']), $mobi_api_key))),
             );
         }

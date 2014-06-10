@@ -847,10 +847,10 @@ switch ($request_name) {
         $_POST['full_ban'] = 1;
         $_POST['ban_suggestion'] = array('email', 'user');
         $_POST['add_ban'] = 'Add';
-        if (isset($request_params[3]) && $request_params[3])
+        if (isset($request_params[3]) && $request_params[3] > time())
         {
             $_POST['expiration'] = 'one_day';
-            $_POST['expire_date'] = ceil($request_params[3]/86400);
+            $_POST['expire_date'] = ceil(($request_params[3]-time())/86400);
         }
         else
         {
