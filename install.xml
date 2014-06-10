@@ -208,6 +208,34 @@ $txt['on_byo'] = 'On App Of This Forum';]]></add>
 ]]></add>
         </operation>
         </file>
+        <file name="$themedir/Display.template.php">
+        <operation>
+            <search position="before"><![CDATA[	while ($message = $context['get_message']())
+	{]]></search>
+            <add><![CDATA[
+		if ($message['body'] && !isset($bodyChanged))
+		{
+			$bodyChanged = true;
+			$message['body'] = preg_replace_callback('/(<img [^>]*?src=")(http:\/\/img.tapatalk.com\/d\/[0-9]{2}\/[0-9]{2}\/[0-9]{2}\/)([^\/]*?)(".*?>)/i',
+			create_function(
+				'$matches',
+				'return \'<a href="http://tapatalk.com/tapatalk_image.php?img=\'.urlencode(base64_encode($matches[2].\'original/\'.$matches[3])).\'" target="_blank">\'.$matches[1].$matches[2].\'thumbnail/\'.$matches[3].$matches[4].\'</a>\';'
+			),
+			$message['body']);
+			
+			$pageProtocol = 'http';
+			if(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 1)){  //Apache
+				$pageProtocol = 'https';
+			}elseif(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on')){ //IIS
+				$pageProtocol = 'https';
+			}elseif(isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443)){ //other
+				$pageProtocol = 'https';
+			}
+			$message['body'] = preg_replace('/\[emoji(\d+)\]/i', '<img src="'.$pageProtocol.'://s3.amazonaws.com/tapatalk-emoji/emoji$1.png" />', $message['body']);
+		}
+]]></add>
+        </operation>
+        </file>
         <file name="$sourcedir/Subs-Members.php">
         <operation>
             <search position="replace"><![CDATA[		is_not_guest();
