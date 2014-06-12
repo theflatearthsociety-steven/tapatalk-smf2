@@ -3,8 +3,7 @@
 defined('IN_MOBIQUO') or exit;
 $forum_version = 'SMF 2.0';
 
-//error_reporting(defined('E_STRICT') ? E_ALL | E_STRICT : E_ALL);
-error_reporting(0);
+set_report_level();
 
 $time_start = microtime();
 

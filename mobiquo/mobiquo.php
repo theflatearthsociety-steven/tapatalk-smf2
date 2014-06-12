@@ -14,14 +14,8 @@ $GLOBALS['exttMbqVarArr']['microtime'] = microtime();
 if (function_exists('set_magic_quotes_runtime'))
     @set_magic_quotes_runtime(0);
 
-//error_reporting(0);
-if (isset($_SERVER['HTTP_DEBUG']) && $_SERVER['HTTP_DEBUG'] && file_exists('debug.on'))
-{
-    error_reporting(-1);
-    @ini_set('display_errors', 1);
-}
-else
-    error_reporting(0);
+error_reporting(0);
+
 $mobiquo_dir = 'mobiquo';
 if($_SERVER['REQUEST_METHOD'] == 'GET')
 {

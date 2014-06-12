@@ -368,7 +368,6 @@ function parse_bbcode($str)
     return preg_replace($search, $replace, $str);
 }
 
-
 function basic_clean($str, $cut = 0, $is_shortcontent = 0)
 {
     global $modSettings;
@@ -1479,4 +1478,15 @@ function exttMbqGetTopic($id) {
         $smcFunc['db_free_result']($request);
         return false;
     }
+}
+
+function set_report_level()
+{
+    if (isset($_SERVER['HTTP_DEBUG']) && $_SERVER['HTTP_DEBUG'])
+    {
+        error_reporting(-1);
+        @ini_set('display_errors', 1);
+    }
+    else
+        error_reporting(0);
 }
