@@ -1499,12 +1499,19 @@ function search_post_func()
 
 function xmlresptrue()
 {
-    $result = new xmlrpcval(array(
+    global $result_topic_id;
+    
+    $result = array(
         'result'        => new xmlrpcval(true, 'boolean'),
         'result_text'   => new xmlrpcval('', 'base64')
-    ), 'struct');
+    );
+    
+    if (isset($result_topic_id) && $result_topic_id)
+    {
+        $result['topic_id'] = new xmlrpcval($result_topic_id, 'string');
+    }
 
-    return new xmlrpcresp($result);
+    return new xmlrpcresp(new xmlrpcval($result, 'struct'));
 }
 
 function report_post_func()

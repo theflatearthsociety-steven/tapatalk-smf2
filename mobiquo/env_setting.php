@@ -823,6 +823,7 @@ switch ($request_name) {
         $_POST['subject'] = $request_params[1];
         $_POST['topics'] = $request_params;
         $_POST['notifications'] = $request_params;
+        $result_topic_id = min($request_params[0], $request_params[1]);
         break;
     case 'm_rename_topic':
         $_GET['action'] = 'rename_topic';
