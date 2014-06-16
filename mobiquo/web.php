@@ -35,7 +35,7 @@ function print_screen($current_plugin_version)
 	//echo "Forum system version:".$modSettings['smfVersion']."<br>";
 	echo "Current Tapatalk plugin version: ".$current_plugin_version."<br>";
 
-	echo "Latest Tapatalk plugin version: <a href=\"http://tapatalk.com/activate_tapatalk.php?plugin=vbulletin\" target=\"_blank\">".$latest_tp_plugin_version."</a><br>";
+	echo "Latest Tapatalk plugin version: <a href=\"https://tapatalk.com/activate_tapatalk.php?plugin=smf\" target=\"_blank\">".$latest_tp_plugin_version."</a><br>";
 
 	echo "Attachment upload interface status: <a href=\"http://".$mobiquo_path."/upload.php\" target=\"_blank\">".($check_upload_status ? 'OK' : 'Inaccessible')."</a><br>";
 
