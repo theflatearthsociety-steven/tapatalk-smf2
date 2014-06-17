@@ -1183,10 +1183,16 @@ function get_box_func()
     {
         $msg_to = array();
         foreach ($pm['recipients']['to'] as $rec_user) {
-            $msg_to[] = new xmlrpcval(array('username' => new xmlrpcval(basic_clean($rec_user), 'base64')), 'struct');
+            $msg_to[] = new xmlrpcval(array(
+                'user_id'  => new xmlrpcval(intval(preg_replace('/^.*?;u=(\d+).*?$/si', '$1', $rec_user))),
+                'username' => new xmlrpcval(basic_clean($rec_user), 'base64'),
+            ), 'struct');
         }
         foreach ($pm['recipients']['bcc'] as $rec_user) {
-            $msg_to[] = new xmlrpcval(array('username' => new xmlrpcval(basic_clean($rec_user), 'base64')), 'struct');
+            $msg_to[] = new xmlrpcval(array(
+                'user_id'  => new xmlrpcval(intval(preg_replace('/^.*?;u=(\d+).*?$/si', '$1', $rec_user))),
+                'username' => new xmlrpcval(basic_clean($rec_user), 'base64')
+            ), 'struct');
         }
 
         $pm_list[] = new xmlrpcval(array(
@@ -1195,6 +1201,7 @@ function get_box_func()
             'sent_date'     => new xmlrpcval($pm['time'],'dateTime.iso8601'),
             'timestamp'     => new xmlrpcval($pm['timestamp'], 'string'),
             'msg_from'      => new xmlrpcval(basic_clean($pm['msg_from']), 'base64'),
+            'msg_from_id'   => new xmlrpcval($pm['msg_from_id']),
             'icon_url'      => new xmlrpcval($pm['member']['avatar']['href']),
             'msg_to'        => new xmlrpcval($msg_to, 'array'),
             'msg_subject'   => new xmlrpcval(basic_clean($pm['subject']), 'base64'),
@@ -1229,6 +1236,7 @@ function get_message_func()
     global $context;
 
     $result = new xmlrpcval(array(
+        'msg_from_id'   => new xmlrpcval(basic_clean($context['pm']['id_member'])),
         'msg_from'      => new xmlrpcval(basic_clean($context['pm']['name']), 'base64'),
         'msg_to'        => new xmlrpcval($context['pm']['recipients'], 'array'),
         'icon_url'      => new xmlrpcval($context['pm']['member']['avatar']['href']),

@@ -1430,6 +1430,7 @@ function get_pm_list($type = 'subject', $reset = false)
         'is_unread' => &$context['message_unread'][$message['id_pm']],
         'is_selected' => !empty($temp_pm_selected) && in_array($message['id_pm'], $temp_pm_selected),
         'msg_from' => $context['folder'] == 'sent' ? $context['user']['name'] : $memberContext[$id_member]['name'],
+        'msg_from_id' => $id_member,
     );
 
     $counter++;
@@ -1550,6 +1551,7 @@ function action_get_message()
     censorText($pm['body']);
 
     $context['pm'] = array(
+        'id_member' => $pm['id_member_from'],
         'username' => $pm['member_name'],
         'name' => $pm['real_name'],
         'time' => timeformat($pm['msgtime']),
@@ -1574,6 +1576,7 @@ function action_get_message()
     while ($row = $smcFunc['db_fetch_assoc']($request))
     {
         $context['pm']['recipients'][] = new xmlrpcval(array(
+            'user_id'  => new xmlrpcval(basic_clean($row['id_member'])),
             'username' => new xmlrpcval(basic_clean($row['real_name']), 'base64'),
         ), 'struct');
 
