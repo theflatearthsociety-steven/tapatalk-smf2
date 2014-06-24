@@ -300,7 +300,7 @@ function get_thread_func()
             $loaded_ids = loadMemberData($message['modified']['name'], true);
             $xmlrpc_post['editor_id']       = new xmlrpcval($loaded_ids[0], 'string');
             $xmlrpc_post['editor_name']     = new xmlrpcval(basic_clean($message['modified']['name']), 'base64');
-            $xmlrpc_post['editor_time']     = new xmlrpcval($message['modified']['timestamp'], 'string');
+            $xmlrpc_post['edit_time']     = new xmlrpcval($message['modified']['timestamp'], 'string');
         }
 
         $rpc_post_list[] = $xmlrpc_post;
