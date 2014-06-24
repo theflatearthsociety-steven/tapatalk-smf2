@@ -1955,10 +1955,10 @@ function get_contact_func()
     
     if(!empty($mobi_api_key) && !empty($user_id))
     {
-        loadMemberData($user_id);
+        loadMemberData($user_id, false, 'profile');
         $profile = $user_profile[$user_id];
         
-        if($profile)
+        if($profile && $profile['notify_announcements'])
         {
             $result = array(
                 'result'        => new xmlrpcval(true, 'boolean'),
