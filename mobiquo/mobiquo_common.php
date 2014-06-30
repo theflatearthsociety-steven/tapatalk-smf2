@@ -203,9 +203,9 @@ function get_error($err_str)
 
     if(!headers_sent())
     {
-        header('200 OK');
-        header('Mobiquo_is_login:'.($context['user']['is_logged'] ? 'true' : 'false'));
-        header('Content-Type: text/xml');
+        @header('HTTP/1.1 200 OK');
+        @header('Mobiquo_is_login:'.($context['user']['is_logged'] ? 'true' : 'false'));
+        @header('Content-Type: text/xml');
     }
 
     $response = new xmlrpcresp(
