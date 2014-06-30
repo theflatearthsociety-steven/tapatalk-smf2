@@ -340,6 +340,13 @@ $server_param = array(
         'docstring' => 'no parameter',
     ),
 
+    
+    'mark_pm_read' => array(
+        'function'  => 'xmlresptrue',
+        'signature' => array(array($xmlrpcArray),
+                             array($xmlrpcArray, $xmlrpcString)),
+    ),
+
     'mark_pm_unread' => array(
         'function' => 'mark_pm_unread_func',
         'signature' => array(array($xmlrpcStruct, $xmlrpcString),

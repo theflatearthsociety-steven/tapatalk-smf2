@@ -908,7 +908,7 @@ function MessageFolder()
 	if (!WIRELESS)
 		$context['sub_template'] = 'folder';
 	$context['page_title'] = $txt['pm_inbox'];
-
+/*
 	// Finally mark the relevant messages as read.
 	if ($context['folder'] != 'sent' && !empty($context['labels'][(int) $context['current_label_id']]['unread_messages']))
 	{
@@ -919,6 +919,7 @@ function MessageFolder()
 		elseif (!empty($context['current_pm']))
 			markMessages($display_pms, $context['current_label_id']);
 	}
+*/
 }
 
 // Get a personal message for the theme.  (used to save memory.)

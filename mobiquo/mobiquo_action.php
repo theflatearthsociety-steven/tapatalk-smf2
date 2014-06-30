@@ -1047,12 +1047,24 @@ function set_topic_and_board_by_message()
     $GLOBALS['board'] = $board_id;
 }
 
+function action_mark_pm_read()
+{
+    require_once('include/PersonalMessage.php');
+    
+    is_not_guest();
+    isAllowedTo('pm_read');
+    loadLanguage('PersonalMessage');
+    
+     markMessages($_POST['id_pm']);
+}
+
 function action_mark_pm_unread()
 {
     global $context, $smcFunc, $user_info, $mark_result;
 
     $mark_result =  1;
 }
+
 function action_get_inbox_stat()
 {
     global $context, $smcFunc, $modSettings, $user_info, $pm_last_checked_time, $subscribed_topic_last_checked_time;
@@ -2221,13 +2233,13 @@ function before_action_admin_invite()
             }
             else
             {   //send email to all
-            	$request = $smcFunc['db_query']('', "
-            	    SELECT 
-            	        *
-            	    FROM {db_prefix}members AS m
-            	    WHERE
-            	        m.is_activated = 1 AND m.email_address <> ''"
-            	);
+                $request = $smcFunc['db_query']('', "
+                    SELECT 
+                        *
+                    FROM {db_prefix}members AS m
+                    WHERE
+                        m.is_activated = 1 AND m.email_address <> ''"
+                );
                 $number = 0;
                 while($r = $smcFunc['db_fetch_assoc']($request))
                 {
@@ -2249,16 +2261,16 @@ function before_action_admin_invite()
     }
     else if(!empty($_POST['email_target']))
     {
-    	$request = $smcFunc['db_query']('', "
-    	    SELECT 
-    	        COUNT(*) as c
-    	    FROM {db_prefix}members AS m
-    	    WHERE
-    	        m.is_activated = 1 AND m.email_address <> ''"
-    	);
-    	$r = $smcFunc['db_fetch_assoc']($request);
-    	$smcFunc['db_free_result']($request);
-    	$user_count = $r['c'];
+        $request = $smcFunc['db_query']('', "
+            SELECT 
+                COUNT(*) as c
+            FROM {db_prefix}members AS m
+            WHERE
+                m.is_activated = 1 AND m.email_address <> ''"
+        );
+        $r = $smcFunc['db_fetch_assoc']($request);
+        $smcFunc['db_free_result']($request);
+        $user_count = $r['c'];
         echo $user_count;
         exit;
     }
@@ -2632,50 +2644,50 @@ function action_search_user()
 function action_ignore_user()
 {
     global $txt, $scripturl, $modSettings, $user_info;
-	global $context, $user_profile, $memberContext, $smcFunc;
-	
-	// For making changes!
-	$ignoreArray = $user_info['ignoreusers'];
+    global $context, $user_profile, $memberContext, $smcFunc;
+    
+    // For making changes!
+    $ignoreArray = $user_info['ignoreusers'];
 
 
-	// Removing a member from the ignore list?
-	if (isset($_GET['remove']) && $user_info['id'])
-	{
-		checkSession('get');
+    // Removing a member from the ignore list?
+    if (isset($_GET['remove']) && $user_info['id'])
+    {
+        checkSession('get');
 
-		// Heh, I'm lazy, do it the easy way...
-		foreach ($ignoreArray as $key => $id_remove)
-			if ($id_remove == (int) $_GET['remove'])
-				unset($ignoreArray[$key]);
+        // Heh, I'm lazy, do it the easy way...
+        foreach ($ignoreArray as $key => $id_remove)
+            if ($id_remove == (int) $_GET['remove'])
+                unset($ignoreArray[$key]);
 
-		// Make the changes.
-		$ignore_list = implode(',', $ignoreArray);
-		updateMemberData($memID, array('pm_ignore_list' => $ignore_list));
+        // Make the changes.
+        $ignore_list = implode(',', $ignoreArray);
+        updateMemberData($memID, array('pm_ignore_list' => $ignore_list));
 
-		// Redirect off the page because we don't like all this ugly query stuff to stick in the history.
-	}
-	elseif (isset($_POST['new_ignore']) && $_POST['new_ignore'] && $user_info['id'])
-	{
+        // Redirect off the page because we don't like all this ugly query stuff to stick in the history.
+    }
+    elseif (isset($_POST['new_ignore']) && $_POST['new_ignore'] && $user_info['id'])
+    {
 
-		// Now find out the id_member for the members in question.
-		$request = $smcFunc['db_query']('', '
-			SELECT id_member
-			FROM {db_prefix}members
-			WHERE id_member = {int:new_ignore}',
-			array(
-				'new_ignore' => $_POST['new_ignore'],
-			)
-		);
+        // Now find out the id_member for the members in question.
+        $request = $smcFunc['db_query']('', '
+            SELECT id_member
+            FROM {db_prefix}members
+            WHERE id_member = {int:new_ignore}',
+            array(
+                'new_ignore' => $_POST['new_ignore'],
+            )
+        );
 
-		// Add the new member to the buddies array.
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$ignoreArray[] = (int) $row['id_member'];
-		$smcFunc['db_free_result']($request);
+        // Add the new member to the buddies array.
+        while ($row = $smcFunc['db_fetch_assoc']($request))
+            $ignoreArray[] = (int) $row['id_member'];
+        $smcFunc['db_free_result']($request);
 
-		// Now update the current users buddy list.
-		$ignore_list = implode(',', $ignoreArray);
-		updateMemberData($memID, array('pm_ignore_list' => $ignore_list));
-	}
+        // Now update the current users buddy list.
+        $ignore_list = implode(',', $ignoreArray);
+        updateMemberData($memID, array('pm_ignore_list' => $ignore_list));
+    }
 }
 
 function action_get_recommended_user()
@@ -2708,31 +2720,31 @@ function action_get_recommended_user()
     if (!$thread_ids) {
         $thread_ids[] = '2000000000';   //impossible big integer
     }
-	$request_members = $smcFunc['db_query']('', '
-		SELECT
-			ln.id_member 
-		FROM {db_prefix}log_notify as ln
-		WHERE ln.id_topic IN ({array_int:topic_list})',
-		array(
-			'topic_list' => $thread_ids,
-		)
-	);
+    $request_members = $smcFunc['db_query']('', '
+        SELECT
+            ln.id_member 
+        FROM {db_prefix}log_notify as ln
+        WHERE ln.id_topic IN ({array_int:topic_list})',
+        array(
+            'topic_list' => $thread_ids,
+        )
+    );
     while ($row = $smcFunc['db_fetch_assoc']($request_members))
     {
         $user_lists = merge_users($user_lists, array($row['id_member'] => 3));
     }
 
     //add_thread_watch_users
-	$request_members = $smcFunc['db_query']('', '
-		SELECT
-			t.id_member_started
-		FROM {db_prefix}log_notify ln 
-		LEFT JOIN {db_prefix}topics t ON (ln.id_topic = t.id_topic)
-		WHERE ln.id_member = {int:current_member}',
-		array(
-			'current_member' => $user_info['id'],
-		)
-	);
+    $request_members = $smcFunc['db_query']('', '
+        SELECT
+            t.id_member_started
+        FROM {db_prefix}log_notify ln 
+        LEFT JOIN {db_prefix}topics t ON (ln.id_topic = t.id_topic)
+        WHERE ln.id_member = {int:current_member}',
+        array(
+            'current_member' => $user_info['id'],
+        )
+    );
     while ($row = $smcFunc['db_fetch_assoc']($request_members))
     {
         if(!empty($row['id_member_started']))
@@ -2740,8 +2752,8 @@ function action_get_recommended_user()
     }
 
     //add_coversation_users
-	$request_members = $smcFunc['db_query']('', '
-		SELECT pmr.id_member
+    $request_members = $smcFunc['db_query']('', '
+        SELECT pmr.id_member
         FROM {db_prefix}personal_messages pm
         LEFT JOIN {db_prefix}pm_recipients pmr ON (pmr.id_pm = pm.id_pm)
         WHERE pm.id_member_from = {int:current_member}',
@@ -2756,8 +2768,8 @@ function action_get_recommended_user()
     }
 
     //add buddy list users
-	$request_buddys = $smcFunc['db_query']('', '
-		SELECT buddy_list
+    $request_buddys = $smcFunc['db_query']('', '
+        SELECT buddy_list
         FROM {db_prefix}members
         WHERE id_member = {int:current_member}',
         array(

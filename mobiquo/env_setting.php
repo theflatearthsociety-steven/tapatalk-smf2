@@ -258,6 +258,23 @@ switch ($request_name) {
             get_error('Parameter Error');
         }
         break;
+    case 'mark_pm_read':
+        if ($params_num < 2) {
+            $_POST['id_pm'] = NULL;
+            if (isset($request_params[0]))
+            {
+                foreach(explode(',', $request_params[0]) as $pm_id)
+                {
+                    if ($pm_id = intval($pm_id))
+                    {
+                        $_POST['id_pm'][] = $pm_id;
+                    }
+                }
+            }
+        } else {
+            get_error('Parameter Error');
+        }
+        break;
     case 'mark_pm_unread':
         if ($params_num == 1) {
             $_POST['id_pm'] = intval($request_params[0]);
