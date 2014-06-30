@@ -195,7 +195,7 @@ function cutstr($string, $length, $dot = ' ...') {
     return $strcut.$dot;
 }
 
-function get_error($err_str)
+function get_error($err_str = '')
 {
     global $context;
 
@@ -1440,7 +1440,7 @@ function exttMbqGetPost($id) {
         WHERE
             a.id_msg = {int:id}',
         array(
-            'id' => $id,
+            'id' => intval($id),
         )
     );
     if ($row = $smcFunc['db_fetch_assoc']($request)) {

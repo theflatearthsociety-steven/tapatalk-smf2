@@ -1905,7 +1905,7 @@ function before_action_reply_topic()
 
 function before_action_reply_post()
 {
-    global $smcFunc, $topic, $board, $context, $language, $txt;
+    global $smcFunc, $topic, $board, $context, $language, $txt, $user_info;
 
     if(empty($_POST['message']))
         fatal_lang_error('error_no_message');

@@ -279,7 +279,7 @@ function get_thread_func()
             'timestamp'         => new xmlrpcval($message['timestamp'], 'string'),
             'attachments'       => new xmlrpcval($attachments, 'array'),
 
-            'is_online'         => new xmlrpcval($message['member']['online']['is_online'] ? true : false, 'boolean'),
+            'is_online'         => new xmlrpcval(isset($message['member']['online']['is_online']) && $message['member']['online']['is_online'] ? true : false, 'boolean'),
             'can_edit'          => new xmlrpcval($message['can_modify'], 'boolean'),
             'can_delete'        => new xmlrpcval($message['can_remove'], 'boolean'),
             'allow_smilies'     => new xmlrpcval($message['smileys_enabled'] ? true : false, 'boolean'),
@@ -1955,10 +1955,10 @@ function get_contact_func()
     
     if(!empty($mobi_api_key) && !empty($user_id))
     {
-        loadMemberData($user_id);
+        loadMemberData($user_id, false, 'profile');
         $profile = $user_profile[$user_id];
         
-        if($profile)
+        if($profile && $profile['notify_announcements'])
         {
             $result = array(
                 'result'        => new xmlrpcval(true, 'boolean'),
