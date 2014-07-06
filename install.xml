@@ -58,11 +58,6 @@
 	// If one or more of the recipient were invalid, go back to the post screen with the failed usernames.
 	if (!empty($context['send_log']['failed']))]]></add>
         </operation>
-        <operation>
-            <search position="before"><![CDATA[$message['body'] = parse_bbc($message['body'], true, 'pm' . $message['id_pm']);]]></search>
-            <add><![CDATA[
-	$message['body'] = preg_replace('/\[emoji(\d+)\]/i', '<img src="https://s3.amazonaws.com/tapatalk-emoji/emoji$1.png" />', $message['body']);]]></add>
-        </operation>
     </file>
 
     <file name="$themedir/languages/Admin.english.php">
@@ -213,19 +208,6 @@ $txt['on_byo'] = 'On App Of This Forum';]]></add>
 ]]></add>
         </operation>
     </file>
-    <file name="$themedir/Display.template.php">
-        <operation>
-            <search position="before"><![CDATA[	while ($message = $context['get_message']())
-	{]]></search>
-            <add><![CDATA[
-		if ($message['body'] && !isset($bodyChanged))
-		{
-			$bodyChanged = true;
-			$message['body'] = preg_replace('/\[emoji(\d+)\]/i', '<img src="https://s3.amazonaws.com/tapatalk-emoji/emoji$1.png" />', $message['body']);
-		}
-]]></add>
-        </operation>
-    </file>
     <file name="$sourcedir/Subs-Members.php">
         <operation>
             <search position="replace"><![CDATA[		is_not_guest();
@@ -280,6 +262,15 @@ $txt['on_byo'] = 'On App Of This Forum';]]></add>
         }
     }
 	/* tapatalk 20140330 end */]]></add>
+        </operation>
+    </file>
+    <file name="$sourcedir/Subs.php">
+        <operation>
+            <search position="after"><![CDATA[	// Cache the output if it took some time...]]></search>
+            <add><![CDATA[	// Parse tapatalk emojis.
+	$message = preg_replace('/\[emoji(\d+)\]/i', '<img src="https://s3.amazonaws.com/tapatalk-emoji/emoji$1.png" />', $message);
+
+]]></add>
         </operation>
     </file>
 </modification>
